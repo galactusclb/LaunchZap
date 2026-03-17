@@ -1,0 +1,8 @@
+node_modules
+node_modules/.prisma
+generated/*
+uploads/*
+
+# Keep environment variables out of version control
+.env
+src/scripts/seed.ts

@@ -1,0 +1,40 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  @@map("orders")
+
+  id          Int       @id @default(autoincrement())
+  orderDescription String @db.VarChar(100)
+  idempotencyKey String? @unique
+  createdAt DateTime @default(now())
+
+  orderProductMap OrderProductMap[]
+}
+
+model Product {
+  @@map("products")
+  
+  id          Int       @id @default(autoincrement())
+  productName String    @db.VarChar(100)
+  productDescription String?  @db.Text
+  createdAt DateTime @default(now())
+
+  orderProductMap OrderProductMap[]
+}
+
+model OrderProductMap {
+  id       String       @id @default(uuid())
+  orderId  Int
+  productId Int
+
+  order    Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}

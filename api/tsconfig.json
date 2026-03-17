@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "node16",
+    "allowJs": false,
+
+    "resolvePackageJsonExports":true,
+    "resolvePackageJsonImports":true,
+    "allowImportingTsExtensions":true,
+    "noEmit": true,
+    
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "strictNullChecks":true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch":true,
+    "declaration": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "lib": ["es2022", "dom"],
+    "baseUrl": "src",
+    "paths": {
+      "@/utils/*": ["utils/*"],
+      "@/features/*": ["features/*"],
+      "@/middleware/*": ["middleware/*"],
+      "@/schemas/*": ["schemas/*"],
+      "@/lib/*": ["lib/*"],
+    },
+    "isolatedModules" : true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"],
+}

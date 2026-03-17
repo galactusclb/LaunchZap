@@ -1,0 +1,22 @@
+FROM node:lts-alpine
+
+RUN npm install -g pnpm
+
+WORKDIR /app
+
+COPY . .
+
+RUN pnpm install 
+RUN npx prisma generate
+
+RUN pnpm run build
+
+ENV NODE_ENV=production
+
+EXPOSE 4000
+
+RUN chmod +x ./entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]
+
+CMD ["pnpm", "start"]
