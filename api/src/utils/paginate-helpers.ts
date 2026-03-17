@@ -1,13 +1,40 @@
-import { Prisma } from "@prisma/client";
-import { DMMF } from '@prisma/client/runtime/library';
-
 import { z } from "zod";
-
 import { PaginationOptions } from "../interfaces/paginate.type.ts";
-
 import { BadRequestError } from "./errors/http-error.ts";
-
+import { ModelName, OrderProductMapScalarFieldEnum, OrderScalarFieldEnum, ProductScalarFieldEnum } from "@/lib/prisma/generated/internal/prismaNamespace.ts";
+ 
 type FieldType = 'string' | 'enum' | 'number' | 'date' | 'boolean' | 'relation';
+
+// Update this when your schema changes
+const MODEL_FIELD_TYPES: Record<string, Record<string, FieldType>> = {
+    [ModelName.Order]: {
+        id: 'number',
+        orderDescription: 'string',
+        idempotencyKey: 'string',
+        createdAt: 'date',
+    },
+    [ModelName.Product]: {
+        id: 'number',
+        productName: 'string',
+        productDescription: 'string',
+        createdAt: 'date',
+    },
+    [ModelName.OrderProductMap]: {
+        id: 'string',
+        orderId: 'number',
+        productId: 'number',
+    },
+};
+
+// Add entries here when you add enums to your schema
+// e.g. SomeStatus: ['ACTIVE', 'INACTIVE']
+const ENUM_VALUES: Record<string, string[]> = {};
+
+const MODEL_FIELDS: Record<string, Record<string, string>> = {
+    [ModelName.Order]: OrderScalarFieldEnum,
+    [ModelName.Product]: ProductScalarFieldEnum,
+    [ModelName.OrderProductMap]: OrderProductMapScalarFieldEnum,
+};
 
 const DEFAULT_OPERATORS: Record<FieldType, string[]> = {
     string: ['equals', 'contains', 'startsWith', 'endsWith', 'in', 'notIn', 'not'],
@@ -15,18 +42,8 @@ const DEFAULT_OPERATORS: Record<FieldType, string[]> = {
     number: ['equals', 'gt', 'gte', 'lt', 'lte', 'in', 'notIn', 'not'],
     date: ['equals', 'gt', 'gte', 'lt', 'lte'],
     boolean: ['equals'],
-    relation: ['some', 'every', 'none', 'is'] // Support for nested relations
+    relation: ['some', 'every', 'none', 'is'],
 };
-
-function getFieldType(field: DMMF.Field): FieldType {
-    if (field.kind === 'enum') return 'enum';
-    if (field.kind === 'object') return 'relation'; // Handle relations
-    if (field.type === 'String') return 'string';
-    if (field.type === 'Boolean') return 'boolean';
-    if (field.type === 'Int' || field.type === 'Float' || field.type === 'Decimal') return 'number';
-    if (field.type === 'DateTime') return 'date';
-    return 'string';
-}
 
 export function parseQueryParams<T>(
     query: Record<string, any>,
@@ -39,171 +56,119 @@ export function parseQueryParams<T>(
     const sortBy = allowedFilters.includes(query.sortBy) ? query.sortBy : undefined;
     const sortOrder = query.sortOrder === 'desc' ? 'desc' : 'asc';
 
+    const modelFields = MODEL_FIELDS[modelName];
+    if (!modelFields) throw new BadRequestError(`Model '${modelName}' not found`);
+
+    const modelFieldTypes = MODEL_FIELD_TYPES[modelName] ?? {};
     const filters: any = {};
 
     for (const key in query) {
         if (['page', 'limit', 'sortBy', 'sortOrder'].includes(key)) continue;
 
-
         const match = key.match(/^(\w+)\[(\w+)\](?:__(\w+))?$/);
-
-        let [field, operator, caseSensitiveMode] = match ? [match[1], match[2] || 'equals', match[3] || 'insensitive'] : [key, 'equals', 'insensitive'];
+        const [field, operator, caseSensitiveMode] = match
+            ? [match[1], match[2] || 'equals', match[3] || 'insensitive']
+            : [key, 'equals', 'insensitive'];
 
         if (!allowedFilters.includes(field)) {
             throw new BadRequestError(`Filtering by '${field}' is not allowed. Allowed filters: ${allowedFilters.join(', ')}`);
         }
 
-        const modelMeta = Prisma.dmmf.datamodel.models.find(m => m.name === modelName);
-        if (!modelMeta) throw new BadRequestError(`Model '${modelName}' not found`);
+        if (!Object.values(modelFields).includes(field)) {
+            throw new BadRequestError(`Field '${field}' not found in model '${modelName}'`);
+        }
 
-        const fieldMeta = modelMeta.fields.find(f => f.name === field);
-        if (!fieldMeta) throw new BadRequestError(`Field '${field}' not found in model '${modelName}'`);
-
-
-        const type = getFieldType(fieldMeta);
+        const type: FieldType = modelFieldTypes[field] ?? 'string';
         const validOperators = DEFAULT_OPERATORS[type];
 
         if (!validOperators.includes(operator)) {
             throw new BadRequestError(`Invalid operator '${operator}' for field '${field}'. Valid operators: ${validOperators.join(', ')}`);
         }
 
+        const value = query[key];
+        const isCaseSensitive = isCaseSensitivity(caseSensitiveMode);
 
-        let value = query[key];
-        const isCaseSensitive: boolean = isCaseSensitivity(caseSensitiveMode)
-
-
-        // Handle enum validation
         if (type === 'enum') {
-            filters[field] = handleEnumParams(fieldMeta, field, value, operator);
-        }
-        // Handle number conversion
-        else if (type === 'number') {
-            filters[field] = handleNumberParams(value, operator)
-        }
-        // Handle date conversion
-        else if (type === 'date') {
-            filters[field] = handleDateParams(field, operator, value)
-        }
-
-        else if (type === 'string') {
-            filters[field] = handleStringParams(value, operator, isCaseSensitive)
-        }
-        // Handle relations (nested filtering)
-        // else if (type === 'relation') {
-        //     const relationModel = modelMeta.fields.find(f => f.name === field)?.type;
-        //     if (!relationModel) throw new Error(`Relation model for '${field}' not found`);
-
-        //     const [nestedField, nestedOperator] = Object.entries(value)[0];
-        //     value = {
-        //         [nestedOperator]: parseQueryParams(
-        //             { [nestedField]: value[nestedField] },
-        //             [nestedField],
-        //             relationModel
-        //         ).filters
-        //     };
-        // }
-        else if (type === 'boolean') {
+            filters[field] = handleEnumParams(field, value, operator);
+        } else if (type === 'number') {
+            filters[field] = handleNumberParams(value, operator);
+        } else if (type === 'date') {
+            filters[field] = handleDateParams(field, operator, value);
+        } else if (type === 'string') {
+            filters[field] = handleStringParams(value, operator, isCaseSensitive);
+        } else if (type === 'boolean') {
             filters[field] = handleBooleanParams(field, value);
         }
 
-        // Build filter condition
         if (!filters[field] && type !== 'boolean') filters[field] = {};
-
     }
 
     return {
         pagination: { page, limit, sortBy, sortOrder },
-        filters
+        filters,
     };
 }
 
 function isCaseSensitivity(caseSensitiveMode: string): boolean {
-
-    return caseSensitiveMode === "exact"
+    return caseSensitiveMode === "exact";
 }
 
 function handleDateParams(field: string, operator: string, value: any) {
-    const schema = z
-        .string()
-        .refine(val => !isNaN(new Date(val).getTime()),
-            // {
-            //     message: `Invalid date value '${value}' for field '${field}'. Valid format: YYYY-MM-DD or ISO 8601.`,
-            // }
-        )
-    // .transform(val => new Date(val));
-
+    const schema = z.string().refine(val => !isNaN(new Date(val).getTime()));
     let parsedDate;
-
     try {
         parsedDate = schema.parse(value);
-
-    } catch (err) {
-        throw new BadRequestError(`Invalid date value '${value}' for field '${field}'. Valid format: YYYY-MM-DD or ISO 8601.`,);
+    } catch {
+        throw new BadRequestError(`Invalid date value '${value}' for field '${field}'. Valid format: YYYY-MM-DD or ISO 8601.`);
     }
-
-    return {
-        [operator]: parsedDate
-    };
+    return { [operator]: parsedDate };
 }
 
 function handleBooleanParams(field: string, value: any): boolean {
     if (typeof value !== 'string' || (value !== 'true' && value !== 'false')) {
-        throw new BadRequestError(`Invalid boolean value ${value} for field '${field}'. Valid values: true, false'`);
+        throw new BadRequestError(`Invalid boolean value ${value} for field '${field}'. Valid values: true, false`);
     }
-
     return value === 'true';
 }
 
-function handleEnumParams(fieldMeta: any, field: string, value: any, operator: string): Record<string, any> {
-    const enumsMeta = Prisma.dmmf.datamodel.enums;
-    const enumDef = enumsMeta.find(e => e.name === fieldMeta.type);
-    if (!enumDef) throw new BadRequestError(`Enum definition for '${fieldMeta.type}' not found`);
+// field is the schema field name whose type is an enum (used to look up ENUM_VALUES key)
+function handleEnumParams(field: string, value: any, operator: string): Record<string, any> {
+    const enumValues = ENUM_VALUES[field];
+    if (!enumValues) throw new BadRequestError(`Enum definition for field '${field}' not found`);
 
-    const enumValues = enumDef?.values.map(v => v.name) || [];
-
-    let values: string[] = [];
     if (['in', 'notIn'].includes(operator)) {
-        values = Array.isArray(value) ? value : String(value).split(',').map(v => v.trim());
+        const values: string[] = Array.isArray(value)
+            ? value
+            : String(value).split(',').map(v => v.trim());
         const invalid = values.filter(v => !enumValues.includes(v));
         if (invalid.length > 0) {
             throw new BadRequestError(`Invalid enum values [${invalid.join(', ')}] for field '${field}'. Valid values: ${enumValues.join(', ')}`);
         }
-
         return { [operator]: values };
-    } else {
-        if (!enumValues.includes(String(value))) {
-            throw new BadRequestError(`Invalid enum value '${value}' for field '${field}'. Valid values: ${enumValues.join(', ')}`);
-        }
-        return { [operator]: value };
     }
+
+    if (!enumValues.includes(String(value))) {
+        throw new BadRequestError(`Invalid enum value '${value}' for field '${field}'. Valid values: ${enumValues.join(', ')}`);
+    }
+    return { [operator]: value };
 }
 
 function handleNumberParams(value: any, operator: string): Record<string, any> {
     if (['in', 'notIn'].includes(operator)) {
-        value = value.split(',').map((v: string) => Number(v));
-
-        return {
-            [operator]: value
-        }
+        return { [operator]: value.split(',').map((v: string) => Number(v)) };
     }
-
-    return {
-        [operator]: Number(value)
-    }
+    return { [operator]: Number(value) };
 }
 
 function handleStringParams(value: any, operator: string, isCaseSensitive: boolean): Record<string, any> {
-
     if (['in', 'notIn'].includes(operator)) {
-        const values = value.split(',').map((v: string) => String(v));
         return {
-            [operator]: values,
-            mode: !isCaseSensitive ? 'insensitive' : 'default' // default = case-sensitive | insensitive
+            [operator]: value.split(',').map((v: string) => String(v)),
+            mode: isCaseSensitive ? 'default' : 'insensitive',
         };
     }
-
     return {
         [operator]: value,
-        mode: !isCaseSensitive ? 'insensitive' : 'default' // default = case-sensitive | insensitive
+        mode: isCaseSensitive ? 'default' : 'insensitive',
     };
 }

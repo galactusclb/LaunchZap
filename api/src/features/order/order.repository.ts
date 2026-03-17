@@ -1,7 +1,7 @@
-import { Prisma, PrismaClient } from "@prisma/client"
 import prisma from "@/lib/prisma/prisma.ts"
-import { CreateOrderHeader, CreateOrderInput, Order, UpdateOrderInput } from "./order.schema.ts"
+import { CreateOrderHeader, CreateOrderInput, UpdateOrderInput } from "./order.schema.ts"
 import { PaginationOptions } from "../../interfaces/paginate.type.ts";
+import { PrismaClient, Prisma } from "@/lib/prisma/generated/client.ts";
 
 export const findAll = async <T>(options: {
     pagination: PaginationOptions<T>;
@@ -37,7 +37,7 @@ export const findById = (id: number, prismaIntance: PrismaClient | Prisma.Transa
     })
 }
 
-export const findOrderByIdempotencyKey = (idempotencyKey: CreateOrderHeader['idempotency-key'], prismaIntance: PrismaClient | Prisma.TransactionClient = prisma): Order => {
+export const findOrderByIdempotencyKey = (idempotencyKey: CreateOrderHeader['idempotency-key'], prismaIntance: PrismaClient | Prisma.TransactionClient = prisma) => {
     return prismaIntance.order.findUnique({
         where: {
             idempotencyKey

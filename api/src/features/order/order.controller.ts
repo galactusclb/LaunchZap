@@ -1,11 +1,10 @@
-import { Prisma } from '@prisma/client';
-
 import { Request, Response } from 'express';
 
 import { parseQueryParams } from '../../utils/paginate-helpers.ts';
 
 import { CreateOrderHeader, CreateOrderInput } from './order.schema.ts';
 import * as orderService from './order.service.ts';
+import { Prisma } from '@/lib/prisma/generated/client.ts';
 
 export const getAllOrders = async (req: Request, res: Response): Promise<void> => {
 

@@ -1,12 +1,11 @@
 import prisma from "@/lib/prisma/prisma.ts";
 
-import { Order } from "@prisma/client";
-
 import { PaginationOptions } from "../../interfaces/paginate.type.ts";
 import { BadRequestError, NotFoundError } from "../../utils/errors/http-error.ts";
 
 import * as repo from "./order.repository.ts";
 import { CreateOrderHeader, CreateOrderInput, UpdateOrderInput } from "./order.schema.ts";
+import { Order } from "@/lib/prisma/generated/client.ts";
 
 export const doGetAllOrders = async <T>({ pagination, filters }: {
   pagination: PaginationOptions<T>;

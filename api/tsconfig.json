@@ -2,9 +2,9 @@
   "compilerOptions": {
     "strict": true,
     "noImplicitAny": true,
-    "target": "ES2022",
-    "module": "Node16",
-    "moduleResolution": "node16",
+    "target": "ES2023",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "allowJs": false,
 
     "resolvePackageJsonExports":true,
@@ -21,7 +21,7 @@
     "declaration": false,
     "outDir": "./dist",
     "rootDir": "./src",
-    "lib": ["es2022", "dom"],
+    "lib": ["es2023", "dom"],
     "baseUrl": "src",
     "paths": {
       "@/utils/*": ["utils/*"],
