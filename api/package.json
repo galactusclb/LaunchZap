@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.5.0",
-    "@prisma/client": "^7.0.0",
+    "@prisma/client": "^7.5.0",
     "@prisma/internals": "^7.5.0",
     "@types/multer": "^1.4.12",
     "bcrypt": "^6.0.0",

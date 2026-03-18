@@ -1,0 +1,65 @@
+name: launch-zap
+services:
+  db:
+    image: postgres:18-alpine
+    container_name: db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test-db
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - inner-net
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: api
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgres://postgres:postgres@db:5432/test-db
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - inner-net
+    # command: sh -c "npx prisma migrate dev && npm run dev"
+
+  # web:
+  #   build: 
+  #     context: ./web
+  #     dockerfile: Dockerfile.dev
+  #   container_name: web
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     NEXT_PUBLIC_API_BASE_URL: http://localhost:4000/api
+  #   volumes:
+  #     - ./web/src:/app/src
+  #     - ./web/public:/app/public
+  #     - ./web/.env.local:/app/.env.local
+  #     - /app/.next
+  #     - /app/node_modules
+  #   networks:
+  #     - inner-net
+
+networks:
+  inner-net:
+
+volumes:
+  db_data:

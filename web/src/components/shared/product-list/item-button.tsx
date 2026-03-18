@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ChevronUp, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 
 export default function ItemButton() {
 	return (
