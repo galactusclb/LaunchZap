@@ -1,4 +1,3 @@
-import orderRoutes from '@/features/order/index.ts';
 import productRoutes from '@/features/product/index.ts';
 import { errorHandler } from '@/middleware/error.middleware.ts';
 

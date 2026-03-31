@@ -29,6 +29,7 @@
       "@/middleware/*": ["middleware/*"],
       "@/schemas/*": ["schemas/*"],
       "@/lib/*": ["lib/*"],
+      "@/prisma/client": ["lib/prisma/generated/client"],
     },
     "isolatedModules" : true
   },

@@ -51,9 +51,11 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  Order: 'Order',
+  User: 'User',
   Product: 'Product',
-  OrderProductMap: 'OrderProductMap'
+  Vote: 'Vote',
+  Category: 'Category',
+  ProductCategory: 'ProductCategory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -72,33 +74,57 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const OrderScalarFieldEnum = {
+export const UserScalarFieldEnum = {
   id: 'id',
-  orderDescription: 'orderDescription',
-  idempotencyKey: 'idempotencyKey',
-  createdAt: 'createdAt'
+  name: 'name',
+  username: 'username'
 } as const
 
-export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
 export const ProductScalarFieldEnum = {
   id: 'id',
-  productName: 'productName',
-  productDescription: 'productDescription',
-  createdAt: 'createdAt'
+  name: 'name',
+  tagline: 'tagline',
+  description: 'description',
+  websiteUrl: 'websiteUrl',
+  logoUrl: 'logoUrl',
+  gallery: 'gallery',
+  status: 'status',
+  launchDate: 'launchDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  makerId: 'makerId'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
 
 
-export const OrderProductMapScalarFieldEnum = {
+export const VoteScalarFieldEnum = {
   id: 'id',
-  orderId: 'orderId',
-  productId: 'productId'
+  userId: 'userId',
+  productId: 'productId',
+  createdAt: 'createdAt'
 } as const
 
-export type OrderProductMapScalarFieldEnum = (typeof OrderProductMapScalarFieldEnum)[keyof typeof OrderProductMapScalarFieldEnum]
+export type VoteScalarFieldEnum = (typeof VoteScalarFieldEnum)[keyof typeof VoteScalarFieldEnum]
+
+
+export const CategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+} as const
+
+export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
+
+
+export const ProductCategoryScalarFieldEnum = {
+  productId: 'productId',
+  categoryId: 'categoryId'
+} as const
+
+export type ProductCategoryScalarFieldEnum = (typeof ProductCategoryScalarFieldEnum)[keyof typeof ProductCategoryScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -109,12 +135,29 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 export const NullsOrder = {

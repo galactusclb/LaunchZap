@@ -19,8 +19,8 @@ RUN pnpm run build
 
 EXPOSE 4000
 
-RUN chmod +x ./entrypoint.sh
+# RUN chmod +x ./entrypoint.sh
 
-ENTRYPOINT ["./entrypoint.sh"]
+# ENTRYPOINT ["./entrypoint.sh"]
 
 CMD ["pnpm", "run", "dev"]

@@ -42,6 +42,8 @@ model Product {
   
   categories ProductCategory[]
   votes Vote[]
+
+  @@unique([makerId,name])
 }
 
 model Vote {

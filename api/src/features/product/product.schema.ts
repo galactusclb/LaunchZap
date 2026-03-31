@@ -1,5 +1,6 @@
+import { ProductStatus } from "@/prisma/client";
 import { trimmedString } from "@/lib/zod/extras.ts";
-import {} from "@/lib/prisma/"
+
 import z from "zod";
 
 export const baseProductSchema = z.object({
@@ -14,14 +15,22 @@ export const baseProductSchema = z.object({
 
 export const createProductSchema = {
     body: baseProductSchema
-}
+};
 
 export const productResponseSchema = baseProductSchema.extend({
     id: z.number(),
     createdAt: z.date(),
     updatedAt: z.date(),
 
-    status: ProductStatus
-})
+    status: z.nativeEnum(ProductStatus),
+    maker: z.object({
+        id: z.string(),
+        name: z.string()
+    }),
+
+    votesCount: z.number()
+});
 
 export type Product = z.infer<typeof baseProductSchema>;
+export type ProductOject = z.infer<typeof productResponseSchema>;
+export type CreateProduct = z.infer<typeof createProductSchema.body>;
