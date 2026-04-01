@@ -1,4 +1,3 @@
-
 import { ConflictError } from '@/utils/errors/http-error.ts';
 
 import * as repo from './product.repository.ts';
@@ -9,11 +8,7 @@ export const doGetAllProducts = async () => {
 }
 
 export const doCreateProduct = async (input: CreateProduct) => {
-    const isExist = await repo.find({
-        where: {
-            name: input.name
-        }
-    })
+    const isExist = await repo.findByName(input.name);
 
     if (isExist) throw new ConflictError("Product is already exist!");
 
