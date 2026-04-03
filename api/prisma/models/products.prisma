@@ -15,8 +15,8 @@ model Product {
   updatedAt DateTime @updatedAt
 
   // relations
-  makerId String
-  maker   User   @relation(fields: [makerId], references: [id])
+  makerId String?
+  maker   User?   @relation(fields: [makerId], references: [id])
 
   categories ProductCategory[]
   votes      Vote[]

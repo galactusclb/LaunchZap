@@ -21,7 +21,6 @@ export const createProduct = async (input: CreateProduct)=>{
             tagline: input.tagline,
             websiteUrl: input.websiteUrl,
             launchDate: input.launchDate,
-
         }
     })
 }

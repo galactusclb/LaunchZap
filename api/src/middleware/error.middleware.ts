@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { Prisma } from '@/prisma/client';
 
 import { AppError } from '../utils/errors/app-errors.ts';
 import { HttpError } from '../utils/errors/http-error.ts';
@@ -12,8 +13,18 @@ export function errorHandler(
     console.error('[Error]', err);
 
     let statusCode = 500;
-    let message = "Internal server error";
+    let message = 'Internal server error';
     let details: unknown;
+
+    if (isPrismaError(err)) {
+        return res.status(500).json({
+            success: false,
+            error: 'Database error. Please try again later.',
+            details: {
+                code: (err as Prisma.PrismaClientKnownRequestError).code || 'DB_ERROR',
+            },
+        });
+    }
 
     if (err instanceof HttpError) {
         statusCode = err.statusCode;
@@ -45,17 +56,24 @@ export function errorHandler(
     }
 
     if (err instanceof Error) {
-        statusCode = 400;
-        message = err.message;
-
-        return res.status(statusCode).json({
+        return res.status(500).json({
             success: false,
-            error: message,
+            error: 'Internal server error',
         });
     }
 
-    return res.status(statusCode).json({
+    return res.status(500).json({
         success: false,
-        error: message,
+        error: 'Internal server error',
     });
+}
+
+function isPrismaError(err: unknown): err is Prisma.PrismaClientKnownRequestError {
+  return (
+    err instanceof Prisma.PrismaClientKnownRequestError ||
+    err instanceof Prisma.PrismaClientUnknownRequestError ||
+    err instanceof Prisma.PrismaClientRustPanicError ||
+    err instanceof Prisma.PrismaClientInitializationError ||
+    err instanceof Prisma.PrismaClientValidationError
+  );
 }
