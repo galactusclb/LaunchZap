@@ -1,24 +1,15 @@
 import { ProductList } from "@/components/shared/product-list";
 import Header from "./components/header";
+import { Suspense } from "react";
 
-export default async function LandingPageContainer() {
-	// async function getProducts() {
-    //     console.log("gg");
-        
-	// 	const response = await fetch("http://localhost:4000/api/products");
-    //     console.log(response);
-        
-	// 	await new Promise((resolve) => {
-	// 		setTimeout(resolve, 2000);
-	// 	});
-
-    //     return []
-	// }
-
+export default function LandingPageContainer() {
 	return (
 		<div className="flex flex-col gap-6 w-full">
 			<Header />
-			{/* <ProductList /> */}
+			<Suspense fallback={<>Loading....</>}>
+				<ProductList/>
+			</Suspense>
+			<p>Some other values</p>
 		</div>
 	);
 }
