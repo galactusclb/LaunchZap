@@ -1,6 +1,6 @@
 import { cacheLife } from "next/cache";
 import ProductItem from "./product-item";
-import { Product, ProductListFullResponse } from "./product.schema";
+import { Product, ProductListFullResponse } from "./product-feed.schema";
 import { constants } from "@/utils/constants";
 
 async function getProducts(): Promise<Product[]>  {
@@ -8,12 +8,22 @@ async function getProducts(): Promise<Product[]>  {
     cacheLife('hours');
 
     const response = await fetch(`${constants.API.BASE_URL}/products`);
+    if(!response.ok) throw new Error('Failed to fetch products')
+
     const json = await response.json() as ProductListFullResponse;
 
     return json?.data
 }
 
-export default async function ProductList(){
+interface ProductFeedSectionProps {
+    title: string,
+    fetcher: ()=> Promise<Product[]>
+}
+
+export default async function ProductFeedSection({
+    title,
+    fetcher
+}: ProductFeedSectionProps){
     const data = await getProducts();
 
     return (

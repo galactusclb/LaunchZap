@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ItemButton from "./item-button";
-import { Product } from "./product.schema";
+import { Product } from "./product-feed.schema";
 
 interface ProductItemProps {
     item: Product
