@@ -1,22 +1,34 @@
 import { ProductFeedSection } from "@/components/shared/product-feed";
-import Header from "./components/header";
-import { Suspense } from "react";
-import { ErrorBoundary } from "@/components/shared/errors";
-import { getDailyProducts } from "@/components/shared/product-feed/apit";
+import FeedAsyncBoundary from "./components/feed-async-boundary";
+import { getDailyProducts, getNewProducts, getWeeklyProducts } from "./product.service";
 
 export default function LandingPageContainer() {
 	return (
-		<div className="flex flex-col gap-6 w-full">
-			<Header />
-			<ErrorBoundary>
-				<Suspense fallback={<>Loading....</>}>
-					<ProductFeedSection 
-						title="Daily Hits"
-						fetcher={getDailyProducts}/>
-				</Suspense>
-			</ErrorBoundary>
-			{/* <ProductFeedSection title="This Week" fetcher={getWeeklyProducts} /> */}
-			{/* <ProductFeedSection title="New Arrivals" fetcher={getNewProducts} /> */}
+		<div className="flex flex-col gap-20 w-full">
+			<FeedAsyncBoundary>
+				<ProductFeedSection
+					header={{
+						title: "Top Products Launching Today",
+						description: "For the first 4 hours of the day, we're hiding upvotes to help every product get a chance to catch your interest. Read more"
+					}}
+					fetcher={getDailyProducts} />
+			</FeedAsyncBoundary>
+			<FeedAsyncBoundary>
+				<ProductFeedSection
+					header={{
+						title: "This Week",
+						description: "For the first 4 hours of the day, we're hiding upvotes to help every product get a chance to catch your interest. Read more"
+					}}
+					fetcher={getWeeklyProducts} />
+			</FeedAsyncBoundary>
+			<FeedAsyncBoundary>
+				<ProductFeedSection
+					header={{
+						title: "New Arrivals",
+						description: "For the first 4 hours of the day, we're hiding upvotes to help every product get a chance to catch your interest. Read more"
+					}}
+					fetcher={getNewProducts} />
+			</FeedAsyncBoundary>
 		</div>
 	);
 }

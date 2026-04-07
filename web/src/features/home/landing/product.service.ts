@@ -1,6 +1,6 @@
 import { cacheLife } from "next/cache"
 import { constants } from "@/utils/constants"
-import { Product, ProductListFullResponse } from "./product-feed.schema"
+import { Product, ProductListFullResponse } from "@/components/shared/product-feed"
 
 async function fetchProducts(endpoint: string): Promise<Product[]> {
     const response = await fetch(`${constants.API.BASE_URL}${endpoint}`)
@@ -15,19 +15,19 @@ export async function getDailyProducts(): Promise<Product[]> {
     'use cache'
     cacheLife('hours')
 
-    return fetchProducts('/products/daily')
+    return fetchProducts('/products?q=daily')
 }
 
 export async function getWeeklyProducts(): Promise<Product[]> {
     'use cache'
     cacheLife('days')
 
-    return fetchProducts('/products/weekly')
+    return fetchProducts('/products?q=weekly')
 }
 
 export async function getNewProducts(): Promise<Product[]> {
     'use cache'
     cacheLife('minutes')
 
-    return fetchProducts('/products/new')
+    return fetchProducts('/products?q=new')
 }
