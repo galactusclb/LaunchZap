@@ -14,25 +14,20 @@ type Schemas = {
 export const validate = (schemas: Schemas) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
-
       if (schemas.headers) {
-        const result = schemas.headers.parse(req.headers);
-        req.headers = result
+        req.validatedHeaders = schemas.headers.parse(req.headers);
       }
 
       if (schemas.body) {
-        const result = schemas.body.parse(req.body);
-        req.body = result
+        req.validatedBody = schemas.body.parse(req.body);
       }
 
       if (schemas.params) {
-        const result = schemas.params.parse(req.params);
-        req.params = result
+        req.validatedParams = schemas.params.parse(req.params);
       }
 
       if (schemas.query) {
-        const result = schemas.query.parse(req.query);
-        req.query = result
+        req.validatedQuery = schemas.query.parse(req.query);
       }
 
       return next();
@@ -43,10 +38,8 @@ export const validate = (schemas: Schemas) =>
           path: e.path.join('.'),
           message: e.message
         }))
-
         return next(new BadRequestError("Validation error", formatted));
       }
-
       return next(err)
     }
   };

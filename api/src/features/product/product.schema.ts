@@ -2,6 +2,7 @@ import { ProductStatus } from "@/prisma/client";
 import { trimmedString } from "@/lib/zod/extras.ts";
 
 import z from "zod";
+import { paginationSchema, sortSchema } from "@/schemas/pagination.schema";
 
 export const baseProductSchema = z.object({
     name: trimmedString.min(1).max(100),
@@ -12,10 +13,6 @@ export const baseProductSchema = z.object({
     logoUrl : z.string().url().optional(),
     launchDate : z.coerce.date()
 });
-
-export const createProductSchema = {
-    body: baseProductSchema
-};
 
 export const productResponseSchema = baseProductSchema.extend({
     id: z.number(),
@@ -31,6 +28,22 @@ export const productResponseSchema = baseProductSchema.extend({
     votesCount: z.number()
 });
 
+export const productFilterSchema = paginationSchema.merge(sortSchema).extend({
+    search: z.string().optional(),
+    status: z.nativeEnum(ProductStatus).optional(),
+    launchDataFrom: z.coerce.date().optional(),
+    launchDateTo: z.coerce.date().optional()
+});
+
+export const createProductSchema = {
+    body: baseProductSchema
+};
+
+export const getProductsSchema = {
+    query: productFilterSchema
+}
+
 export type Product = z.infer<typeof baseProductSchema>;
 export type ProductOject = z.infer<typeof productResponseSchema>;
 export type CreateProduct = z.infer<typeof createProductSchema.body>;
+export type ProductFilterQuery = z.infer<typeof productFilterSchema>;
