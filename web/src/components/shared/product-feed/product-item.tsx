@@ -19,8 +19,8 @@ export default function ProductItem({item}: ProductItemProps){
                 <span className="text-base font-normal text-secondary-foreground">{item.tagline}</span>
             </div>
 
-            <ItemButton />
-            <ItemButton />
+            <ItemButton value={String(item.votesCount ?? 0)}/>
+            {/* <ItemButton /> */}
         </div>
     )
 }

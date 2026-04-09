@@ -1,32 +1,36 @@
-import { cacheLife } from "next/cache";
-import ProductItem from "./product-item";
-import { Product, ProductListFullResponse } from "./product-feed.schema";
-import { constants } from "@/utils/constants";
 import ProductFeedSectionHeader, { ProductFeedSectionHeaderProps } from "./product-feed-section-header";
+import { Product } from "./product-feed.schema";
+import ProductItem from "./product-item";
 
 interface ProductFeedSectionProps {
     header: ProductFeedSectionHeaderProps,
-    fetcher: ()=> Promise<Product[]>
+    fetcher: () => Promise<Product[]>
 }
 
 export default async function ProductFeedSection({
     header,
     fetcher
-}: ProductFeedSectionProps){
+}: ProductFeedSectionProps) {
     const data = await fetcher();
 
     return (
         <div className="flex flex-col gap-6 w-full">
             <ProductFeedSectionHeader {...header} />
-            <div className="flex flex-col gap-4">
-                {
-                    data?.map((item, key) => {
-                        return (
-                            <ProductItem item={item} key={key} />
-                        )
-                    })
-                }
-            </div>
+            {!data.length ? (
+                (
+                    <p className="text-muted-foreground">No products yet. Check back soon.</p>
+                )
+            ) : (
+                <div className="flex flex-col gap-4">
+                    {
+                        data?.map((item, key) => {
+                            return (
+                                <ProductItem item={item} key={key} />
+                            )
+                        })
+                    }
+                </div>
+            )}
         </div>
     )
 }

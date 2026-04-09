@@ -1,8 +1,8 @@
 import { ProductStatus } from "@/prisma/client";
 import { trimmedString } from "@/lib/zod/extras.ts";
+import { paginationSchema, sortSchema } from "@/schemas/pagination.schema";
 
 import z from "zod";
-import { paginationSchema, sortSchema } from "@/schemas/pagination.schema";
 
 export const baseProductSchema = z.object({
     name: trimmedString.min(1).max(100),
@@ -29,10 +29,11 @@ export const productResponseSchema = baseProductSchema.extend({
 });
 
 export const productFilterSchema = paginationSchema.merge(sortSchema).extend({
+    q: z.enum(['new', 'daily', 'weekly', 'hot']).optional(),
     search: z.string().optional(),
     status: z.nativeEnum(ProductStatus).optional(),
     launchDataFrom: z.coerce.date().optional(),
-    launchDateTo: z.coerce.date().optional()
+    launchDateTo: z.coerce.date().optional(),
 });
 
 export const createProductSchema = {

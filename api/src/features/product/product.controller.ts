@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 
+import { toProductDTO } from "./product.dto.ts";
 import { CreateProduct, ProductFilterQuery } from "./product.schema.ts";
 import * as service from "./product.service.ts";
 
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
     const result = await service.doGetAllProducts(req.validatedQuery as ProductFilterQuery);
-    res.status(200).json({ success: true, ...result });
+    const parsed = result.data?.map((item)=>toProductDTO(item));
+    res.status(200).json({ success: true, meta: result.meta, data: parsed });
 }
 
 export const getProductById = async (req: Request, res: Response): Promise<void> =>{
