@@ -23,9 +23,9 @@ export default async function ProductFeedSection({
             ) : (
                 <div className="flex flex-col gap-4">
                     {
-                        data?.map((item, key) => {
+                        data?.map((item) => {
                             return (
-                                <ProductItem item={item} key={key} />
+                                <ProductItem item={item} key={item.id} />
                             )
                         })
                     }
