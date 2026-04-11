@@ -121,7 +121,11 @@ export type ProductCategoryScalarFieldEnum = (typeof ProductCategoryScalarFieldE
 export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  username: 'username'
+  email: 'email',
+  emailVerified: 'emailVerified',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  role: 'role'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]

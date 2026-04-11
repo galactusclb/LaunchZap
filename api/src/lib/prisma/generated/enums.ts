@@ -16,3 +16,11 @@ export const ProductStatus = {
 } as const
 
 export type ProductStatus = (typeof ProductStatus)[keyof typeof ProductStatus]
+
+
+export const Roles = {
+  ADMIN: 'ADMIN',
+  USER: 'USER'
+} as const
+
+export type Roles = (typeof Roles)[keyof typeof Roles]

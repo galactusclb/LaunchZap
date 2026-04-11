@@ -1,4 +1,5 @@
 import productRoutes from '@/features/product/index.ts';
+import authRoutes from '@/features/auth/index.ts';
 import { errorHandler } from '@/middleware/error.middleware.ts';
 
 import cookieParser from 'cookie-parser';
@@ -14,11 +15,9 @@ const apiRouter = express.Router();
 
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://api.cleaoo.com',
   'https://cs.cleaoo.com',
   'https://cs-dev.cleaoo.com',
   'http://localhost:8081',
-  'http://api.localhost:8081',
 ];
 
 app.use(cors({
@@ -49,7 +48,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// apiRouter.use('/orders', orderRoutes);
+apiRouter.use('/auth', authRoutes);
 apiRouter.use('/products', productRoutes);
 
 app.use('/api', apiRouter);

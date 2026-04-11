@@ -7,6 +7,7 @@ declare global {
       validatedBody?: unknown;
       validatedParams?: unknown;
       validatedHeaders?: unknown;
+      user?: unknown
     }
   }
 }
