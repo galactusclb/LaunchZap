@@ -1,5 +1,6 @@
-import productRoutes from '@/features/product/index.ts';
-import authRoutes from '@/features/auth/index.ts';
+import { routes as productRoutes } from '@/features/product';
+import { routes as authRoutes } from '@/features/auth';
+import { routes as userRoutes } from "@/features/user";
 import { errorHandler } from '@/middleware/error.middleware.ts';
 
 import cookieParser from 'cookie-parser';
@@ -49,6 +50,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 apiRouter.use('/auth', authRoutes);
+apiRouter.use('/users', userRoutes);
 apiRouter.use('/products', productRoutes);
 
 app.use('/api', apiRouter);

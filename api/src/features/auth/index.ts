@@ -1,3 +1,5 @@
-import router from "./auth.route.ts";
+import routes from "./auth.route.ts";
 
-export default router;
+export {
+    routes
+}
