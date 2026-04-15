@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
 import { Prisma } from '@/prisma/client';
+
+import { Request, Response, NextFunction } from 'express';
 
 import { AppError } from '../utils/errors/app-errors.ts';
 import { HttpError } from '../utils/errors/http-error.ts';
@@ -58,13 +59,15 @@ export function errorHandler(
     if (err instanceof Error) {
         return res.status(500).json({
             success: false,
-            error: 'Internal server error',
+            // error: 'Internal server error',
+            error: message,
         });
     }
 
     return res.status(500).json({
         success: false,
-        error: 'Internal server error',
+        // error: 'Internal server error',
+        error: message,
     });
 }
 

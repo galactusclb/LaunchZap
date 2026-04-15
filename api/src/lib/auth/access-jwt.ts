@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 const { ACCESS_SECRET } = constants.auth;
 
 export type AccessPayload = {
-  sub: string;
+  id: string;
   email: string;
   role: Role;
 };

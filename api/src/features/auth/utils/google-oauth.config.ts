@@ -44,8 +44,3 @@ export async function getGoogleOIDCConfig(): Promise<Configuration> {
 
   return cachedConfig;
 }
-
-// Legacy function for backward compatibility - will be removed
-export async function createOAuth2Client() {
-  return await getGoogleOIDCConfig();
-}

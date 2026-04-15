@@ -3,7 +3,7 @@ import { constants } from "@/utils/constants"
 import { Product, ProductListFullResponse } from "@/components/shared/product-feed"
 
 async function fetchProducts(endpoint: string): Promise<Product[]> {
-    const response = await fetch(`${constants.API.BASE_URL}${endpoint}`)
+    const response = await fetch(`${constants.API.URL}${endpoint}`)
 
     if (!response.ok) throw new Error(`Failed to fetch from ${endpoint}`)
 

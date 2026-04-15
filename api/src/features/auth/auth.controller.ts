@@ -1,12 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { clearAuthCookies, setAuthCookies } from './utils/auth.cookies.ts';
 import { 
   handleGoogleOAuthStart, 
   handleGoogleCallback, 
   handleTokenRefresh, 
   handleLogout 
 } from './auth.service.ts';
+
+import { clearAuthCookies, setAuthCookies } from './utils/auth.cookies.ts';
 
 function safeReturnTo(input: unknown): string {
   if (typeof input !== 'string') return '/';
@@ -22,15 +23,14 @@ const googleStart = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const googleCallback = async (req: Request, res: Response, next: NextFunction) => {
-  const code = typeof req.query.code === 'string' ? req.query.code : null;
   const state = typeof req.query.state === 'string' ? req.query.state : null;
-  
-  if (!code || !state) {
-    res.status(400).json({ error: 'Missing code/state' });
+
+  if (!state) {
+    res.status(400).json({ error: 'Missing state' });
     return;
   }
 
-  const result = await handleGoogleCallback(code, state);
+  const result = await handleGoogleCallback(req.originalUrl, state);
   if (!result) {
     res.status(400).json({ error: 'Invalid state' });
     return;

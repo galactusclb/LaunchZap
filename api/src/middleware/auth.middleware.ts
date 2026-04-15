@@ -15,7 +15,7 @@ export const isAuth = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const payload = verifyAccessToken(authToken);
-    req.user = { id: payload.sub, role: payload.role, email: payload.email };
+    req.user = { id: payload.id, role: payload.role, email: payload.email };
     next();
   } catch {
     res.status(401).json({ error: 'Invalid or expired token' });

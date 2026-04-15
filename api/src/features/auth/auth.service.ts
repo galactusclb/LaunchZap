@@ -12,57 +12,30 @@ import { redisClient } from '@/lib/redis/redis-client.ts';
 
 import { randomPKCECodeVerifier, calculatePKCECodeChallenge, buildAuthorizationUrl, authorizationCodeGrant } from 'openid-client';
 
+import { createUser, findUserByEmail, findUserByGoogleSub, updateUserByEmail, updateUserById } from './auth.repository.ts';
 import { User } from './auth.schema.ts';
 
 import { getGoogleOAuthConfig, getGoogleOIDCConfig } from './utils/google-oauth.config.ts';
 import { saveGoogleOAuthState, consumeGoogleOAuthState } from './utils/google-oauth.store.ts';
 
-export async function upsertGoogleUser(profile: {
-  email: string;
-  sub: string;
-  name?: string | null;
-  pictureUrl?: string | null;
-}) {
-  const userModel = (prisma as any).user;
-  const existingBySub = await userModel.findUnique({ where: { googleSub: profile.sub } });
+export async function upsertGoogleUser(profile: Pick<User, "email" | "googleSub" | "name" | "pictureUrl">) {
+  const existingBySub = await findUserByGoogleSub(profile.googleSub);
+
   if (existingBySub) {
-    return await userModel.update({
-      where: { id: existingBySub.id },
-      data: {
-        email: profile.email,
-        name: profile.name ?? existingBySub.name,
-        pictureUrl: profile.pictureUrl ?? existingBySub.pictureUrl,
-        lastLoginAt: new Date(),
-      },
-    });
+    return updateUserById(existingBySub, profile);
   }
 
-  const existingByEmail = await userModel.findUnique({ where: { email: profile.email } });
+  const existingByEmail = await findUserByEmail(profile.email);
+
   if (existingByEmail) {
-    return await userModel.update({
-      where: { id: existingByEmail.id },
-      data: {
-        googleSub: profile.sub,
-        name: profile.name ?? existingByEmail.name,
-        pictureUrl: profile.pictureUrl ?? existingByEmail.pictureUrl,
-        lastLoginAt: new Date(),
-      },
-    });
+    return await updateUserByEmail(existingByEmail, profile)
   }
 
-  return await userModel.create({
-    data: {
-      email: profile.email,
-      googleSub: profile.sub,
-      name: profile.name ?? null,
-      pictureUrl: profile.pictureUrl ?? null,
-      lastLoginAt: new Date(),
-    },
-  });
+  return await createUser(profile);
 }
 
-export async function issueAppTokensForUser(user: User) {
-  const accessToken = signAccessToken({ sub: user.id, email: user.email, role: user.role });
+export async function issueAppTokensForUser(user: Pick<User, "email" | "role" | "id">) {
+  const accessToken = signAccessToken({ id: user.id, email: user.email, role: user.role });
 
   const { token: refreshToken, tokenHash, sessionId } = issueRefreshToken();
   await saveRefreshSession(redisClient, tokenHash, { userId: user.id, sessionId });
@@ -84,7 +57,7 @@ export async function rotateRefreshToken(refreshToken: string) {
 
   await userModel.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
 
-  const accessToken = signAccessToken({ sub: user.id, email: user.email, role: user.role });
+  const accessToken = signAccessToken({ id: user.id, email: user.email, role: user.role });
 
   return { accessToken, refreshToken: newRefreshToken };
 }
@@ -116,7 +89,7 @@ export async function handleGoogleOAuthStart(returnTo: string): Promise<string> 
   }).href;
 }
 
-export async function handleGoogleCallback(code: string, state: string): Promise<{
+export async function handleGoogleCallback(originalUrl: string, state: string): Promise<{
   user: any;
   tokens: { accessToken: string; refreshToken: string };
   redirectTo: string;
@@ -128,20 +101,18 @@ export async function handleGoogleCallback(code: string, state: string): Promise
   }
 
   const config = await getGoogleOIDCConfig();
-  
-  // Exchange authorization code for tokens
-  const result = await authorizationCodeGrant(config, new URL(cfg.redirectUri), {
-    pkceCodeVerifier: stored.codeVerifier,
-  }, {
-    code,
-    state,
-  });
 
+  const callbackUrl = new URL(originalUrl, new URL(cfg.redirectUri).origin);
+
+  const result = await authorizationCodeGrant(config, callbackUrl, {
+    pkceCodeVerifier: stored.codeVerifier,
+    expectedState: state,
+  });
+  
   if (!result.access_token) {
     throw new Error('Missing access_token from Google');
   }
 
-  // Get user info from ID token claims (more secure and efficient)
   const claims = result.claims();
   
   const email = claims?.email as string;
@@ -152,8 +123,8 @@ export async function handleGoogleCallback(code: string, state: string): Promise
 
   const user = await upsertGoogleUser({
     email,
-    sub,
-    name: claims?.name as string ?? undefined,
+    googleSub: sub,
+    name: claims?.name as string,
     pictureUrl: claims?.picture as string ?? undefined,
   });
 
