@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 
+import { User } from "../auth/auth.schema.ts";
+
 import { toProductDTO } from "./product.dto.ts";
-import { CreateProduct, ProductFilterQuery } from "./product.schema.ts";
+import { CreateProduct, ProductFilterQuery, VoteProduct } from "./product.schema.ts";
 import * as service from "./product.service.ts";
 
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
@@ -15,7 +17,15 @@ export const getProductById = async (req: Request, res: Response): Promise<void>
 }
 
 export const createProduct = async (req: Request, res: Response): Promise<void> =>{
-    const product = await service.doCreateProduct(req.body as CreateProduct);
+    const product = await service.doCreateProduct(req.validatedBody as CreateProduct);
 
     res.status(201).json({success: true, data: product})
+}
+
+export const toggleVote = async (req: Request, res: Response)=>{
+    const {id: productId} = (req.validatedParams as VoteProduct);
+    const {id: userId} = req.user as User
+
+    const result = await service.doVoteProduct(userId, productId);
+    res.status(200).json({success: true, isUpvoted: result.isUpvoted, message: `${productId} Product voted ${result.isUpvoted ? "up" : "remove"} successfully`})
 }

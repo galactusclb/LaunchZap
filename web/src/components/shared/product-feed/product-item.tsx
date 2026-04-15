@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import ItemButton from "./item-button";
 import { Product } from "./product-feed.schema";
+import VoteButton from "./vote-button";
 
 interface ProductItemProps {
     item: Product
@@ -19,7 +19,7 @@ export default function ProductItem({item}: ProductItemProps){
                 <span className="text-base font-normal text-secondary-foreground">{item.tagline}</span>
             </div>
 
-            <ItemButton value={String(item.votesCount ?? 0)}/>
+            <VoteButton id={item.id} votesCount={item.votesCount}/>
             {/* <ItemButton /> */}
         </div>
     )

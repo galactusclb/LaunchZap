@@ -44,7 +44,12 @@ export const getProductsSchema = {
     query: productFilterSchema
 }
 
-export type Product = z.infer<typeof baseProductSchema>;
-export type ProductOject = z.infer<typeof productResponseSchema>;
+export const voteProductSchema = {
+    params: z.object({ id: z.coerce.number() })
+}
+
+// export type Product = z.infer<typeof baseProductSchema>;
+export type Product = z.infer<typeof productResponseSchema>;
 export type CreateProduct = z.infer<typeof createProductSchema.body>;
+export type VoteProduct = z.infer<typeof voteProductSchema.params>;
 export type ProductFilterQuery = z.infer<typeof productFilterSchema>;

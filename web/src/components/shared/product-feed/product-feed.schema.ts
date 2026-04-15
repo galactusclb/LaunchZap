@@ -23,7 +23,7 @@ export const createProductSchema = {
 };
 
 export const productResponseSchema = baseProductSchema.extend({
-    id: z.number(),
+    id: z.string(),
     createdAt: z.date(),
     updatedAt: z.date(),
 

@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma/prisma.ts"
 import { CreateProduct, ProductFilterQuery } from "./product.schema"
-import { Prisma } from "@/lib/prisma/generated/client"
+import { Prisma, PrismaClient, Product, User, Vote } from "@/lib/prisma/generated/client"
 import { paginate } from "@/utils/paginate-helpers"
 import { categoryFilter, getDateRange } from "./product.utils"
 import { getProductInclude } from "./product.dto"
@@ -37,9 +37,9 @@ export const findAll = async (query: ProductFilterQuery) => {
         }),
         prisma.product.count({where})
     ]);
-    
-    const sorted = data.sort((a,b)=>a._count.votes - b._count.votes)
-    return {data: sorted, total}
+
+    const sorted = data.sort((a, b) => b._count.votes - a._count.votes)
+    return { data: sorted, total }
 }
 
 export const findByName = async (name: string)=>{
@@ -58,6 +58,32 @@ export const createProduct = async (input: CreateProduct)=>{
             tagline: input.tagline,
             websiteUrl: input.websiteUrl,
             launchDate: input.launchDate,
+        }
+    })
+}
+
+export const findVote = async (userId: User['id'], productId: Product['id'], prismaIntance: PrismaClient | Prisma.TransactionClient = prisma) => {
+    return await prisma.vote.findFirst({
+        where: { 
+            userId,
+            productId
+         }
+    })
+}
+
+export const removeVote = async (id: Vote['id'], prismaIntance: PrismaClient | Prisma.TransactionClient = prisma)=>{
+    return await prisma.vote.delete({
+        where: {
+            id
+        }
+    })
+}
+
+export const createVote = async (userId: User['id'], productId: Product['id'], prismaIntance: PrismaClient | Prisma.TransactionClient = prisma)=>{
+    return await prisma.vote.create({
+        data: {
+            productId: productId,
+            userId: userId
         }
     })
 }

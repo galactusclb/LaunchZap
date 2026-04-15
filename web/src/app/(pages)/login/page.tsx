@@ -3,7 +3,7 @@ import { constants } from "@/utils/constants";
 
 
 function safeReturnTo(input: unknown): string {
-  if (typeof input !== "string") return "/dashboard";
+  if (typeof input !== "string") return "/";
   if (!input.startsWith("/")) return "/";
   if (input.startsWith("//")) return "/";
   return input;
