@@ -1,4 +1,4 @@
-import { LandingPageContainer } from "@/features/home/landing";
+import { LandingPageContainer } from "@/features/views/home/landing";
 
 export default function HomePage() {
 
