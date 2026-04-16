@@ -1,6 +1,6 @@
+import sanitizeHtml from 'sanitize-html';
 import z from "zod";
 
-import sanitizeHtml from 'sanitize-html';
 
 const trimmedString = z.string().trim();
 

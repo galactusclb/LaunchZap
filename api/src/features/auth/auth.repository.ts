@@ -1,6 +1,7 @@
+import { User } from "./auth.schema";
+
 import prisma from "@/lib/prisma/prisma";
 
-import { User } from "./auth.schema";
 
 export async function findUserByGoogleSub(sub?: string | null){
     if (!sub) return;

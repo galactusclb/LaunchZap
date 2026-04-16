@@ -1,8 +1,9 @@
-import { ProductStatus } from "@/prisma/client";
+import z from "zod";
+
 import { trimmedString } from "@/lib/zod/extras.ts";
+import { ProductStatus } from "@/prisma/client";
 import { paginationSchema, sortSchema } from "@/schemas/pagination.schema";
 
-import z from "zod";
 
 export const baseProductSchema = z.object({
     name: trimmedString.min(1).max(100),

@@ -1,15 +1,13 @@
-import { routes as productRoutes } from '@/features/product';
-import { routes as authRoutes } from '@/features/auth';
-import { routes as userRoutes } from "@/features/user";
-import { errorHandler } from '@/middleware/error.middleware.ts';
 
 import cookieParser from 'cookie-parser';
-
 import cors from 'cors';
-
 import express, { Request, Response } from 'express';
-
 import rateLimit from 'express-rate-limit';
+
+import { routes as authRoutes } from '@/features/auth';
+import { routes as productRoutes } from '@/features/product';
+import { routes as userRoutes } from "@/features/user";
+import { errorHandler } from '@/middleware/error.middleware.ts';
 
 const app = express();
 const apiRouter = express.Router();

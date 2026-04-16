@@ -1,11 +1,12 @@
-import { ConflictError } from '@/utils/errors/http-error.ts';
-import { paginatedResponse } from '@/utils/paginate-helpers.ts';
-import prisma from '@/lib/prisma/prisma.ts';
 
 import { User } from '../auth/auth.schema.ts';
 
 import * as repo from './product.repository.ts';
-import { CreateProduct, Product, ProductFilterQuery, VoteProduct } from './product.schema.ts';
+import { CreateProduct, Product, ProductFilterQuery } from './product.schema.ts';
+
+import prisma from '@/lib/prisma/prisma.ts';
+import { ConflictError } from '@/utils/errors/http-error.ts';
+import { paginatedResponse } from '@/utils/paginate-helpers.ts';
 
 export const doGetAllProducts = async (query: ProductFilterQuery) => {
     const { data, total } = await repo.findAll(query);

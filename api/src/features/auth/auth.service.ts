@@ -1,4 +1,11 @@
-import prisma from '@/lib/prisma/prisma.ts';
+
+import { randomPKCECodeVerifier, calculatePKCECodeChallenge, buildAuthorizationUrl, authorizationCodeGrant } from 'openid-client';
+
+import { createUser, findUserByEmail, findUserByGoogleSub, updateUserByEmail, updateUserById } from './auth.repository.ts';
+import { User } from './auth.schema.ts';
+import { getGoogleOAuthConfig, getGoogleOIDCConfig } from './utils/google-oauth.config.ts';
+import { saveGoogleOAuthState, consumeGoogleOAuthState } from './utils/google-oauth.store.ts';
+
 import { signAccessToken } from '@/lib/auth/access-jwt.ts';
 import {
   getRefreshSession,
@@ -8,15 +15,8 @@ import {
   saveRefreshSession,
 } from '@/lib/auth/refresh-store.ts';
 import { sha256Hex, randomToken } from '@/lib/auth/token-utils.ts';
+import prisma from '@/lib/prisma/prisma.ts';
 import { redisClient } from '@/lib/redis/redis-client.ts';
-
-import { randomPKCECodeVerifier, calculatePKCECodeChallenge, buildAuthorizationUrl, authorizationCodeGrant } from 'openid-client';
-
-import { createUser, findUserByEmail, findUserByGoogleSub, updateUserByEmail, updateUserById } from './auth.repository.ts';
-import { User } from './auth.schema.ts';
-
-import { getGoogleOAuthConfig, getGoogleOIDCConfig } from './utils/google-oauth.config.ts';
-import { saveGoogleOAuthState, consumeGoogleOAuthState } from './utils/google-oauth.store.ts';
 
 export async function upsertGoogleUser(profile: Pick<User, "email" | "googleSub" | "name" | "pictureUrl">) {
   const existingBySub = await findUserByGoogleSub(profile.googleSub);

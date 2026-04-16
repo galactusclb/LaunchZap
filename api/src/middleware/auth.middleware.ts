@@ -1,6 +1,7 @@
+import { NextFunction, Request, Response } from 'express';
+
 import { verifyAccessToken } from '@/lib/auth/access-jwt.ts';
 
-import { NextFunction, Request, Response } from 'express';
 
 export type Permission = string;
 

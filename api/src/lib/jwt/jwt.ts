@@ -1,8 +1,9 @@
 
-import { Role } from '@/utils/constant/role.ts';
-import { constants } from '@/utils/constant';
-
 import jwt from 'jsonwebtoken';
+
+import { constants } from '@/utils/constant';
+import { Role } from '@/utils/constant/role.ts';
+
 
 const {ACCESS_SECRET, REFRESH_SECRET} = constants.auth
 

@@ -6,7 +6,6 @@ import {
   handleTokenRefresh, 
   handleLogout 
 } from './auth.service.ts';
-
 import { clearAuthCookies, setAuthCookies } from './utils/auth.cookies.ts';
 
 function safeReturnTo(input: unknown): string {

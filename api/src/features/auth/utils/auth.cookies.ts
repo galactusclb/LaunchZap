@@ -1,6 +1,7 @@
+import type { CookieOptions, Response } from 'express';
+
 import { constants } from '@/utils/constant';
 
-import type { CookieOptions, Response } from 'express';
 
 const isProd = constants.NODE_ENV;
 

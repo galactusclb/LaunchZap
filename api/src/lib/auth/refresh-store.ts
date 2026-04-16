@@ -1,7 +1,8 @@
-import type { Redis as RedisClient } from 'ioredis';
 
 import { kvDel, kvGet, kvSetEx } from './kv-store.ts';
 import { randomToken, sha256Hex } from './token-utils.ts';
+
+import type { Redis as RedisClient } from 'ioredis';
 
 export type RefreshSession = {
   userId: string;

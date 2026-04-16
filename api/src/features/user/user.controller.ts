@@ -1,5 +1,7 @@
 import { Request, Response } from "express"
+
 import { User } from "../auth/auth.schema";
+
 import * as service from "./user.service"
 
 export const getVotedPosts = async (req: Request, res: Response) =>{
