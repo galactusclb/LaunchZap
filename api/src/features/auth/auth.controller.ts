@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 import { 
   handleGoogleOAuthStart, 
@@ -15,13 +15,13 @@ function safeReturnTo(input: unknown): string {
   return input;
 }
 
-const googleStart = async (req: Request, res: Response, next: NextFunction) => {
+const googleStart = async (req: Request, res: Response) => {
   const returnTo = safeReturnTo(req.query.returnTo);
   const authUrl = await handleGoogleOAuthStart(returnTo);
   res.redirect(authUrl);
 };
 
-const googleCallback = async (req: Request, res: Response, next: NextFunction) => {
+const googleCallback = async (req: Request, res: Response) => {
   const state = typeof req.query.state === 'string' ? req.query.state : null;
 
   if (!state) {
@@ -58,7 +58,7 @@ const refresh = async (req: Request, res: Response) => {
 };
 
 const me = async (req: Request, res: Response) => {
-  const user = (req as any).user;
+  const user = req.user;
   if (!user) {
     res.status(401).json({ error: 'Not authenticated' });
     return;
@@ -66,7 +66,7 @@ const me = async (req: Request, res: Response) => {
   res.json(user);
 };
 
-const logout = async (req: Request, res: Response, next: NextFunction) => {
+const logout = async (req: Request, res: Response) => {
   const token = req.cookies?.refresh_token as string | undefined;
   await handleLogout(token);
   clearAuthCookies(res);

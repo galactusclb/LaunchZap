@@ -1,5 +1,5 @@
 
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 import { AppError } from '../utils/errors/app-errors.ts';
 import { HttpError } from '../utils/errors/http-error.ts';
@@ -9,8 +9,7 @@ import { Prisma } from '@/prisma/client';
 export function errorHandler(
     err: unknown,
     req: Request,
-    res: Response,
-    next: NextFunction
+    res: Response
 ) {
     console.error('[Error]', err);
 

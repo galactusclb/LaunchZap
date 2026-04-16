@@ -51,7 +51,7 @@ export async function rotateRefreshToken(refreshToken: string) {
   const { token: newRefreshToken, tokenHash: newTokenHash } = issueRefreshToken();
   await rotateRefreshSession(redisClient, tokenHash, newTokenHash, session);
 
-  const userModel = (prisma as any).user;
+  const userModel = prisma.user;
   const user = await userModel.findUnique({ where: { id: session.userId } });
   if (!user) return null;
 

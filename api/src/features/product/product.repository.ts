@@ -2,7 +2,7 @@ import { getProductInclude } from "./product.dto"
 import { CreateProduct, ProductFilterQuery } from "./product.schema"
 import { categoryFilter, getDateRange } from "./product.utils"
 
-import { Prisma, PrismaClient, Product, User, Vote } from "@/lib/prisma/generated/client"
+import { Prisma, Product, User, Vote } from "@/lib/prisma/generated/client"
 import prisma from "@/lib/prisma/prisma.ts"
 import { paginate } from "@/utils/paginate-helpers"
 
@@ -64,8 +64,8 @@ export const createProduct = async (input: CreateProduct)=>{
     })
 }
 
-export const findVote = async (userId: User['id'], productId: Product['id'], prismaIntance: PrismaClient | Prisma.TransactionClient = prisma) => {
-    return await prisma.vote.findFirst({
+export const findVote = async (userId: User['id'], productId: Product['id'], prismaIntance: Prisma.TransactionClient = prisma) => {
+    return await prismaIntance.vote.findFirst({
         where: { 
             userId,
             productId
@@ -73,16 +73,16 @@ export const findVote = async (userId: User['id'], productId: Product['id'], pri
     })
 }
 
-export const removeVote = async (id: Vote['id'], prismaIntance: PrismaClient | Prisma.TransactionClient = prisma)=>{
-    return await prisma.vote.delete({
+export const removeVote = async (id: Vote['id'], prismaIntance: Prisma.TransactionClient = prisma)=>{
+    return await prismaIntance.vote.delete({
         where: {
             id
         }
     })
 }
 
-export const createVote = async (userId: User['id'], productId: Product['id'], prismaIntance: PrismaClient | Prisma.TransactionClient = prisma)=>{
-    return await prisma.vote.create({
+export const createVote = async (userId: User['id'], productId: Product['id'], prismaIntance: Prisma.TransactionClient = prisma)=>{
+    return await prismaIntance.vote.create({
         data: {
             productId: productId,
             userId: userId

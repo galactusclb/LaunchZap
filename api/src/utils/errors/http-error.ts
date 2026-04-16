@@ -44,6 +44,7 @@ class ConflictError extends HttpError {
 class InternalServerError extends HttpError {
     constructor(message = "Internal server error", details?: unknown) {
         super(500, message);
+        this.details = details
     }
 }
 
