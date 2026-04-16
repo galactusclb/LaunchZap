@@ -1,16 +1,28 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { constants } from '@/utils/constants';
 
 export default function Header() {
-    const { user, isLoading } = useAuthStore();
+    const { user, isLoading, clearUser } = useAuthStore();
+    const router = useRouter();
+
+    async function handleLogout() {
+        await fetch(`${constants.API.BROWSER_URL}/auth/logout`, {
+            method: 'POST',
+            credentials: 'include',
+        });
+        clearUser();
+        router.push('/login');
+    }
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm">
-            <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+        <header className="fixed top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm">
+            <div className="mx-auto h-16 flex max-w-7xl items-center justify-between px-4 py-3">
                 <Link href="/" className="text-lg font-bold text-primary">
                     LaunchZap
                 </Link>
@@ -19,11 +31,16 @@ export default function Header() {
                     {isLoading ? (
                         <div className="size-8 animate-pulse rounded-full bg-gray-200" />
                     ) : user ? (
-                        <Avatar className="size-8 cursor-pointer">
-                            <AvatarFallback className="bg-purple-100 text-sm font-semibold">
-                                {user.email.charAt(0).toUpperCase()}
-                            </AvatarFallback>
-                        </Avatar>
+                        <>
+                            <Avatar className="size-8">
+                                <AvatarFallback className="bg-purple-100 text-sm font-semibold">
+                                    {user.email.charAt(0).toUpperCase()}
+                                </AvatarFallback>
+                            </Avatar>
+                            <Button variant="ghost" size="sm" onClick={handleLogout}>
+                                Logout
+                            </Button>
+                        </>
                     ) : (
                         <Button asChild size="sm">
                             <Link href="/login">Login</Link>
