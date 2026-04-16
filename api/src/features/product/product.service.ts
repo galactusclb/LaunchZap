@@ -31,7 +31,7 @@ export const doVoteProduct = async (userId: User['id'], productId: Product['id']
             return { isUpvoted: false };
         }
 
-        const res = await repo.createVote(userId, productId, tx);
+        await repo.createVote(userId, productId, tx);
         
         return { isUpvoted: true };
     });

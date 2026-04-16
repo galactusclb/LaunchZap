@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { User } from "@/features/auth/auth.schema";
 
 declare global {
   namespace Express {
@@ -7,7 +7,7 @@ declare global {
       validatedBody?: unknown;
       validatedParams?: unknown;
       validatedHeaders?: unknown;
-      user?: unknown
+      user?: Pick<User, "id" | "role" | "email">
     }
   }
 }

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { verifyAccessToken } from '@/lib/auth/access-jwt.ts';
+import { Role } from '@/utils/constant/role';
 
-
-export type Permission = string;
+export type Permission = Role;
 
 export const isAuth = (req: Request, res: Response, next: NextFunction) => {
   console.log('cookies', req.cookies)
@@ -25,8 +25,12 @@ export const isAuth = (req: Request, res: Response, next: NextFunction) => {
 
 export const permit = (...required: Permission[]) =>
   (req: Request, res: Response, next: NextFunction) => {
-    const userPerms: string[] = (req as any).user.perms || [];
-    const ok = required.every(p => userPerms.includes(p));
+    if (!req.user) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
+
+    const ok = required.includes(req.user.role);
     if (!ok) {
       res.status(403).json({ error: 'Forbidden' });
       return;
