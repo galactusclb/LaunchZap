@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowBigUp } from "lucide-react";
+import { ArrowBigUp, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ItemButtonProps {
@@ -22,7 +22,7 @@ export default function ItemButton({ value, isVoted, onClick, disabled }: ItemBu
 			onClick={onClick}
 			disabled={disabled}>
 			<ArrowBigUp className={cn(isVoted && "fill-orange-400")} />
-			{value}
+			{Number(value) < 1 ? <Minus /> : value}
 		</Button>
 	);
 }
