@@ -1,5 +1,7 @@
 import z from "zod";
 
+import { userSchema } from "../auth/auth.schema";
+
 import { trimmedString } from "@/lib/zod/extras.ts";
 import { ProductStatus } from "@/prisma/client";
 import { paginationSchema, sortSchema } from "@/schemas/pagination.schema";
@@ -21,9 +23,9 @@ export const productResponseSchema = baseProductSchema.extend({
     updatedAt: z.date(),
 
     status: z.nativeEnum(ProductStatus),
-    maker: z.object({
-        id: z.string(),
-        name: z.string()
+    maker: userSchema.pick({
+        id: true,
+        name: true
     }),
 
     votesCount: z.number()
