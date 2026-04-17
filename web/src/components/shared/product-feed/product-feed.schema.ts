@@ -1,1 +1,1 @@
-export * from "@/features/product/product.schema";
+export * from "@/models/product.schema";

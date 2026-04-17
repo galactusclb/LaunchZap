@@ -1,6 +1,6 @@
 import { cacheLife } from "next/cache"
 import { constants } from "@/utils/constants"
-import { Product, ProductListFullResponse } from "@/components/shared/product-feed"
+import { Product, ProductListFullResponse } from "@/models/product.schema"
 
 async function fetchProducts(endpoint: string): Promise<Product[]> {
     const response = await fetch(`${constants.API.URL}${endpoint}`)

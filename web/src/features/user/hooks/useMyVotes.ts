@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/store/auth.store";
 import { constants } from "@/utils/constants";
 import { useQuery } from "@tanstack/react-query";
-import { myVotesResponseSchema } from "../user.schema";
+import { myVotesResponseSchema } from "@/models/user.schema";
 
 export default function useMyVotes(){
     const user = useAuthStore(store=>store.user);

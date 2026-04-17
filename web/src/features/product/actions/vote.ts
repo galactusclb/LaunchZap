@@ -1,4 +1,4 @@
-import { Product } from "@/components/shared/product-feed";
+import { Product } from "@/models/product.schema";
 import { constants } from "@/utils/constants";
 import z from "zod";
 
