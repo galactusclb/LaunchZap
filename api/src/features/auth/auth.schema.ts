@@ -1,29 +1,41 @@
-import z from "zod";
+import z from 'zod';
 
-import { Roles } from "@/prisma/client"
+import { trimmedString, normalizedEmail } from '@/lib/zod/extras';
+import { Roles } from '@/prisma/client';
 
-const baseUserSchema = z.object({
-    name: z.string().min(3).max(30).regex(/^[a-zA-Z0-9_]+$/, {
-        message: "Name can only contain letters, numbers, and underscores",
+
+export const baseSchema = z.object({
+    name:       trimmedString.min(3).max(30).regex(/^[a-zA-Z0-9_]+$/, {
+        message: 'Name can only contain letters, numbers, and underscores',
     }),
-    email: z.string().email(),
-    emailVerified: z.boolean().default(false),
-    googleSub: z.string().optional(),
+    email:      normalizedEmail,
     pictureUrl: z.string().url().optional(),
-    role: z.nativeEnum(Roles)
 });
 
-export const userSchema = baseUserSchema.extend({
-  id: z.string().cuid(),
-  lastLoginAt: z.date().optional(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+export const userSchema = baseSchema.extend({
+    id:            z.string().cuid(),
+    emailVerified: z.boolean(),
+    googleSub:     z.string().optional(),
+    role:          z.nativeEnum(Roles),
+    lastLoginAt:   z.date().optional(),
+    createdAt:     z.date(),
+    updatedAt:     z.date(),
 });
 
-export const createUserSchema = baseUserSchema;
 
-export const updateUserSchema = baseUserSchema.partial();
+export const createUserSchema = {
+    body: baseSchema,
+};
 
-export type User = z.infer<typeof userSchema>;
-export type CreateUserInput = z.infer<typeof createUserSchema>;
-export type UpdateUserInput = z.infer<typeof updateUserSchema>;
+export const updateUserSchema = {
+    params: z.object({ id: z.string().cuid() }),
+    body:   baseSchema.partial(),
+};
+
+export const getUserSchema = {
+    params: z.object({ id: z.string().cuid() }),
+};
+
+export type User       = z.infer<typeof userSchema>;
+export type CreateUser = z.infer<typeof createUserSchema.body>;
+export type UpdateUser = z.infer<typeof updateUserSchema.body>;
