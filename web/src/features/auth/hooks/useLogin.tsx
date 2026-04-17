@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import loginAction, { LoginState } from "../actions/login";
-import { startTransition, useActionState } from "react";
+import { startTransition, useActionState, useEffect } from "react";
 
 const formSchema = z.object({
 	email: z
@@ -29,23 +29,27 @@ export default function useLogin() {
 		}
 	});
 
-	async function onSubmit(data: z.infer<typeof formSchema>) {
-		console.log(data);
-		try {
-			const formData = new FormData();
-			formData.append('email', data.email);
-			formData.append('password', data.password);
+	function onSubmit(data: z.infer<typeof formSchema>) {
+		const formData = new FormData();
+		formData.append('email', data.email);
+		formData.append('password', data.password);
 
-			startTransition(()=>{
-				formAction(formData)
-			})
-			console.log('Success');
-			
-		} catch (error) {
-			console.error('Error');
-			
-		}
+		startTransition(()=>{
+			formAction(formData)
+		});
 	}
+
+	// React to the resolved state here
+	useEffect(() => {
+	if (state.success) {
+		// handle success: redirect, toast, etc.
+	}
+
+	if (state.error) {
+		// handle error: show toast, set form error, etc.
+		// toast.error(state.error);
+	}
+	}, [state]);
 
 	return {
 		form,

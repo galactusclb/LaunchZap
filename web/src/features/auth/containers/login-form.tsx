@@ -14,19 +14,15 @@ import {
 } from "@/components/ui/card";
 import {
 	Field,
-	FieldDescription,
 	FieldError,
 	FieldGroup,
 	FieldLabel,
 } from "@/components/ui/field";
 
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import useLogin from "../hooks/useLogin";
 import ImageWrapper from "./image-wrapper";
 
-// The Easiest Contact Form With Next.js 16 (Server Actions + DB + Tests)
-// https://youtu.be/R1RMNHHXNn0
 export default function LoginForm() {
 	const { form, onSubmit, state, isPending } = useLogin();
 

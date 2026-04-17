@@ -2,7 +2,8 @@
 
 export type LoginState = {
     success: boolean
-    message?: string
+    message?: string,
+    error?: string
 }
 
 export default async function loginAction(prevState: LoginState, formData: FormData): Promise<LoginState>{
