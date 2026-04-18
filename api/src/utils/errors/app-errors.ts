@@ -4,6 +4,16 @@ export type AppErrorCode =
     | "DB_ERROR"
     | "UNKNOWN_ERROR";
 
+export class IsAuthMiddlewareMissingError extends Error {
+    constructor(route?: string) {
+        super(
+            `[IsAuthMiddlewareMissingError] req.user is undefined${route ? ` on route "${route}"` : ''}. ` +
+            `Did you forget to add the isAuth middleware?`
+        );
+        Object.setPrototypeOf(this, new.target.prototype);
+    }
+}
+
 export class AppError extends Error {
     code: AppErrorCode;
     details?: unknown;

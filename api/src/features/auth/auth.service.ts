@@ -1,7 +1,8 @@
 
 import { randomPKCECodeVerifier, calculatePKCECodeChallenge, buildAuthorizationUrl, authorizationCodeGrant } from 'openid-client';
 
-import { createUser, findUserByEmail, findUserByGoogleSub, updateUserByEmail, updateUserById } from './auth.repository.ts';
+import { toMeDTO } from './auth.dto.ts';
+import { createUser, findMe, findUserByEmail, findUserByGoogleSub, updateUserByEmail, updateUserById } from './auth.repository.ts';
 import { User } from './auth.schema.ts';
 import { getGoogleOAuthConfig, getGoogleOIDCConfig } from './utils/google-oauth.config.ts';
 import { saveGoogleOAuthState, consumeGoogleOAuthState } from './utils/google-oauth.store.ts';
@@ -136,6 +137,11 @@ export async function handleGoogleCallback(originalUrl: string, state: string): 
 
 export async function handleTokenRefresh(refreshToken: string) {
   return await rotateRefreshToken(refreshToken);
+}
+
+export async function handleGetMe(id: string) {
+  const user = await findMe(id);
+  return user ? toMeDTO(user) : null;
 }
 
 export async function handleLogout(refreshToken?: string): Promise<void> {

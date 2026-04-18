@@ -52,7 +52,7 @@ export const findByName = async (name: string)=>{
     })
 }
 
-export const createProduct = async (input: CreateProduct)=>{
+export const createProduct = async (makerId: User['id'],input: CreateProduct)=>{
     return await prisma.product.create({
         data: {
             name: input.name,
@@ -60,6 +60,7 @@ export const createProduct = async (input: CreateProduct)=>{
             tagline: input.tagline,
             websiteUrl: input.websiteUrl,
             launchDate: input.launchDate,
+            makerId
         }
     })
 }

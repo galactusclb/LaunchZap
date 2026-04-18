@@ -1,4 +1,5 @@
 import { User } from "./auth.schema";
+import { getMeSelect } from "./auth.dto";
 
 import prisma from "@/lib/prisma/prisma";
 
@@ -47,6 +48,13 @@ export async function updateUserByEmail(
             lastLoginAt: new Date(),
         }
     })
+}
+
+export async function findMe(id: string) {
+    return prisma.user.findUnique({
+        where: { id },
+        ...getMeSelect,
+    });
 }
 
 export async function createUser(user:Pick<User, "name" | "email" | "googleSub" | "pictureUrl">) {

@@ -1,12 +1,15 @@
 import { Request, Response } from 'express';
 
-import { 
-  handleGoogleOAuthStart, 
-  handleGoogleCallback, 
-  handleTokenRefresh, 
-  handleLogout 
+import {
+  handleGoogleOAuthStart,
+  handleGoogleCallback,
+  handleTokenRefresh,
+  handleLogout,
+  handleGetMe,
 } from './auth.service.ts';
 import { clearAuthCookies, setAuthCookies } from './utils/auth.cookies.ts';
+
+import { requireAuth } from '@/middleware/auth.middleware.ts';
 
 function safeReturnTo(input: unknown): string {
   if (typeof input !== 'string') return '/';
@@ -58,12 +61,14 @@ const refresh = async (req: Request, res: Response) => {
 };
 
 const me = async (req: Request, res: Response) => {
-  const user = req.user;
-  if (!user) {
-    res.status(401).json({ error: 'Not authenticated' });
+  const user = requireAuth(req);
+  const data = await handleGetMe(user.id);
+  
+  if (!data) {
+    res.status(401).json({ error: 'Profile not found' });
     return;
   }
-  res.json(user);
+  res.json(data);
 };
 
 const logout = async (req: Request, res: Response) => {

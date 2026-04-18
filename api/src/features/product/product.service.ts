@@ -13,12 +13,12 @@ export const doGetAllProducts = async (query: ProductFilterQuery) => {
     return paginatedResponse(data, total, query);
 };
 
-export const doCreateProduct = async (input: CreateProduct) => {
+export const doCreateProduct = async (makerId: string,input: CreateProduct) => {
     const isExist = await repo.findByName(input.name);
 
     if (isExist) throw new ConflictError("Product is already exist!");
 
-    return await repo.createProduct(input);
+    return await repo.createProduct(makerId, input);
 };
 
 export const doVoteProduct = async (userId: User['id'], productId: Product['id']) => {

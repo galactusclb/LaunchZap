@@ -1,7 +1,7 @@
 
 import { Request, Response } from 'express';
 
-import { AppError } from '../utils/errors/app-errors.ts';
+import { AppError, IsAuthMiddlewareMissingError } from '../utils/errors/app-errors.ts';
 import { HttpError } from '../utils/errors/http-error.ts';
 
 import { Prisma } from '@/prisma/client';
@@ -16,6 +16,11 @@ export function errorHandler(
     let statusCode = 500;
     let message = 'Internal server error';
     let details: unknown;
+
+    if (err instanceof IsAuthMiddlewareMissingError) {
+        console.error('[Implementation Bug]', err.message);
+        return res.status(500).json({ success: false, error: 'Something went wrong' });
+    }
 
     if (isPrismaError(err)) {
         return res.status(500).json({

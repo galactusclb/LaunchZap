@@ -11,7 +11,7 @@ const router = Router();
 
 router.get('/', validate(getProductsSchema), getAllProducts);
 router.get('/:id', getProductById);
-router.post('/', validate(createProductSchema), createProduct);
+router.post('/', isAuth, validate(createProductSchema), createProduct);
 // router.put('/:id', validate(createProductSchema), updateProduct);
 router.patch('/:id/vote', isAuth, validate(voteProductSchema) ,toggleVote);
 

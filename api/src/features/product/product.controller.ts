@@ -5,6 +5,7 @@ import { User } from "../auth/auth.schema.ts";
 import { toProductDTO } from "./product.dto.ts";
 import { CreateProduct, ProductFilterQuery, VoteProduct } from "./product.schema.ts";
 import * as service from "./product.service.ts";
+import { requireAuth } from "@/middleware/auth.middleware.ts";
 
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
     const result = await service.doGetAllProducts(req.validatedQuery as ProductFilterQuery);
@@ -17,7 +18,9 @@ export const getProductById = async (req: Request, res: Response): Promise<void>
 }
 
 export const createProduct = async (req: Request, res: Response): Promise<void> =>{
-    const product = await service.doCreateProduct(req.validatedBody as CreateProduct);
+    const user = requireAuth(req);
+
+    const product = await service.doCreateProduct(user.id, req.validatedBody as CreateProduct);
 
     res.status(201).json({success: true, data: product})
 }
