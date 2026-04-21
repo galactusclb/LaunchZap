@@ -1,15 +1,10 @@
 import { create } from 'zustand';
-
-export type AuthUser = {
-    id: string;
-    email: string;
-    role: string;
-};
+import { type User } from '@/models/user.schema';
 
 type AuthState = {
-    user: AuthUser | null;
+    user: User | null;
     isLoading: boolean;
-    setUser: (user: AuthUser) => void;
+    setUser: (user: User) => void;
     clearUser: () => void;
     setLoading: (loading: boolean) => void;
 };

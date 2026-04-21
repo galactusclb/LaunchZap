@@ -68,7 +68,7 @@ const me = async (req: Request, res: Response) => {
     res.status(401).json({ error: 'Profile not found' });
     return;
   }
-  res.json(data);
+  res.status(200).json({success: true, data});
 };
 
 const logout = async (req: Request, res: Response) => {

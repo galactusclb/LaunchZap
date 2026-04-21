@@ -1,5 +1,6 @@
-import { ApiResponseSchema } from "@/models/api.interface";
+import { ApiResponseSchema } from "@/models/api.schema";
 import z from "zod";
+import { userResponseSchema } from "./user.schema";
 
 export enum ProductStatus {
     PENDING = "PENDING",
@@ -13,20 +14,20 @@ export const baseProductSchema = z.object({
     description: z.string().max(1000).optional(),
 
     websiteUrl: z.url(),
-    logoUrl: z.url().optional(),
+    logoUrl: z.url().nullable().optional(),
     launchDate: z.coerce.date()
 });
 
 export const productResponseSchema = baseProductSchema.extend({
     id: z.number(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
+    createdAt: z.coerce.date(),
+    updatedAt: z.coerce.date().optional(),
 
     status: z.enum(ProductStatus),
-    maker: z.object({
-        id: z.string(),
-        name: z.string()
-    }).optional(),
+    maker: userResponseSchema.pick({
+        id: true,
+        name: true
+    }).nullable().optional(),
 
     votesCount: z.number()
 });

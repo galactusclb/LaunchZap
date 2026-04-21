@@ -1,9 +1,25 @@
-import { ApiResponseSchema } from "@/models/api.interface";
+import { ApiResponseSchema } from "@/models/api.schema";
 import z from "zod";
-import { productResponseSchema } from "./product.schema";
 
-export const myVotesResponseSchema = ApiResponseSchema.extend({
-    data: z.array(z.object({ productId: productResponseSchema.shape.id }))
+export enum UserRole {
+    USER  = 'USER',
+    ADMIN = 'ADMIN',
+}
+
+export const baseUserSchema = z.object({
+    email:      z.email(),
+    name:       z.string(),
+    pictureUrl: z.url().optional(),
 });
 
-export type MyVotesResponse = z.infer<typeof myVotesResponseSchema>;
+export const userResponseSchema = baseUserSchema.extend({
+    id:   z.string(),
+    role: z.enum(UserRole),
+});
+
+export const meFullResponseSchema = ApiResponseSchema.extend({
+    data: userResponseSchema,
+});
+
+export type User           = z.infer<typeof userResponseSchema>;
+export type MeFullResponse = z.infer<typeof meFullResponseSchema>;

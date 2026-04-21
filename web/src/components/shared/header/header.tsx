@@ -4,7 +4,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { constants } from '@/utils/constants';
 
 export default function Header() {
@@ -32,14 +39,28 @@ export default function Header() {
                         <div className="size-8 animate-pulse rounded-full bg-gray-200" />
                     ) : user ? (
                         <>
-                            <Avatar className="size-8">
-                                <AvatarFallback className="bg-purple-100 text-sm font-semibold">
-                                    {user.email.charAt(0).toUpperCase()}
-                                </AvatarFallback>
-                            </Avatar>
-                            <Button variant="ghost" size="sm" onClick={handleLogout}>
-                                Logout
+                            <Button asChild size="sm" variant="outline">
+                                <Link href="/submit">Submit</Link>
                             </Button>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Avatar className="size-8 cursor-pointer">
+                                        <AvatarImage src={user?.pictureUrl}/>
+                                        <AvatarFallback className="bg-purple-100 text-sm font-semibold">
+                                            {user.email.charAt(0).toUpperCase()}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem className="text-muted-foreground text-xs" disabled>
+                                        {user.email}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                                        Logout
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </>
                     ) : (
                         <Button asChild size="sm">

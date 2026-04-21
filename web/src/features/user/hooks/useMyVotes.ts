@@ -1,7 +1,13 @@
 import { useAuthStore } from "@/store/auth.store";
 import { constants } from "@/utils/constants";
 import { useQuery } from "@tanstack/react-query";
-import { myVotesResponseSchema } from "@/models/user.schema";
+import { ApiResponseSchema } from "@/models/api.schema";
+import z from "zod";
+import { productResponseSchema } from "@/models/product.schema";
+
+const myVotesResponseSchema = ApiResponseSchema.extend({
+    data: z.array(z.object({ productId: productResponseSchema.shape.id }))
+});
 
 export default function useMyVotes(){
     const user = useAuthStore(store=>store.user);
