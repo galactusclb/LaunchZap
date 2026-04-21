@@ -1,6 +1,6 @@
 'use client'
 
-import { ComponentType, ReactNode } from "react";
+import { ComponentType, ErrorInfo, ReactNode } from "react";
 import { FallbackProps, ErrorBoundary as ReactErrorBoundary } from "react-error-boundary"
 import DefaultErrorFallback from "./default-error-fallback";
 
@@ -14,8 +14,12 @@ export default function ErrorBoundary({
     fallback = DefaultErrorFallback
  }: ErrorBoundaryProps) {
 
+    function handleError(error: unknown, info: ErrorInfo) {
+        console.error("[ErrorBoundary]", error, info.componentStack)
+    }
+
     return (
-        <ReactErrorBoundary FallbackComponent={fallback}>
+        <ReactErrorBoundary FallbackComponent={fallback} onError={handleError}>
             {children}
         </ReactErrorBoundary>
     )
