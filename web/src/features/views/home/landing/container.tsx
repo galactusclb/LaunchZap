@@ -11,6 +11,7 @@ export default function LandingPageContainer() {
 						title: "Top Products Launching Today",
 						description: "For the first 4 hours of the day, we're hiding upvotes to help every product get a chance to catch your interest. Read more"
 					}}
+					endpoint="/products?q=daily"
 					fetcher={getDailyProducts} />
 			</FeedAsyncBoundary>
 			<FeedAsyncBoundary>
@@ -19,6 +20,7 @@ export default function LandingPageContainer() {
 						title: "This Week",
 						description: "For the first 4 hours of the day, we're hiding upvotes to help every product get a chance to catch your interest. Read more"
 					}}
+					endpoint="/products?q=weekly"
 					fetcher={getWeeklyProducts} />
 			</FeedAsyncBoundary>
 			<FeedAsyncBoundary>
@@ -27,6 +29,7 @@ export default function LandingPageContainer() {
 						title: "New Arrivals",
 						description: "For the first 4 hours of the day, we're hiding upvotes to help every product get a chance to catch your interest. Read more"
 					}}
+					endpoint="/products?q=new"
 					fetcher={getNewProducts} />
 			</FeedAsyncBoundary>
 		</div>
