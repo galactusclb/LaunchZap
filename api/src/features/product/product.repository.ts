@@ -44,6 +44,13 @@ export const findAll = async (query: ProductFilterQuery) => {
     return { data: sorted, total }
 }
 
+export const findById = async (id: Product['id'], prismaIntance: Prisma.TransactionClient = prisma) => {
+    return await prismaIntance.product.findFirst({
+        where: { id },
+        include: getProductInclude().include
+    })
+}
+
 export const findByName = async (name: string)=>{
     return await prisma.product.findFirst({
         where: {

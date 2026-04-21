@@ -5,8 +5,14 @@ import * as repo from './product.repository.ts';
 import { CreateProduct, Product, ProductFilterQuery } from './product.schema.ts';
 
 import prisma from '@/lib/prisma/prisma.ts';
-import { ConflictError } from '@/utils/errors/http-error.ts';
+import { ConflictError, NotFoundError } from '@/utils/errors/http-error.ts';
 import { paginatedResponse } from '@/utils/paginate-helpers.ts';
+
+export const doGetById = async (id: Product['id']) => {
+    const product = await repo.findById(id);
+    if (!product) throw new NotFoundError("Product not found");
+    return product;
+};
 
 export const doGetAllProducts = async (query: ProductFilterQuery) => {
     const { data, total } = await repo.findAll(query);
