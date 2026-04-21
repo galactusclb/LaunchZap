@@ -1,5 +1,15 @@
-export default function LaunchItemPage(){
+import { LaunchPageContainer } from "@/features/views/home/launch";
+import { LaunchPageContainerProps } from "@/features/views/home/launch/container";
+import { Suspense } from "react";
+
+export default async function LaunchItemPage({
+    params,
+}: {
+    params: LaunchPageContainerProps['params'];
+}) {
     return (
-        <>Launch Item Details</>
-    )
+        <Suspense>
+            <LaunchPageContainer params={params} />
+        </Suspense>
+    );
 }

@@ -1,27 +1,44 @@
 import { Button } from "@/components/ui/button";
 import { ArrowBigUp, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { cva, type VariantProps } from "class-variance-authority";
+import { MouseEvent } from "react";
 
-interface ItemButtonProps {
+const itemButtonVariants = cva(
+	"flex flex-col items-center justify-center gap-1 border-2 transition-all duration-300",
+	{
+		variants: {
+			size: {
+				default: "size-14 rounded-xl",
+				hero: "size-20 rounded-2xl text-base font-semibold",
+			},
+		},
+		defaultVariants: {
+			size: "default",
+		},
+	}
+);
+
+interface ItemButtonProps extends VariantProps<typeof itemButtonVariants> {
 	value: string;
 	isVoted?: boolean;
-	onClick?: () => void;
+	onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
 	disabled?: boolean;
 }
 
-export default function ItemButton({ value, isVoted, onClick, disabled }: ItemButtonProps) {
+export default function ItemButton({ value, isVoted, onClick, disabled, size }: ItemButtonProps) {
 	return (
 		<Button
-			variant={"outline"}
+			variant="outline"
 			className={cn(
-				"flex size-14 flex-col items-center justify-center gap-1 rounded-xl border-2 transition-all duration-300",
+				itemButtonVariants({ size }),
 				isVoted
 					? "border-orange-400 bg-orange-50 text-orange-500 hover:bg-orange-100 hover:text-orange-500"
 					: "border-gray-200"
 			)}
 			onClick={onClick}
 			disabled={disabled}>
-			<ArrowBigUp className={cn(isVoted && "fill-orange-400")} />
+			<ArrowBigUp className={cn(size === "hero" && "size-6", isVoted && "fill-orange-400")} />
 			{Number(value) < 1 ? <Minus /> : value}
 		</Button>
 	);

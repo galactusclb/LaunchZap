@@ -13,7 +13,11 @@ export default function VoteButton({ id, votesCount: initialVotes }: VoteButtonP
         <ItemButton
             value={String(votes)}
             isVoted={isVoted}
-            onClick={() => vote()}
+            onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                vote();
+            }}
             disabled={isPending}
         />
     );

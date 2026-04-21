@@ -19,7 +19,7 @@ export const baseProductSchema = z.object({
 });
 
 export const productResponseSchema = baseProductSchema.extend({
-    id: z.number(),
+    id: z.coerce.number(),
     createdAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
 
@@ -36,6 +36,16 @@ export const productListFullResponseSchema = ApiResponseSchema.extend({
     data: z.array(productResponseSchema)
 });
 
+export const productSingleResponseSchema = ApiResponseSchema.extend({
+    data: productResponseSchema.optional()
+});
+
+export const productIdParamSchema = productResponseSchema.pick({
+    id: true
+});
+
 export type Product = z.infer<typeof productResponseSchema>;
 export type ProductListFullResponse = z.infer<typeof productListFullResponseSchema>;
+export type ProductSingleResponse = z.infer<typeof productSingleResponseSchema>;
 export type CreateProduct = z.infer<typeof baseProductSchema>;
+export type ProductIdParam = z.infer<typeof productIdParamSchema>;

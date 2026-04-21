@@ -1,6 +1,6 @@
 import { cacheLife } from "next/cache"
 import { constants } from "@/utils/constants"
-import { ProductListFullResponse, productListFullResponseSchema } from "@/models/product.schema"
+import { Product, ProductListFullResponse, productListFullResponseSchema, productSingleResponseSchema } from "@/models/product.schema"
 
 export type ProductFeedResult = Pick<ProductListFullResponse, 'data' | 'meta'>
 
@@ -32,4 +32,16 @@ export async function getNewProducts(): Promise<ProductFeedResult> {
     cacheLife('minutes')
 
     return fetchProducts('/products?q=new')
+}
+
+export async function getProductById(id: number): Promise<Product> {
+    'use cache'
+    cacheLife('minutes')
+
+    const response = await fetch(`${constants.API.URL}/products/${id}`)
+    if (!response.ok) throw new Error(`Failed to fetch product ${id}`)
+
+    const { data } = productSingleResponseSchema.parse(await response.json())
+    if (!data) throw new Error(`Product ${id} not found`)
+    return data
 }
