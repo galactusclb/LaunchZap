@@ -1,5 +1,5 @@
-import { User } from "./auth.schema";
 import { getMeSelect } from "./auth.dto";
+import { User } from "./auth.schema";
 
 import prisma from "@/lib/prisma/prisma";
 
