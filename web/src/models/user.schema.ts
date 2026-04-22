@@ -1,4 +1,4 @@
-import { ApiResponseSchema } from "@/models/api.schema";
+import { apiResponseSchema } from "@/models/api-response.schema";
 import z from "zod";
 
 export enum UserRole {
@@ -17,9 +17,9 @@ export const userResponseSchema = baseUserSchema.extend({
     role: z.enum(UserRole),
 });
 
-export const meFullResponseSchema = ApiResponseSchema.extend({
-    data: userResponseSchema,
-});
+export const meFullResponseSchema = apiResponseSchema.single(userResponseSchema);
+
+export const logoutResponseSchema = apiResponseSchema.single(z.void())
 
 export type User           = z.infer<typeof userResponseSchema>;
 export type MeFullResponse = z.infer<typeof meFullResponseSchema>;

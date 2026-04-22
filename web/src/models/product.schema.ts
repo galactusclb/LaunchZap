@@ -1,4 +1,4 @@
-import { ApiResponseSchema } from "@/models/api.schema";
+import { apiResponseSchema } from "@/models/api-response.schema";
 import z from "zod";
 import { userResponseSchema } from "./user.schema";
 
@@ -32,13 +32,9 @@ export const productResponseSchema = baseProductSchema.extend({
     votesCount: z.number()
 });
 
-export const productListFullResponseSchema = ApiResponseSchema.extend({
-    data: z.array(productResponseSchema)
-});
+export const productListFullResponseSchema = apiResponseSchema.list(productResponseSchema);
 
-export const productSingleResponseSchema = ApiResponseSchema.extend({
-    data: productResponseSchema.optional()
-});
+export const productSingleResponseSchema = apiResponseSchema.single(productResponseSchema.optional());
 
 export const productIdParamSchema = productResponseSchema.pick({
     id: true

@@ -2,21 +2,21 @@
 
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { constants } from "@/utils/constants"
-import { PaginationMeta } from "@/models/api.schema"
 import { productListFullResponseSchema } from "@/models/product.schema"
 import ProductItem from "./product-item"
 import { Button } from "@/components/ui/button"
+import { ApiMeta } from "@/models/api-response.schema"
+import { apiGet } from "@/utils/api/api-client"
 
 interface ProductLoadMoreProps {
     endpoint: string
-    initialMeta: PaginationMeta
+    initialMeta: ApiMeta
 }
 
 const fetchPage = async (endpoint: string, page: number) => {
-    const res = await fetch(`${constants.API.BROWSER_URL}${endpoint}&page=${page}`)
-    if (!res.ok) throw new Error(`Failed to fetch page ${page}`)
-    const json = productListFullResponseSchema.parse(await res.json())
-    return { data: json.data ?? [], meta: json.meta }
+    const res = await apiGet(`/${endpoint}&page=${page}`, productListFullResponseSchema)
+    if (!res.success) throw new Error(`Failed to fetch page ${page}`)
+    return { data: res.data ?? [], meta: res.meta }
 }
 
 export default function ProductLoadMore({ endpoint, initialMeta }: ProductLoadMoreProps) {

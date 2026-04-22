@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
-import { constants } from '@/utils/constants';
-import { useAuthStore } from '@/store/auth.store';
 import { meFullResponseSchema } from '@/models/user.schema';
+import { useAuthStore } from '@/store/auth.store';
 
+import { apiGet } from '@/utils/api/api-client';
 import type { ReactNode } from 'react';
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
@@ -15,11 +15,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     const { data, isLoading } = useQuery({
         queryKey: ['me'],
         queryFn: async () => {
-            const res = await fetch(`${constants.API.BROWSER_URL}/auth/me`, {
-                credentials: 'include',
-            });
-            if (!res.ok) throw new Error('Unauthenticated');
-            return meFullResponseSchema.parse(await res.json()).data;
+            const res = await apiGet(`/auth/me`,meFullResponseSchema);
+            if (!res.success) throw new Error('Unauthenticated');
+            return res.data;
         },
         retry: false,
     });

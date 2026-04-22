@@ -1,5 +1,5 @@
 import { Product } from "@/models/product.schema";
-import { constants } from "@/utils/constants";
+import { apiPatch } from "@/utils/api/api-client";
 import z from "zod";
 
 const voteResponseSchema = z.object({
@@ -11,15 +11,11 @@ const voteResponseSchema = z.object({
 export type VoteResponse = z.infer<typeof voteResponseSchema>;
 
 export async function toggleVoteAction(productId: Product['id']): Promise<VoteResponse> {
-    const response = await fetch(`${constants.API.BROWSER_URL}/products/${productId}/vote`, {
-        method: 'PATCH',
-        credentials: 'include',
-    });
+    const response = await apiPatch(`/products/${productId}/vote`, {}, voteResponseSchema);
 
-    if (!response.ok) {
+    if (!response.success) {
         throw new Error("Vote failed")
     }
 
-    const json = await response.json();
-    return voteResponseSchema.parse(json);
+    return response;
 }

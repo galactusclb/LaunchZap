@@ -12,17 +12,15 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { constants } from '@/utils/constants';
+import { apiPost } from '@/utils/api/api-client';
+import { logoutResponseSchema } from '@/models/user.schema';
 
 export default function Header() {
     const { user, isLoading, clearUser } = useAuthStore();
     const router = useRouter();
 
     async function handleLogout() {
-        await fetch(`${constants.API.BROWSER_URL}/auth/logout`, {
-            method: 'POST',
-            credentials: 'include',
-        });
+        await apiPost(`/auth/logout`, {}, logoutResponseSchema);
         clearUser();
         router.push('/login');
     }
