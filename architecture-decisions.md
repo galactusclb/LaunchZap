@@ -1,0 +1,262 @@
+# Architecture Decisions — LaunchZap
+
+> Engineering decisions made during development, including the context, trade-offs, and implementation approach for each.
+
+**Highlights**
+- [6. AI Usage Optimizations](#6-ai-usage-optimizations) — Claude skill directory structure and reduced ~45% token wastage on Skills.
+
+---
+
+## 1. Hybrid SSR + Client Pagination
+
+### Decision
+Server components render and cache the first page of each product feed. A client component (`ProductLoadMore`) owns all subsequent pages, fetching them directly from the API on user interaction.
+
+### Context
+The product feed is the core of the landing page. It needed to be SEO-indexed, fast on first paint, and still support dynamic pagination without a full page reload. A purely client-side approach would lose SSR. A purely server-side approach (full page reloads or server actions per page) would break the UX. The hybrid solves both.
+
+### Flow
+
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant Next.js Server
+    participant Cache
+    participant API
+
+    Note over Browser,API: Phase 1 — Server (SSR)
+
+    Browser->>Next.js Server: GET /
+    Next.js Server->>Cache: getDailyProducts()  ['use cache']
+    alt Cache hit
+        Cache-->>Next.js Server: Product[] page 1
+    else Cache miss
+        Cache->>API: GET /products?q=daily&page=1
+        API-->>Cache: { data, meta }
+        Cache-->>Next.js Server: Product[] page 1
+    end
+    Next.js Server-->>Browser: HTML (page 1 items + ProductLoadMore mounted)
+
+    Note over Browser,API: Phase 2 — Client (Hydration + Interaction)
+
+    Browser->>Browser: React hydrates, useInfiniteQuery idle (enabled: false)
+    Browser->>Browser: User clicks "See all of top products"
+    Browser->>API: GET /products?q=daily&page=2  (direct, no server)
+    API-->>Browser: { data, meta }
+    Browser->>Browser: Append page 2 items below page 1
+    opt More pages exist
+        Browser->>API: GET /products?q=daily&page=3
+        API-->>Browser: { data, meta }
+        Browser->>Browser: Append page 3 items
+    end
+```
+
+### Implementation
+- `ProductFeedSection` — async server component, calls a cached fetcher, renders page 1, passes `endpoint` + `meta` as plain props to the client component
+- `ProductLoadMore` — client component, `useInfiniteQuery` with `enabled: false` (no automatic fetch), `initialPageParam: 2`, accumulates pages in state
+- The server component's `fetcher` returns `Pick<ProductListFullResponse, 'data' | 'meta'>` — reusing the existing schema type rather than defining a new one
+
+### Trade-offs
+
+| | |
+|---|---|
+| Page 1 is SSR, cached, SEO-indexed | Page 2+ are not indexed by crawlers |
+| First paint is fast — no client JS needed | Requires the API to support pagination params |
+| Cache can be invalidated independently per feed | `meta` being optional in the base schema requires a non-null assertion in the service |
+| `useInfiniteQuery` handles page accumulation cleanly | Adds TanStack Query as a dependency |
+
+---
+
+## 2. Graduated Cache TTLs Per Feed Type
+
+### Decision
+Each product feed function carries its own `'use cache'` directive with a `cacheLife` TTL matched to how often that feed's data meaningfully changes.
+
+```ts
+export async function getDailyProducts() {
+    'use cache'
+    cacheLife('hours')       // revalidates every few hours
+    return fetchProducts('/products?q=daily')
+}
+
+export async function getWeeklyProducts() {
+    'use cache'
+    cacheLife('days')        // revalidates once a day
+    return fetchProducts('/products?q=weekly')
+}
+
+export async function getNewProducts() {
+    'use cache'
+    cacheLife('minutes')     // revalidates frequently
+    return fetchProducts('/products?q=new')
+}
+```
+
+### Context
+A single global cache TTL would either over-cache "new arrivals" (stale data) or under-cache "top of the week" (wasted API calls). The TTL is a direct expression of expected mutation rate per feed.
+
+### Trade-offs
+
+| | |
+|---|---|
+| Each feed revalidates at the right frequency | More cache entries to manage and reason about |
+| Reduces unnecessary API calls for stable feeds | A "weekly" feed showing a stale product for hours is technically correct but may feel wrong |
+| `cacheLife` is declarative — no manual `revalidateTag` needed | Tied to Next.js cache infrastructure; harder to test in isolation |
+
+---
+
+## 3. Async Boundaries for Independent Streaming
+
+### Decision
+Each `ProductFeedSection` is individually wrapped in a `FeedAsyncBoundary` (Suspense boundary). Sections stream and resolve independently.
+
+```tsx
+<FeedAsyncBoundary>
+    <ProductFeedSection fetcher={getDailyProducts} ... />
+</FeedAsyncBoundary>
+<FeedAsyncBoundary>
+    <ProductFeedSection fetcher={getWeeklyProducts} ... />
+</FeedAsyncBoundary>
+```
+
+### Context
+Without boundaries, a slow database query for one feed would block the entire page from rendering. With per-section boundaries, each feed paints as soon as its data resolves — faster perceived load time even if total data fetch time is the same.
+
+### Trade-offs
+
+| | |
+|---|---|
+| Sections paint independently — faster perceived load | Each boundary adds a skeleton/loading state that needs design |
+| A slow feed doesn't block a fast one | More granular boundaries increase component nesting |
+| Pairs well with graduated TTLs — cache misses are isolated | Layout shift can occur if skeleton dimensions don't match content |
+
+---
+
+## 4. Zod as the Contract Layer on Both Ends
+
+### Decision
+The API validates all incoming query parameters through a Zod schema before they reach the controller. The web app parses all API responses through a matching Zod schema before the data is used. Zod enforces the contract at both boundaries.
+
+**API side** — request validation:
+```ts
+router.get('/', validate(getProductsSchema), getAllProducts)
+// req.validatedQuery is typed as ProductFilterQuery
+```
+
+**Web side** — response parsing:
+```ts
+const json = productListFullResponseSchema.parse(await response.json())
+```
+
+### Context
+Without schema validation on the API, a malformed query string can reach Prisma and cause a runtime error or unexpected query. Without parsing on the web, an unexpected API shape (a missing field, a type change) silently becomes `undefined` in the UI. Zod surfaces both problems at the boundary rather than deep in the component tree.
+
+### Trade-offs
+
+| | |
+|---|---|
+| Type errors are caught at the boundary, not in components | Parsing every API response adds a small runtime cost |
+| `z.coerce.date()` and `z.coerce.number()` handle query string coercion cleanly | Schema drift between API and web must be maintained manually — no code generation |
+| `req.validatedQuery` is fully typed downstream | Adds Zod as a required dependency on both the API and web |
+
+---
+
+## 5. `prisma.$transaction([findMany, count])` for Consistent Pagination
+
+### Decision
+Every paginated repository query runs `findMany` and `count` inside a single `$transaction`, ensuring the total count and the data slice are read from the same database snapshot.
+
+```ts
+const [data, total] = await prisma.$transaction([
+    prisma.product.findMany({ where, ...paginate(query) }),
+    prisma.product.count({ where })
+])
+```
+
+### Context
+Running `findMany` and `count` as two separate queries creates a race window — a new product inserted between the two calls makes `totalPages` off by one, causing the last page to appear to have one extra slot or the "Load More" button to appear when there's nothing left. The transaction eliminates this window.
+
+### Trade-offs
+
+| | |
+|---|---|
+| `total` and `data` are always consistent with each other | Slightly more expensive than two sequential queries in low-write scenarios |
+| `totalPages` in `meta` is always accurate at the moment of the request | Interactive transactions (`$transaction(async tx => ...)`) would be needed for write operations — this read-only pattern doesn't support that |
+| No off-by-one pagination bugs under concurrent inserts | In practice, on a low-traffic app, the race condition is rare — the transaction is defensive rather than reactive |
+
+---
+
+## 6. AI Usage Optimizations
+
+### 6.1 Claude Skill Directory Structure
+
+#### My Decision
+In generally, I create sperate skills, if there is a repeatable implemenataion or code implementation standard, I follow in day-to-day. Previously I stored those `.md` file in a flat directory. Later It bacome hard to scan as the list grew, and since I tend to strucuture files into nested structure groupes by concern, I re-organized my Claude Code slash commands from a flat directory into a nested structure grouped by app layer and purpose.
+
+Here was the flat structure where everything lived at the same level with prefixes to distinguish them:
+```
+.claude/commands/
+  web-schema.md       → /web-schema
+  web-form.md         → /web-form
+  api-feature.md      → /api-feature
+```
+
+I wanted to split those skills into two distinct categories — 
+* **scaffold skills** - run once when starting a project 
+* **feature skills** - run repeatedly as I build. 
+
+Keeping them mixed in a flat list buried that distinction. So here is the after:
+```
+.claude/commands/
+  web/
+    scaffold.md           → /web:scaffold  (project setup, run once)
+    scaffold/
+      api-layer.md        → /web:scaffold:api-layer
+      files/              → template .ts files, copied verbatim
+    schema.md             → /web:schema    (per-feature, run repeatedly)
+    form.md               → /web:form
+    page.md               → /web:page
+  api/
+    scaffold/
+      <skill-file>.md        → /api:scaffold:<skill-file>
+      files/
+    scaffold.md           → /api:scaffold
+    schema.md             → /api:schema
+    dto.md                → /api:dto
+    feature.md            → /api:feature
+    filtering.md          → /api:filtering
+```
+Also want to highlight, full code snippets in the scaffold categories are moved as separate files into a nested subdirectory at `/scaffold/files` to achieve the following benefits:
+* Cleaner readability
+* Reduced token usage, which I cover in the next section
+---
+
+### 6.2 Scaffold Token Usage Optimisation
+
+Here is one situation where I tried to reduce AI costs by optimizing token usage with proper reasoning without blindly applying it. This happened when I wanted to improve the readability of `api-layer.md` by extracting its inline code to separate files.
+
+When I was writing the web project's scaffold command skill, axios and its relevant code snippets were embedded as inline code blocks in the same `.md` file. So whenever that scaffold skill ran, all that inline code gets loaded into the context window, consuming tokens.
+
+I checked the token usage on average as follows and it's quite high even though it only runs once. But if I chain a few more scaffold steps, the token cost would compound quickly. However, simply extracting to separate `.ts` files wouldn't help on its own — Claude would still read and write each file, billing those tokens all the same.
+
+**Before** - inline code blocks inside `api-layer.md`, Claude reads and writes each file using the `Write` tool:
+
+| Step | Tokens (approx) |
+|---|---|
+| Read `scaffold.md` + `api-layer.md` (instructions + all inline code) | ~2,500 |
+| Claude writes 5 files via `Write` tool (full content in output tokens) | ~2,000 |
+| System prompt + conversation overhead | ~4,000 |
+| **Total** | **~8,500** |
+
+So I thought, why not just copy the files into the correct locations using `cp`? Those scaffold files are already correct and reviewed, and unlike the `Write` tool which passes full file content as output tokens, `cp` command copies the files without reads and writes, so the content never appears in model output. Afterwards, I measured the token usage again.
+
+**After** - code lives in `scaffold/files/*.ts`, `api-layer.md` contains only `cp` commands:
+
+| Step | Tokens (approx) |
+|---|---|
+| Read `scaffold.md` + `api-layer.md` (instructions only, no inline code) | ~500 |
+| Claude runs 5 `cp` bash commands (command strings only, no file content in output) | ~100 |
+| System prompt + conversation overhead | ~4,000 |
+| **Total** | **~4,600** |
+
+That is roughly **~45% reduction** in token usage per scaffold run.
