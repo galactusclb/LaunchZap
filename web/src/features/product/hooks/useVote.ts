@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { toggleVoteAction } from "@/features/product/actions/vote";
-import useMyVotes from "@/features/user/hooks/useMyVotes";
+import { useMyVotes } from "@/features/user";
 import { useAuthStore } from "@/store/auth.store";
 import { useRouter } from "next/navigation";
+import { toggleVoteAction } from "../actions/vote";
 
 export default function useVote(id: number, initialVotes: number) {
     const queryClient = useQueryClient();

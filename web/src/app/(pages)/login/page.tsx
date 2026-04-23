@@ -1,5 +1,5 @@
 import { LoginContainer } from '@/features/views/login';
-import { type LoginSearchParams } from '@/features/views/login/schemas/login.schema';
+import { type LoginSearchParams } from '@/features/views/login';
 
 export default function LoginPage({
     searchParams,

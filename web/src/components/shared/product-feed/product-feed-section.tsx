@@ -1,4 +1,4 @@
-import { ProductFeedResult } from "@/features/product/services/product.service";
+import { ProductFeedResult } from "@/features/product";
 import ProductFeedSectionHeader, { ProductFeedSectionHeaderProps } from "./product-feed-section-header";
 import ProductItem from "./product-item";
 import ProductLoadMore from "./product-load-more";
@@ -19,7 +19,7 @@ export default async function ProductFeedSection({
     return (
         <div className="flex flex-col gap-6 w-full">
             <ProductFeedSectionHeader {...header} />
-            {!data.length ? (
+            {!data?.length ? (
                 <p className="text-muted-foreground">No products yet. Check back soon.</p>
             ) : (
                 <div className="flex flex-col gap-4">

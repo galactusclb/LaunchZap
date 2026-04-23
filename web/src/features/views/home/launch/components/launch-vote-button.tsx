@@ -1,7 +1,7 @@
 'use client'
 
 import ItemButton from "@/components/shared/product-feed/item-button";
-import useVote from "@/features/product/hooks/useVote";
+import { useVote } from "@/features/product";
 
 interface LaunchVoteButtonProps {
     id: number;

@@ -1,5 +1,5 @@
 import { LaunchPageContainer } from "@/features/views/home/launch";
-import { LaunchPageContainerProps } from "@/features/views/home/launch/container";
+import type { LaunchPageContainerProps } from "@/features/views/home/launch";
 import { Suspense } from "react";
 
 export default async function LaunchItemPage({
