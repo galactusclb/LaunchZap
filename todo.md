@@ -5,6 +5,7 @@
 * Standardize API response {success, data, message, meta, error?} ✅
 * SEO / AEO
 * Accessibility Standards
+* push dynamic data to the smallest possible leaf, cache the static shell
 
 ## API
 * Standardize API response {success, data, message, meta, error?}
