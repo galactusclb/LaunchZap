@@ -1,12 +1,11 @@
 'use client'
 
-import { useInfiniteQuery } from "@tanstack/react-query"
-import { constants } from "@/utils/constants"
-import { productListFullResponseSchema } from "@/models/product.schema"
-import ProductItem from "./product-item"
 import { Button } from "@/components/ui/button"
 import { ApiMeta } from "@/models/api-response.schema"
+import { productListFullResponseSchema } from "@/models/product.schema"
 import { apiGet } from "@/utils/api/api-client"
+import { useInfiniteQuery } from "@tanstack/react-query"
+import ProductItem from "./product-item"
 
 interface ProductLoadMoreProps {
     endpoint: string
@@ -14,7 +13,7 @@ interface ProductLoadMoreProps {
 }
 
 const fetchPage = async (endpoint: string, page: number) => {
-    const res = await apiGet(`/${endpoint}&page=${page}`, productListFullResponseSchema)
+    const res = await apiGet(`${endpoint}&page=${page}`, productListFullResponseSchema)
     if (!res.success) throw new Error(`Failed to fetch page ${page}`)
     return { data: res.data ?? [], meta: res.meta }
 }

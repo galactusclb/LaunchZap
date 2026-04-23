@@ -17,6 +17,7 @@ const failureSchema = z.object({
   error: apiErrorSchema,
   data: z.never().optional(),
   meta: z.never().optional(),
+  message: z.string().optional()
 });
 
 export const apiResponseSchema = {
@@ -24,6 +25,7 @@ export const apiResponseSchema = {
     z.discriminatedUnion('success', [
       z.object({
         success: z.literal(true),
+        message: z.string().optional(),
         data: dataSchema,
         error: z.never().optional(),
       }),
@@ -34,6 +36,7 @@ export const apiResponseSchema = {
     z.discriminatedUnion('success', [
       z.object({
         success: z.literal(true),
+        message: z.string().optional(),
         data: z.array(itemSchema),
         meta: apiMetaSchema,
         error: z.never().optional(),
