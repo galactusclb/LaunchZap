@@ -1,8 +1,8 @@
-import { apiErrorSchema } from '@/models/api-response.schema';
 
 import axios from 'axios';
-
 import { z } from 'zod';
+
+import { apiErrorSchema } from '@/models/api-response.schema';
 
 export class ApiError extends Error {
   code?: string;

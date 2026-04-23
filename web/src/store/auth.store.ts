@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 import { type User } from '@/models/user.schema';
 
 type AuthState = {

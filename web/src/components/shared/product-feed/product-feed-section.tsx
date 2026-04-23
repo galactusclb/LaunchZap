@@ -1,4 +1,5 @@
 import { ProductFeedResult } from "@/features/product";
+
 import ProductFeedSectionHeader, { ProductFeedSectionHeaderProps } from "./product-feed-section-header";
 import ProductItem from "./product-item";
 import ProductLoadMore from "./product-load-more";

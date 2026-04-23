@@ -1,6 +1,7 @@
 import { ProductFeedSection } from "@/components/shared/product-feed";
-import FeedAsyncBoundary from "./components/feed-async-boundary";
 import { getDailyProducts, getNewProducts, getWeeklyProducts } from "@/features/product";
+
+import FeedAsyncBoundary from "./components/feed-async-boundary";
 
 export default function LandingPageContainer() {
 	return (

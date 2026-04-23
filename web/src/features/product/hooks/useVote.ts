@@ -1,11 +1,14 @@
 'use client'
 
-import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
+
 import { useMyVotes } from "@/features/user";
 import { useAuthStore } from "@/store/auth.store";
-import { useRouter } from "next/navigation";
+
+
 import { toggleVoteAction } from "../actions/vote";
 
 export default function useVote(id: number, initialVotes: number) {

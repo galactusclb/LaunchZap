@@ -1,10 +1,12 @@
 'use client'
 
+import { useInfiniteQuery } from "@tanstack/react-query"
+
 import { Button } from "@/components/ui/button"
 import { ApiMeta } from "@/models/api-response.schema"
 import { productListFullResponseSchema } from "@/models/product.schema"
 import { apiGet } from "@/utils/api/api-client"
-import { useInfiniteQuery } from "@tanstack/react-query"
+
 import ProductItem from "./product-item"
 
 interface ProductLoadMoreProps {

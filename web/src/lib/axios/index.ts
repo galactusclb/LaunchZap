@@ -1,8 +1,9 @@
 
 import axios from 'axios';
 
-import { constants } from '@/utils/constants';
 import { ApiError } from '@/utils/api/api-error';
+import { constants } from '@/utils/constants';
+
 import { extractApiError } from './extract-api-error';
 
 const apiClient = axios.create({

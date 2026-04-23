@@ -1,7 +1,9 @@
+import { notFound } from "next/navigation";
+
 import { ProductIdParam, productIdParamSchema } from "@/models/product.schema";
+
 import LaunchAsyncBoundary from "./components/launch-async-boundary";
 import LaunchSection from "./components/launch-section";
-import { notFound } from "next/navigation";
 
 export interface LaunchPageContainerProps {
     params: Promise<ProductIdParam>

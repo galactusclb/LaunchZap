@@ -1,6 +1,7 @@
 import { cacheLife } from "next/cache"
-import { constants } from "@/utils/constants"
+
 import { Product, ProductListFullResponse, productListFullResponseSchema, productSingleResponseSchema } from "@/models/product.schema"
+import { constants } from "@/utils/constants"
 
 export type ProductFeedResult = Pick<ProductListFullResponse, 'data' | 'meta'>
 

@@ -1,5 +1,6 @@
-import { apiResponseSchema } from "@/models/api-response.schema";
 import z from "zod";
+
+import { apiResponseSchema } from "@/models/api-response.schema";
 
 export enum UserRole {
     USER  = 'USER',

@@ -1,8 +1,9 @@
 'use client'
 
+import { useVote } from "@/features/product";
+
 import ItemButton from "./item-button";
 import { Product } from "./product-feed.schema";
-import { useVote } from "@/features/product";
 
 type VoteButtonProps = Pick<Product, "id" | "votesCount">
 

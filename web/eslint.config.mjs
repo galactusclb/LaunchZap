@@ -2,6 +2,7 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 import boundaries from "eslint-plugin-boundaries";
+import importX from 'eslint-plugin-import-x';
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -9,7 +10,8 @@ const eslintConfig = defineConfig([
   // Override default ignores of eslint-config-next.
   {
     plugins: { 
-      boundaries
+      boundaries,
+      "import-x": importX
     },
     settings: {
       "boundaries/elements": [
@@ -79,7 +81,18 @@ const eslintConfig = defineConfig([
             message: "Use the view entry-point (@/features/views/<group>/<name>) instead of deep imports.",
           },
         ]
-      }]
+      }],
+      "import-x/order": ["warn", 
+        {
+          groups: ["builtin", "external", "internal", "parent", "sibling", "index", "object"],
+          pathGroups: [
+            { pattern: "@/**", group: "internal", position: "after" }
+          ],
+          pathGroupsExcludedImportTypes: ["builtin"],
+          "newlines-between": "always",
+          alphabetize: { order: "asc", caseInsensitive: true },
+        }
+      ],
     },
   },
   globalIgnores([

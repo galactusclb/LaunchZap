@@ -2,12 +2,12 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
+import type { ReactNode } from 'react';
 
 import { meFullResponseSchema } from '@/models/user.schema';
 import { useAuthStore } from '@/store/auth.store';
-
 import { apiGet } from '@/utils/api/api-client';
-import type { ReactNode } from 'react';
+
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
     const { setUser, clearUser, setLoading } = useAuthStore();

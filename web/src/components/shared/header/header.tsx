@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/store/auth.store';
-import { Button } from '@/components/ui/button';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,8 +12,9 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { apiPost } from '@/utils/api/api-client';
 import { logoutResponseSchema } from '@/models/user.schema';
+import { useAuthStore } from '@/store/auth.store';
+import { apiPost } from '@/utils/api/api-client';
 
 export default function Header() {
     const { user, isLoading, clearUser } = useAuthStore();

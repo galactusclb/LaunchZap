@@ -1,8 +1,9 @@
-import { useAuthStore } from "@/store/auth.store";
 import { useQuery } from "@tanstack/react-query";
-import { apiResponseSchema } from "@/models/api-response.schema";
 import z from "zod";
+
+import { apiResponseSchema } from "@/models/api-response.schema";
 import { productResponseSchema } from "@/models/product.schema";
+import { useAuthStore } from "@/store/auth.store";
 import { apiGet } from "@/utils/api/api-client";
 
 const myVotesResponseSchema = apiResponseSchema.list(z.object({ productId: productResponseSchema.shape.id }));

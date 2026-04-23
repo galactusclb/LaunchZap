@@ -1,5 +1,7 @@
 import Image from 'next/image';
+
 import { constants } from '@/utils/constants';
+
 import { loginSearchParamsSchema, type LoginSearchParams } from '../schemas/login.schema';
 
 export default async function LoginGoogleButton({

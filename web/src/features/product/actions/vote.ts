@@ -1,6 +1,7 @@
+import z from "zod";
+
 import { Product } from "@/models/product.schema";
 import { apiPatch } from "@/utils/api/api-client";
-import z from "zod";
 
 const voteResponseSchema = z.object({
     success: z.boolean(),

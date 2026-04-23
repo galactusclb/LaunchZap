@@ -2,6 +2,7 @@
 
 import { ComponentType, ErrorInfo, ReactNode } from "react";
 import { FallbackProps, ErrorBoundary as ReactErrorBoundary } from "react-error-boundary"
+
 import DefaultErrorFallback from "./default-error-fallback";
 
 interface ErrorBoundaryProps {

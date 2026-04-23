@@ -1,9 +1,11 @@
+import { Calendar, ExternalLink, User } from "lucide-react";
+import Link from "next/link";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Product } from "@/models/product.schema";
-import { Calendar, ExternalLink, User } from "lucide-react";
-import Link from "next/link";
+
 import LaunchVoteButton from "./launch-vote-button";
 
 interface LaunchHeroProps {

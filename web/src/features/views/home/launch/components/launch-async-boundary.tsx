@@ -1,5 +1,6 @@
-import { ErrorBoundary } from "@/components/shared/errors";
 import { ReactNode, Suspense } from "react";
+
+import { ErrorBoundary } from "@/components/shared/errors";
 
 interface LaunchAsyncBoundaryProps {
     children: ReactNode;
