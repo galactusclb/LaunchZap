@@ -8,6 +8,7 @@ import {
   handleGetMe,
 } from './auth.service.ts';
 import { clearAuthCookies, setAuthCookies } from './utils/auth.cookies.ts';
+import { getGoogleOAuthConfig } from './utils/google-oauth.config.ts';
 
 import { requireAuth } from '@/middleware/auth.middleware.ts';
 
@@ -25,16 +26,24 @@ const googleStart = async (req: Request, res: Response) => {
 };
 
 const googleCallback = async (req: Request, res: Response) => {
-  const state = typeof req.query.state === 'string' ? req.query.state : null;
+  const error = typeof req.query.error === 'string' ? req.query.error : null;
+  if (error) {
+    const { webAppUrl } = getGoogleOAuthConfig();
+    res.redirect(`${webAppUrl}/login?error=${encodeURIComponent(error)}`);
+    return;
+  }
 
+  const state = typeof req.query.state === 'string' ? req.query.state : null;
   if (!state) {
-    res.status(400).json({ error: 'Missing state' });
+    const { webAppUrl } = getGoogleOAuthConfig();
+    res.redirect(`${webAppUrl}/login?error=invalid_state`);
     return;
   }
 
   const result = await handleGoogleCallback(req.originalUrl, state);
   if (!result) {
-    res.status(400).json({ error: 'Invalid state' });
+    const { webAppUrl } = getGoogleOAuthConfig();
+    res.redirect(`${webAppUrl}/login?error=invalid_state`);
     return;
   }
 
