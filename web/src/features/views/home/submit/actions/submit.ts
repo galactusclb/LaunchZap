@@ -1,7 +1,7 @@
 'use server'
 
 import { baseProductSchema } from "@/models/product.schema";
-import { constants } from "@/utils/constants";
+import { constants } from "@/utils/constants/server";
 
 export type SubmitState = {
     success: boolean

@@ -3,12 +3,12 @@
 import { cacheLife } from "next/cache"
 
 import { Product, ProductListFullResponse, productListFullResponseSchema, productSingleResponseSchema } from "@/models/product.schema"
-import { constants } from "@/utils/constants"
+import { constants } from "@/utils/constants/server"
 
 export type ProductFeedResult = Pick<ProductListFullResponse, 'data' | 'meta'>
 
 async function fetchProducts(endpoint: string): Promise<ProductFeedResult> {
-    const response = await fetch(`${constants.API.SERVER_URL}${endpoint}`)
+    const response = await fetch(`${constants.API.URL}${endpoint}`)
 
     if (!response.ok) throw new Error(`Failed to fetch from ${endpoint}`)
 
@@ -37,7 +37,7 @@ export async function getNewProducts(): Promise<ProductFeedResult> {
 export async function getProductById(id: number): Promise<Product> {
     cacheLife('minutes')
 
-    const response = await fetch(`${constants.API.SERVER_URL}/products/${id}`)
+    const response = await fetch(`${constants.API.URL}/products/${id}`)
     if (!response.ok) throw new Error(`Failed to fetch product ${id}`)
 
     const { data } = productSingleResponseSchema.parse(await response.json())

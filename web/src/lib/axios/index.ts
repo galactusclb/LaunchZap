@@ -2,12 +2,12 @@
 import axios from 'axios';
 
 import { ApiError } from '@/utils/api/api-error';
-import { constants } from '@/utils/constants';
+import { constants } from '@/utils/constants/client';
 
 import { extractApiError } from './extract-api-error';
 
 const apiClient = axios.create({
-  baseURL: constants.API.BROWSER_URL,
+  baseURL: constants.API.URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
