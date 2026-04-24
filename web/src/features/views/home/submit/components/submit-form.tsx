@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import useSubmit from "../hooks/useSubmit";
+import { LogoUpload } from "./logo-upload";
 
 export default function SubmitForm() {
     const { form, onSubmit, state, isPending } = useSubmit();
@@ -117,19 +118,13 @@ export default function SubmitForm() {
                         />
 
                         <Controller
-                            name="logoUrl"
+                            name="logoFile"
                             control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="submit-logoUrl">Logo URL (optional)</FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id="submit-logoUrl"
-                                        type="url"
-                                        aria-invalid={fieldState.invalid}
-                                        aria-describedby={fieldState.invalid ? "submit-logoUrl-error" : undefined}
-                                        placeholder="https://myproduct.com/logo.png"
-                                        autoComplete="off"
+                                    <FieldLabel htmlFor="submit-logoUrl">Logo (optional)</FieldLabel>
+                                    <LogoUpload 
+                                        onChange={(file)=>field.onChange(file ?? undefined)}
                                     />
                                     {fieldState.invalid && (
                                         <FieldError id="submit-logoUrl-error" role="alert" errors={[fieldState.error]} />

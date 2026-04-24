@@ -6,6 +6,7 @@
 * SEO / AEO
 * Accessibility Standards
 * push dynamic data to the smallest possible leaf, cache the static shell
+* Run env zod validation on startup 
 
 ## API
 * Standardize API response {success, data, message, meta, error?}

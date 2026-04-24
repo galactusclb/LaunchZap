@@ -9,7 +9,7 @@ import { baseProductSchema } from "@/models/product.schema";
 import submitAction, { SubmitState } from "../actions/submit";
 
 const formSchema = baseProductSchema.extend({
-    logoUrl: z.union([z.url(), z.literal("")]).optional(),
+    logoFile: z.instanceof(File).optional(),
     launchDate: z.string().min(1, "Launch date is required"),
 });
 
@@ -29,7 +29,7 @@ export default function useSubmit() {
             tagline: "",
             description: "",
             websiteUrl: "",
-            logoUrl: "",
+            logoFile: undefined,
         },
     });
 
@@ -39,8 +39,8 @@ export default function useSubmit() {
         formData.append('tagline', data.tagline);
         if (data.description) formData.append('description', data.description);
         formData.append('websiteUrl', data.websiteUrl);
-        if (data.logoUrl) formData.append('logoUrl', data.logoUrl);
         formData.append('launchDate', data.launchDate);
+        if (data.logoFile) formData.append('logoFile', data.logoFile);
 
         startTransition(() => {
             formAction(formData);
