@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const PROTECTED_ROUTES = ['/dashboard', '/submit']
+import { AUTH_ROUTES, PROTECTED_ROUTES, ROUTES } from '@/config/routes'
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -9,15 +9,16 @@ export function proxy(request: NextRequest) {
   const access = request.cookies.has('access_token')
   console.log('isAuthenticated', isAuthenticated, access)
   const isProtected = PROTECTED_ROUTES.some((route) => pathname.startsWith(route))
+  const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route))
 
   if (isProtected && !isAuthenticated) {
-    const loginUrl = new URL('/login', request.url)
+    const loginUrl = new URL(ROUTES.login, request.url)
     loginUrl.searchParams.set('returnTo', pathname)
     return NextResponse.redirect(loginUrl)
   }
 
-  if (pathname === '/login' && isAuthenticated) {
-    return NextResponse.redirect(new URL('/', request.url))
+  if (isAuthRoute && isAuthenticated) {
+    return NextResponse.redirect(new URL(ROUTES.home, request.url))
   }
 
   return NextResponse.next()
