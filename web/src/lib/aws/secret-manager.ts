@@ -4,6 +4,7 @@ import {
 } from "@aws-sdk/client-secrets-manager";
 
 import { constants } from "@/utils/constants/server";
+
 import { secretManagerResponse, secretManagerResponseSchema } from "./secrett-manager.schema";
 
 type SecretsManagerInstance = {
