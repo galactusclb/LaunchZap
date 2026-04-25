@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { ROUTES } from "@/config/routes";
 import { useMyVotes } from "@/features/user";
 import { useAuthStore } from "@/store/auth.store";
 
@@ -48,7 +49,7 @@ export default function useVote(id: number, initialVotes: number) {
 
     const handleVote = ()=>{
         if(!user) {
-            return router.push('/login')
+            return router.push(ROUTES.login)
         };
 
         mutate()

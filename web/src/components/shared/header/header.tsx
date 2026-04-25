@@ -12,6 +12,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ROUTES } from '@/config/routes';
 import { logoutResponseSchema } from '@/models/user.schema';
 import { useAuthStore } from '@/store/auth.store';
 import { apiPost } from '@/utils/api/api-client';
@@ -23,13 +24,13 @@ export default function Header() {
     async function handleLogout() {
         await apiPost(`/auth/logout`, {}, logoutResponseSchema);
         clearUser();
-        router.push('/login');
+        router.push(ROUTES.login);
     }
 
     return (
         <header className="fixed top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm">
             <div className="mx-auto h-16 flex max-w-7xl items-center justify-between px-4 py-3">
-                <Link href="/" className="text-lg font-bold text-primary">
+                <Link href={ROUTES.home} className="text-lg font-bold text-primary">
                     LaunchZap
                 </Link>
 
@@ -39,7 +40,7 @@ export default function Header() {
                     ) : user ? (
                         <>
                             <Button asChild size="sm" variant="outline">
-                                <Link href="/submit">Submit</Link>
+                                <Link href={ROUTES.submit}>Submit</Link>
                             </Button>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -63,7 +64,7 @@ export default function Header() {
                         </>
                     ) : (
                         <Button asChild size="sm">
-                            <Link href="/login">Login</Link>
+                            <Link href={ROUTES.login}>Login</Link>
                         </Button>
                     )}
                 </nav>
