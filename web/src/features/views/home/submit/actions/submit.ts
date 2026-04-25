@@ -4,7 +4,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { s3 } from "@/lib/aws";
 import { baseProductSchema } from "@/models/product.schema";
-import { constants } from "@/utils/constants/server";
+import { apiServer } from "@/utils/api/api-server";
 
 export type SubmitState = {
     success: boolean
@@ -37,23 +37,20 @@ export default async function submitAction(
         return { success: false, error: "Failed to upload logo. Please try again." }
     }
 
-    const response = await fetch(`${constants.API.URL}/products`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ ...result.data, logoUrl: tempLogoURL }),
-    });
-
-    if (!response.ok) {
-        const json = await response.json().catch(() => ({}));
-        return { success: false, error: json.message ?? "Failed to submit product" };
+    try {
+        await apiServer('/products', {
+            method: 'POST',
+            body: JSON.stringify({ ...result.data, logoUrl: tempLogoURL }),
+        });
+    } catch (err) {
+        const message = err instanceof Error ? err.message : "Failed to submit product";
+        return { success: false, error: message };
     }
 
     return { success: true };
 }
 
 async function uploadFilesToS3(image: File): Promise<string | undefined> {
-    
     const { client, bucket } = await s3.getS3ClientInstance();
 
     const uuid = crypto.randomUUID();
