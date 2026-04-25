@@ -67,6 +67,7 @@ export const createProduct = async (makerId: User['id'],input: CreateProduct)=>{
             tagline: input.tagline,
             websiteUrl: input.websiteUrl,
             launchDate: input.launchDate,
+            logoUrl: input.logoUrl,
             makerId
         }
     })
