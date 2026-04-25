@@ -7,7 +7,7 @@ const env = serverEnvSchema.parse({
     AWS_REGION: process.env.AWS_REGION,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-    S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
+    AWS_SECRET_MANAGER_SECRET_NAME: process.env.AWS_SECRET_MANAGER_SECRET_NAME,
 })
 
 export const constants = {
@@ -18,6 +18,6 @@ export const constants = {
         REGION: env.AWS_REGION,
         ACCESS_KEY_ID: env.AWS_ACCESS_KEY_ID,
         SECRET_ACCESS_KEY: env.AWS_SECRET_ACCESS_KEY,
-        S3_BUCKET_NAME: env.S3_BUCKET_NAME,
+        SECRET_MANAGER_SECRET_NAME: env.AWS_SECRET_MANAGER_SECRET_NAME,
     },
 }

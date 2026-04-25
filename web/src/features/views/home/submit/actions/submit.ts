@@ -2,7 +2,7 @@
 
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
-import { buildS3Url, getS3ClientInstance } from "@/lib/aws";
+import { s3 } from "@/lib/aws";
 import { baseProductSchema } from "@/models/product.schema";
 import { constants } from "@/utils/constants/server";
 
@@ -53,8 +53,8 @@ export default async function submitAction(
 }
 
 async function uploadFilesToS3(image: File): Promise<string | undefined> {
-
-    const { client, bucket } = getS3ClientInstance();
+    
+    const { client, bucket } = await s3.getS3ClientInstance();
 
     const uuid = crypto.randomUUID();
     const key = `temp/${uuid}/${image.name}`;
@@ -69,7 +69,7 @@ async function uploadFilesToS3(image: File): Promise<string | undefined> {
     try {
         await client.send(command);
 
-        return buildS3Url(key);
+        return s3.buildS3Url(key);
     } catch (error) {
         console.error("S3 upload failed:", error);
         throw new Error("Image upload failed")
