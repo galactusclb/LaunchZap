@@ -1,5 +1,5 @@
 
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import { AppError, IsAuthMiddlewareMissingError } from '../utils/errors/app-errors.ts';
 import { HttpError } from '../utils/errors/http-error.ts';
@@ -9,7 +9,8 @@ import { Prisma } from '@/prisma/client';
 export function errorHandler(
     err: unknown,
     req: Request,
-    res: Response
+    res: Response,
+    _next: NextFunction
 ) {
     console.error('[Error]', err);
 

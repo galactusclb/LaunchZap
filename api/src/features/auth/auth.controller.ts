@@ -26,29 +26,34 @@ const googleStart = async (req: Request, res: Response) => {
 };
 
 const googleCallback = async (req: Request, res: Response) => {
-  const error = typeof req.query.error === 'string' ? req.query.error : null;
-  if (error) {
-    const { webAppUrl } = getGoogleOAuthConfig();
-    res.redirect(`${webAppUrl}/login?error=${encodeURIComponent(error)}`);
-    return;
-  }
+  const { webAppUrl } = getGoogleOAuthConfig();
 
-  const state = typeof req.query.state === 'string' ? req.query.state : null;
-  if (!state) {
-    const { webAppUrl } = getGoogleOAuthConfig();
-    res.redirect(`${webAppUrl}/login?error=invalid_state`);
-    return;
+  try {
+    const error = typeof req.query.error === 'string' ? req.query.error : null;
+    if (error) {
+      res.redirect(`${webAppUrl}/login?error=${encodeURIComponent(error)}`);
+      return;
+    }
+  
+    const state = typeof req.query.state === 'string' ? req.query.state : null;
+    if (!state) {
+      res.redirect(`${webAppUrl}/login?error=invalid_state`);
+      return;
+    }
+  
+    const result = await handleGoogleCallback(req.originalUrl, state);
+    if (!result) {
+      res.redirect(`${webAppUrl}/login?error=invalid_state`);
+      return;
+    }
+  
+    setAuthCookies(res, result.tokens);
+    res.redirect(result.redirectTo);
+    
+  } catch (err) {
+    console.error('[googleCallback] Unexpected error:', err);
+    res.redirect(`${webAppUrl}/login?error=server_error`);
   }
-
-  const result = await handleGoogleCallback(req.originalUrl, state);
-  if (!result) {
-    const { webAppUrl } = getGoogleOAuthConfig();
-    res.redirect(`${webAppUrl}/login?error=invalid_state`);
-    return;
-  }
-
-  setAuthCookies(res, result.tokens);
-  res.redirect(result.redirectTo);
 };
 
 const refresh = async (req: Request, res: Response) => {
