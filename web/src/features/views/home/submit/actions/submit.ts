@@ -54,7 +54,7 @@ async function uploadFilesToS3(image: File): Promise<string | undefined> {
     const { client, bucket } = await s3.getS3ClientInstance();
 
     const uuid = crypto.randomUUID();
-    const key = `temp/${uuid}/${image.name}`;
+    const key = `logos/${uuid}/${image.name}`;
 
     const command = new PutObjectCommand({
         Bucket: bucket,

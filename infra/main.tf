@@ -13,6 +13,14 @@ module "s3" {
   s3_bucket_name = var.s3_bucket_name
 }
 
+module "cloudfront" {
+  source = "./resources/cloudfront"
+
+  bucket_regional_domain_name = module.s3.s3_bucket_regional_domain_name
+  bucket_id                   = module.s3.s3_bucket_id
+  bucket_arn                  = module.s3.s3_bucket_arn
+}
+
 module "secret-manager" {
   source = "./resources/secret-manager"
 
