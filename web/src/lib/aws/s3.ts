@@ -2,8 +2,6 @@ import { S3Client } from "@aws-sdk/client-s3";
 
 import { constants } from "@/utils/constants/server";
 
-import { getSecretValueFromAWS } from "./secret-manager";
-
 type S3Instance = {
     client: S3Client
     region: string
@@ -15,7 +13,6 @@ let instance: S3Instance | undefined;
 export const getS3ClientInstance = async (): Promise<S3Instance> => {
     if (instance) return instance;
 
-    const secretObject = await getSecretValueFromAWS();
 
     instance = {
         client: new S3Client({
@@ -26,13 +23,15 @@ export const getS3ClientInstance = async (): Promise<S3Instance> => {
             }
         }),
         region: constants.AWS.REGION,
-        bucket: secretObject.S3_BUCKET_NAME,
+        bucket: constants.AWS.S3_BUCKET_NAME,
     };
 
     return instance;
 };
 
 export const buildS3Url = async (key: string): Promise<string> => {
-    const { bucket, region } = await getS3ClientInstance()
-    return `https://${bucket}.s3.${region}.amazonaws.com/${key}`
+    const cloudfrontDomain = constants.AWS.CLOUDFRONT_DOMAIN;
+    if (!cloudfrontDomain) throw new Error("NEXT_PUBLIC_CLOUDFRONT_DOMAIN is not set");
+
+    return `https://${cloudfrontDomain}/${key}`;
 }

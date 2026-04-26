@@ -21,11 +21,11 @@ module "cloudfront" {
   bucket_arn                  = module.s3.s3_bucket_arn
 }
 
-module "secret-manager" {
-  source = "./resources/secret-manager"
+# module "secret-manager" {
+#   source = "./resources/secret-manager"
 
-  secret_manager_name = var.secret_manager_name
-  secrets_object = {
-    S3_BUCKET_NAME = module.s3.s3_bucket_name
-  }
-}
+#   secret_manager_name = var.secret_manager_name
+#   secrets_object = {
+#     S3_BUCKET_NAME = module.s3.s3_bucket_name
+#   }
+# }

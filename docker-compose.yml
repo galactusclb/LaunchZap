@@ -79,6 +79,7 @@ services:
       AWS_SECRET_MANAGER_SECRET_NAME: 'launchzap/app-config/dev'
     env_file:
       - .env.infra
+      - ./web/.env.infra
     volumes:
       - ./web/src:/app/src
       - ./web/public:/app/public

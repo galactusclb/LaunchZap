@@ -30,3 +30,4 @@
 * API gateway
 * Lambda
 * S3 - add 24H ttl for /tmp
+* Cloudfront ✅
