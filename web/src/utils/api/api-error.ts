@@ -40,13 +40,15 @@ export function toApiError(error: unknown): ApiError {
     return new ApiError(msg, { status });
   }
 
-  if (error instanceof z.ZodError) {
-    return new ApiError('Invalid API response format');
-  }
+  if (error instanceof z.ZodError) return new ApiError('Invalid API response format', { code: 'INVALID_RESPONSE', details: z.treeifyError(error) });
+  if (error instanceof Error) return new ApiError(error.message || unknownErrorMessage);
 
-  if (error instanceof Error) {
-    return new ApiError(error.message || unknownErrorMessage);
-  }
+  return new ApiError(unknownErrorMessage);
+}
 
+export function toFetchApiError(error: unknown): ApiError {
+  if (error instanceof ApiError) return error;
+  if (error instanceof z.ZodError) return new ApiError('Invalid API response format', { code: 'INVALID_RESPONSE', details: z.treeifyError(error) });
+  if (error instanceof Error) return new ApiError(error.message || unknownErrorMessage);
   return new ApiError(unknownErrorMessage);
 }

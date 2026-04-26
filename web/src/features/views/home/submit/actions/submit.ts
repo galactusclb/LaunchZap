@@ -3,12 +3,13 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { s3 } from "@/lib/aws";
-import { baseProductSchema } from "@/models/product.schema";
+import { baseProductSchema, productSingleResponseSchema } from "@/models/product.schema";
 import { apiServer } from "@/utils/api/api-server";
 
 export type SubmitState = {
     success: boolean
-    error?: string
+    error?: string,
+    productId?: string
 }
 
 export default async function submitAction(
@@ -38,16 +39,17 @@ export default async function submitAction(
     }
 
     try {
-        await apiServer('/products', {
+        const product = await apiServer('/products', productSingleResponseSchema, {
             method: 'POST',
             body: JSON.stringify({ ...result.data, logoUrl: tempLogoURL }),
         });
+
+        return { success: true, productId: String(product.data!.id) };
     } catch (err) {
         const message = err instanceof Error ? err.message : "Failed to submit product";
         return { success: false, error: message };
     }
 
-    return { success: true };
 }
 
 async function uploadFilesToS3(image: File): Promise<string | undefined> {
