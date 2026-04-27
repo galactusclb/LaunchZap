@@ -11,10 +11,12 @@ interface ProductItemProps {
 
 export default function ProductItem({ item }: ProductItemProps) {
     return (
-        <Link href={`/launch/${item.id}`} className="flex gap-4 p-4 bg-slate-50 rounded-lg hover:bg-slate-100 duration-300">
+        <Link href={`/launch/${item.id}`} className="flex gap-4 p-4 bg-card rounded-lg hover:bg-muted transition-colors duration-200">
             <Avatar className="rounded-lg size-12">
                 <AvatarImage src={item?.logoUrl ?? ""} />
-                <AvatarFallback className="rounded-lg bg-purple-100">CN</AvatarFallback>
+                <AvatarFallback className="rounded-lg bg-brand/15 text-brand-foreground text-sm font-semibold">
+                    {item.name.charAt(0).toUpperCase()}
+                </AvatarFallback>
             </Avatar>
 
             <div className="flex flex-col flex-1">

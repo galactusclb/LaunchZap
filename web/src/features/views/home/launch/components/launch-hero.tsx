@@ -20,20 +20,20 @@ export default function LaunchHero({ product }: LaunchHeroProps) {
     });
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-8">
             <div className="flex gap-5 items-start">
                 <Avatar className="rounded-2xl size-20 shrink-0">
                     <AvatarImage src={product.logoUrl ?? undefined} />
-                    <AvatarFallback className="rounded-2xl bg-purple-100 text-2xl font-bold text-purple-600">
+                    <AvatarFallback className="rounded-2xl bg-brand/15 text-brand-foreground text-2xl font-bold">
                         {product.name[0]}
                     </AvatarFallback>
                 </Avatar>
 
                 <div className="flex flex-col flex-1 gap-1 min-w-0">
-                    <h1 className="text-2xl font-bold text-primary">{product.name}</h1>
+                    <h1 className="text-4xl font-black tracking-tight">{product.name}</h1>
                     <p className="text-muted-foreground text-base">{product.tagline}</p>
-                    <div className="mt-3">
-                        <Button asChild size="sm" className="gap-1.5">
+                    <div className="mt-4">
+                        <Button asChild size="sm" className="gap-1.5 bg-brand text-brand-foreground hover:bg-brand/90 border-transparent">
                             <Link href={product.websiteUrl} target="_blank" rel="noopener noreferrer">
                                 <ExternalLink className="size-3.5" />
                                 Visit Website
@@ -47,7 +47,7 @@ export default function LaunchHero({ product }: LaunchHeroProps) {
 
             <Separator />
 
-            <div className="flex items-center gap-5 text-sm text-muted-foreground flex-wrap">
+            <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
                 {product.maker && (
                     <div className="flex items-center gap-1.5">
                         <User className="size-3.5 shrink-0" />
@@ -60,7 +60,7 @@ export default function LaunchHero({ product }: LaunchHeroProps) {
                     <Calendar className="size-3.5 shrink-0" />
                     <span>Launched {launchDate}</span>
                 </div>
-                <span className="ml-auto px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium capitalize">
+                <span className="ml-auto px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-xs font-medium capitalize">
                     {product.status.toLowerCase()}
                 </span>
             </div>

@@ -52,7 +52,7 @@ export default function ProductLoadMore({ endpoint, initialMeta }: ProductLoadMo
                     onClick={() => fetchNextPage()}
                     disabled={isFetchingNextPage}
                 >
-                    {isFetchingNextPage ? 'Loading...' : 'See all of top products'}
+                    {isFetchingNextPage ? 'Loading...' : 'Load more'}
                 </Button>
             )}
         </div>

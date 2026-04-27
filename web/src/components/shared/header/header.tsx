@@ -28,25 +28,25 @@ export default function Header() {
     }
 
     return (
-        <header className="fixed top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm">
+        <header className="fixed top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-sm">
             <div className="mx-auto h-16 flex max-w-7xl items-center justify-between px-4 py-3">
-                <Link href={ROUTES.home} className="text-lg font-bold text-primary">
+                <Link href={ROUTES.home} className="text-xl font-black tracking-tight text-brand">
                     LaunchZap
                 </Link>
 
                 <nav className="flex items-center gap-3">
                     {isLoading ? (
-                        <div className="size-8 animate-pulse rounded-full bg-gray-200" />
+                        <div className="size-8 animate-pulse rounded-full bg-muted" />
                     ) : user ? (
                         <>
-                            <Button asChild size="sm" variant="outline">
+                            <Button asChild size="sm" className="bg-brand text-brand-foreground hover:bg-brand/90 border-transparent">
                                 <Link href={ROUTES.submit}>Submit</Link>
                             </Button>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Avatar className="size-8 cursor-pointer">
                                         <AvatarImage src={user?.pictureUrl}/>
-                                        <AvatarFallback className="bg-purple-100 text-sm font-semibold">
+                                        <AvatarFallback className="bg-brand/15 text-sm font-semibold">
                                             {user.email.charAt(0).toUpperCase()}
                                         </AvatarFallback>
                                     </Avatar>

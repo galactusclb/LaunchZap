@@ -35,12 +35,12 @@ export default function ItemButton({ value, isVoted, onClick, disabled, size }: 
 			className={cn(
 				itemButtonVariants({ size }),
 				isVoted
-					? "border-orange-400 bg-orange-50 text-orange-500 hover:bg-orange-100 hover:text-orange-500"
-					: "border-gray-200"
+					? "border-brand bg-brand/10 text-brand hover:bg-brand/20 hover:text-brand"
+					: "border-border"
 			)}
 			onClick={onClick}
 			disabled={disabled}>
-			<ArrowBigUp className={cn(size === "hero" && "size-6", isVoted && "fill-orange-400")} />
+			<ArrowBigUp className={cn(size === "hero" && "size-6", isVoted && "fill-brand")} />
 			{Number(value) < 1 ? <Minus /> : value}
 		</Button>
 	);

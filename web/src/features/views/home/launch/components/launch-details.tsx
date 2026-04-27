@@ -11,7 +11,7 @@ export default function LaunchDetails({ description }: LaunchDetailsProps) {
         <div className="flex flex-col gap-4">
             <Separator />
             <div className="flex flex-col gap-3">
-                <h2 className="text-lg font-semibold text-primary">About</h2>
+                <h2 className="text-xl font-semibold">About</h2>
                 <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{description}</p>
             </div>
         </div>

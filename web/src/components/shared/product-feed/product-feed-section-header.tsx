@@ -5,9 +5,9 @@ export interface ProductFeedSectionHeaderProps {
 
 export default function ProductFeedSectionHeader({title, description}: ProductFeedSectionHeaderProps){
     return (
-        <div className="flex flex-col">
-            <h2 className="text-3xl font-bold">{title}</h2>
-            <p>{description}</p>
+        <div className="flex flex-col gap-1">
+            <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+            <p className="text-sm text-muted-foreground">{description}</p>
         </div>
     )
 }

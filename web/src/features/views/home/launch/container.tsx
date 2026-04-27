@@ -18,7 +18,7 @@ export default async function LaunchPageContainer({ params }: LaunchPageContaine
     const {id} = parsedParams.data;
 
     return (
-        <div className="w-full mx-auto py-10 px-4">
+        <div className="w-full mx-auto">
             <LaunchAsyncBoundary>
                 <LaunchSection id={id} />
             </LaunchAsyncBoundary>
