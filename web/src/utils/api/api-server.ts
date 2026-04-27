@@ -37,6 +37,7 @@ export async function apiServer<T extends z.ZodTypeAny>(
         const json = await response.json();
         return schema.parse(json);
     } catch (error) {
+        console.error('[apiServer]', error);
         throw toFetchApiError(error);
     }
 }

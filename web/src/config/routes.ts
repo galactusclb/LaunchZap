@@ -3,6 +3,7 @@ export const ROUTES = {
     login: '/login',
     submit: '/submit',
     dashboard: '/dashboard',
+    launch: (id: string | number) => `/launch/${id}`,
 } as const;
 
 export const PROTECTED_ROUTES = [ROUTES.submit, ROUTES.dashboard] as const;

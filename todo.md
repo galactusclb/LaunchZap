@@ -7,6 +7,8 @@
 * Accessibility Standards
 * push dynamic data to the smallest possible leaf, cache the static shell
 * Run env zod validation on startup 
+* set up sentry
+* startTransition, useTransition
 
 ## API
 * Standardize API response {success, data, message, meta, error?}

@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { startTransition, useActionState, useEffect } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -15,12 +15,12 @@ const formSchema = baseProductSchema.extend({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const initState: SubmitState = {
-    success: false,
-};
+const initState: SubmitState = { success: false };
 
 export default function useSubmit() {
-    const [state, formAction, isPending] = useActionState(submitAction, initState);
+    const [state, setState] = useState<SubmitState>(initState);
+    const [isPending, startTransition] = useTransition();
+    const [showBanner, setShowBanner] = useState(false);
 
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
@@ -42,25 +42,25 @@ export default function useSubmit() {
         formData.append('launchDate', data.launchDate);
         if (data.logoFile) formData.append('logoFile', data.logoFile);
 
-        startTransition(() => {
-            formAction(formData);
+        startTransition(async () => {
+            const result = await submitAction(state, formData);
+            setState(result);
+            if (result.success) setShowBanner(true);
+            if (result.error) toast.error(result.error);
         });
     }
 
-    useEffect(() => {
-        if (state.success) {
-            toast.success("Product submitted successfully!");
-            form.reset();
-        }
-        if (state.error) {
-            toast.error(state.error);
-        }
-    }, [state, form]);
+    function dismissBanner() {
+        setShowBanner(false);
+        form.reset();
+    }
 
     return {
         form,
         onSubmit,
         state,
         isPending,
+        showBanner,
+        dismissBanner,
     };
 }

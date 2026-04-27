@@ -21,9 +21,14 @@ import { Input } from "@/components/ui/input";
 import useSubmit from "../hooks/useSubmit";
 
 import { LogoUpload } from "./logo-upload";
+import SubmitSuccessBanner from "./submit-success-banner";
 
 export default function SubmitForm() {
-    const { form, onSubmit, state, isPending } = useSubmit();
+    const { form, onSubmit, state, isPending, showBanner, dismissBanner } = useSubmit();
+
+    if (showBanner) {
+        return <SubmitSuccessBanner productId={state.productId!} onDismiss={dismissBanner} />;
+    }
 
     return (
         <Card className="w-full">
