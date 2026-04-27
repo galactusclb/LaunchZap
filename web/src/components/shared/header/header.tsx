@@ -29,8 +29,8 @@ export default function Header() {
 
     return (
         <header className="fixed top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-sm">
-            <div className="mx-auto h-16 flex max-w-7xl items-center justify-between px-4 py-3">
-                <Link href={ROUTES.home} className="text-xl font-black tracking-tight text-brand">
+            <div className="mx-auto h-16 flex max-w-5xl items-center justify-between px-4 sm:px-6 lg:px-8">
+                <Link href={ROUTES.home} className="text-2xl font-black tracking-tight text-brand">
                     LaunchZap
                 </Link>
 
@@ -43,7 +43,7 @@ export default function Header() {
                                 <Link href={ROUTES.submit}>Submit</Link>
                             </Button>
                             <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
+                                <DropdownMenuTrigger asChild aria-label="User menu">
                                     <Avatar className="size-8 cursor-pointer">
                                         <AvatarImage src={user?.pictureUrl}/>
                                         <AvatarFallback className="bg-brand/15 text-sm font-semibold">
@@ -63,7 +63,7 @@ export default function Header() {
                             </DropdownMenu>
                         </>
                     ) : (
-                        <Button asChild size="sm">
+                        <Button asChild size="sm" className="bg-brand text-brand-foreground hover:bg-brand/90 border-transparent">
                             <Link href={ROUTES.login}>Login</Link>
                         </Button>
                     )}

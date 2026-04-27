@@ -9,6 +9,7 @@
 * Run env zod validation on startup 
 * set up sentry
 * startTransition, useTransition
+* fix the logged user's voted products on refresh
 
 ## API
 * Standardize API response {success, data, message, meta, error?}
