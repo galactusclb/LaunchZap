@@ -3,7 +3,7 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { s3 } from "@/lib/aws";
-import { baseProductSchema, productSingleResponseSchema } from "@/models/product.schema";
+import { baseProductSchema, productCreateResponseSchema } from "@/models/product.schema";
 import { apiServer } from "@/utils/api/api-server";
 
 export type SubmitState = {
@@ -39,7 +39,7 @@ export default async function submitAction(
     }
 
     try {
-        const product = await apiServer('/products', productSingleResponseSchema, {
+        const product = await apiServer('/products', productCreateResponseSchema, {
             method: 'POST',
             body: JSON.stringify({ ...result.data, logoUrl: tempLogoURL }),
         });

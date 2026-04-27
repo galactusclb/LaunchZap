@@ -38,6 +38,16 @@ export const productListFullResponseSchema = apiResponseSchema.list(productRespo
 
 export const productSingleResponseSchema = apiResponseSchema.single(productResponseSchema.optional());
 
+export const productCreateResponseSchema = apiResponseSchema.single(
+    baseProductSchema.extend({
+        id: z.coerce.number(),
+        status: z.enum(ProductStatus),
+        makerId: z.string(),
+        createdAt: z.coerce.date(),
+        updatedAt: z.coerce.date().optional(),
+    })
+);
+
 export const productIdParamSchema = productResponseSchema.pick({
     id: true
 });
