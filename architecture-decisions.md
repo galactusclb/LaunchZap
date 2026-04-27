@@ -260,3 +260,21 @@ So I thought, why not just copy the files into the correct locations using `cp`?
 | **Total** | **~4,600** |
 
 That is roughly **~45% reduction** in token usage per scaffold run.
+
+
+## 7. (Infra) CDN optimization
+```
+Cache-Control: public, max-age=31536000, immutable
+```
+### 7.1 Adding Cache-Control header inorder to browser handle cache
+
+Since most of the file uploaded to S3, have UUID based file name, so I can added the `Cache-Control` header
+to cloudfront caching behaviour. 
+Before that everytime CDN requests are reached to CloudFront and return 304 status, because of nothing is changed. I know its a small, but can reduce the latency by not to load assets again.
+
+### 7.2 Adding long max-age like 1 year
+
+Since most of the assets have UUID based file name on each upload, those are consider as immutable, because 
+those types URLs don't server updated content, just eveytime send same data. So I can use 31536000 (1 year) duration, instead using shorter TTL like 86400 (1 day) in safely.
+
+Also, `immutable` tell the broswer the same similar thing that it doesn't even need to revalidate when the tab is refreshed because `max-age` is for freshness window.
