@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import z from "zod";
 
 import { constants } from "../constants/server";
@@ -8,15 +9,25 @@ import { ApiError, toFetchApiError } from "./api-error";
 async function baseFetch(path: string, init?: RequestInit): Promise<Response> {
     const cookieStore = await cookies();
 
-    const response = await fetch(`${constants.API.URL}${path}`, {
-        cache: 'no-store',
-        ...init,
-        headers: {
-            'Content-Type': 'application/json',
-            ...init?.headers,
-            Cookie: cookieStore.toString()
-        }
+    const doFetch = ()=> 
+        fetch(`${constants.API.URL}${path}`, {
+            cache: 'no-store',
+            ...init,
+            headers: {
+                'Content-Type': 'application/json',
+                ...init?.headers,
+                Cookie: cookieStore.toString()
+            }
     });
+
+    let response = await doFetch();
+
+    if (response.status === 401) {
+        const refreshed = await tokenRotation();
+        if (refreshed) {
+            response = await doFetch();
+        }
+    }
 
     if (!response.ok) {
         const data = await response.json().catch(() => ({}));
@@ -37,6 +48,7 @@ export async function apiServer<T extends z.ZodTypeAny>(
         const json = await response.json();
         return schema.parse(json);
     } catch (error) {
+        if (error instanceof ApiError && error.status === 401) redirect('/login');
         console.error('[apiServer]', error);
         throw toFetchApiError(error);
     }
@@ -46,6 +58,42 @@ export async function apiServerVoid(path: string, init?: RequestInit): Promise<v
     try {
         await baseFetch(path, init);
     } catch (error) {
+        if (error instanceof ApiError && error.status === 401) redirect('/login');
+        console.error('[apiServer]', error);
         throw toFetchApiError(error);
     }
+}
+
+async function tokenRotation(): Promise<boolean>{
+    const cookieStore = await cookies();
+    const response = await fetch(`${constants.API.URL}/auth/refresh`, {
+        method: 'POST',
+        cache: 'no-store',
+        headers: {
+            Cookie: cookieStore.toString()
+        }
+    })
+
+    if(!response.ok) return false;
+
+    for (const raw of response.headers.getSetCookie()) {
+        const [nameValue, ...parts] = raw.split(';');
+        const eqIdx = nameValue.indexOf('=');
+        const name = nameValue.slice(0, eqIdx).trim();
+        const value = nameValue.slice(eqIdx+1).trim();
+
+        // Preserve the original attributes (HttpOnly, Path, SameSite, etc.)
+        const attrs = Object.fromEntries(
+            parts.map(p => p.trim().split('=')).map(([k, v]) => [k.toLowerCase(), v ?? true])
+        );
+
+        cookieStore.set(name, value, {
+            httpOnly: !!attrs['httponly'],
+            secure: !!attrs['secure'],
+            path: typeof attrs['path'] === 'string' ? attrs['path'] : '/',
+            sameSite: attrs['samesite'] as 'lax' | 'strict' | 'none' | undefined,
+        })
+    }
+
+    return true;
 }
