@@ -19,11 +19,12 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   default_cache_behavior {
+    target_origin_id = "s3-origin"
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods = ["GET", "HEAD"]
     cached_methods = ["GET", "HEAD"]
-    target_origin_id = "s3-origin"
     cache_policy_id = data.aws_cloudfront_cache_policy.caching_optimized.id
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.broswer_cache_headers.id
   }
 
   restrictions {
@@ -34,6 +35,18 @@ resource "aws_cloudfront_distribution" "this" {
  
   viewer_certificate {
     cloudfront_default_certificate = true
+  }
+}
+
+resource "aws_cloudfront_response_headers_policy" "broswer_cache_headers" {
+  name = "browser-cache-policy"
+
+  custom_headers_config {
+    items {
+      header = "Cache-Control"
+      value = "public, max-age=31536000, immutable"
+      override = false
+    }
   }
 }
 
