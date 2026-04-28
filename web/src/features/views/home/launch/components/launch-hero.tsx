@@ -1,8 +1,8 @@
 import { Calendar, ExternalLink, User } from "lucide-react";
 import Link from "next/link";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import ImageAvatar from "@/components/ui/image-avatar";
 import { Separator } from "@/components/ui/separator";
 import { Product } from "@/models/product.schema";
 
@@ -22,13 +22,13 @@ export default function LaunchHero({ product }: LaunchHeroProps) {
     return (
         <div className="flex flex-col gap-8">
             <div className="flex gap-5 items-start">
-                <Avatar className="rounded-2xl size-20 shrink-0">
-                    <AvatarImage src={product.logoUrl ?? undefined} />
-                    <AvatarFallback className="rounded-2xl bg-brand/15 text-brand-foreground text-2xl font-bold">
-                        {product.name[0]}
-                    </AvatarFallback>
-                </Avatar>
-
+                <ImageAvatar
+                    src={product.logoUrl ?? ""}
+                    alt={product.name}
+                    fallback={product.name.charAt(0).toUpperCase()}
+                    className="size-24"
+                    size={96}
+                />
                 <div className="flex flex-col flex-1 gap-1 min-w-0">
                     <h1 className="text-4xl font-black tracking-tight">{product.name}</h1>
                     <p className="text-muted-foreground text-base">{product.tagline}</p>
