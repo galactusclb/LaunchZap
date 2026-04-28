@@ -1,4 +1,4 @@
-.PHONY: infra-apply infra-plan sync-env infra-refresh deploy
+.PHONY: infra-apply infra-plan sync-env infra-refresh deploy analyze-bundle
 
 
 infra-apply:
@@ -14,3 +14,16 @@ sync-dev:
 	./infra/scripts/sync-env.sh
 
 deploy: infra-apply sync-dev
+
+analyze-bundle:
+	cd web && \
+	ANALYZE=true \
+	NEXT_PUBLIC_API_BASE_URL=http://localhost:3001 \
+	API_BASE_URL=http://localhost:3001 \
+	AWS_REGION=us-east-1 \
+	AWS_ACCESS_KEY_ID=dummy \
+	AWS_SECRET_ACCESS_KEY=dummy \
+	AWS_SECRET_MANAGER_SECRET_NAME=dummy \
+	AWS_CLOUDFRONT_DOMAIN=dummy.cloudfront.net \
+	AWS_S3_BUCKET_NAME=dummy-bucket \
+	npx next build --webpack
