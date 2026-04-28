@@ -1,4 +1,4 @@
-.PHONY: infra-apply infra-plan sync-env deploy
+.PHONY: infra-apply infra-plan sync-env infra-refresh deploy
 
 
 infra-apply:
@@ -13,5 +13,4 @@ infra-refresh:
 sync-dev:
 	./infra/scripts/sync-env.sh
 
-deploy:
-	infra-apply sync-dev
+deploy: infra-apply sync-dev
