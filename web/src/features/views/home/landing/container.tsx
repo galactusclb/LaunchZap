@@ -1,7 +1,6 @@
-import { ProductFeedSection } from "@/components/shared/product-feed";
 import { getDailyProducts, getNewProducts, getWeeklyProducts } from "@/features/product";
 
-import FeedAsyncBoundary from "./components/feed-async-boundary";
+import FeedSection from "./components/feed-section";
 
 export default function LandingPageContainer() {
 	return (
@@ -14,33 +13,24 @@ export default function LandingPageContainer() {
 			</div>
 
 			<div className="flex flex-col gap-16 w-full">
-				<FeedAsyncBoundary>
-					<ProductFeedSection
-						header={{
-							title: "Top Products Launching Today",
-							description: "Upvotes are hidden for the first 4 hours so every product gets a fair shot."
-						}}
-						endpoint="/products?q=daily"
-						fetcher={getDailyProducts} />
-				</FeedAsyncBoundary>
-				<FeedAsyncBoundary>
-					<ProductFeedSection
-						header={{
-							title: "This Week",
-							description: "The best products launched over the past 7 days."
-						}}
-						endpoint="/products?q=weekly"
-						fetcher={getWeeklyProducts} />
-				</FeedAsyncBoundary>
-				<FeedAsyncBoundary>
-					<ProductFeedSection
-						header={{
-							title: "New Arrivals",
-							description: "Fresh submissions from the maker community."
-						}}
-						endpoint="/products?q=new"
-						fetcher={getNewProducts} />
-				</FeedAsyncBoundary>
+				<FeedSection
+					title="Top Products Launching Today"
+					description="Upvotes are hidden for the first 4 hours so every product gets a fair shot."
+					endpoint="/products?q=daily"
+					fetcher={getDailyProducts}
+				/>
+				<FeedSection
+					title="This Week"
+					description="The best products launched over the past 7 days."
+					endpoint="/products?q=weekly"
+					fetcher={getWeeklyProducts}
+				/>
+				<FeedSection
+					title="New Arrivals"
+					description="Fresh submissions from the maker community."
+					endpoint="/products?q=new"
+					fetcher={getNewProducts}
+				/>
 			</div>
 		</div>
 	);
