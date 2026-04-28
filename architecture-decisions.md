@@ -266,15 +266,12 @@ That is roughly **~45% reduction** in token usage per scaffold run.
 ```
 Cache-Control: public, max-age=31536000, immutable
 ```
-### 7.1 Adding Cache-Control header inorder to browser handle cache
+### 7.1 Adding the Cache-Control header to enable browser-side caching
 
-Since most of the file uploaded to S3, have UUID based file name, so I can added the `Cache-Control` header
-to cloudfront caching behaviour. 
-Before that everytime CDN requests are reached to CloudFront and return 304 status, because of nothing is changed. I know its a small, but can reduce the latency by not to load assets again.
+Since most files uploaded to S3 use UUID-based filenames, I can add the `Cache-Control` header to the CloudFront cache behavior. Previously, the browser had no `Cache-Control` directives, so every asset request reached CloudFront to revalidate and returned a 304 status. While this is a minor change, it reduces latency by preventing unnecessary hits to the CDN on every load.
 
-### 7.2 Adding long max-age like 1 year
+### 7.2 Adding a long max-age (e.g., 1 year)
 
-Since most of the assets have UUID based file name on each upload, those are consider as immutable, because 
-those types URLs don't server updated content, just eveytime send same data. So I can use 31536000 (1 year) duration, instead using shorter TTL like 86400 (1 day) in safely.
+Since most assets have UUID-based filenames for each upload, they are considered immutable; these types of URLs never serve updated content, only the same data every time. Therefore, I can safely use a 31536000 (1 year) duration instead of a shorter TTL like 86400 (1 day).
 
-Also, `immutable` tell the broswer the same similar thing that it doesn't even need to revalidate when the tab is refreshed because `max-age` is for freshness window.
+`immutable` and `max-age` are defined followings. `max-age` is for freshness window on normal navigation while `immutable` tells the broswer not to revalidate even on page refresh.

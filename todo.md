@@ -33,4 +33,5 @@
 * API gateway
 * Lambda
 * S3 - add 24H ttl for /tmp
-* Cloudfront ✅
+* Cloudfront ✅ 
+    * viewer_certificate - replace own with an ACM certificate ARN and ssl_support_method: sni-only
