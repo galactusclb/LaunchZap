@@ -4,7 +4,7 @@ import { revalidateTag } from "next/cache";
 import z from "zod";
 
 import { Product } from "@/models/product.schema";
-import { apiPatch } from "@/utils/api/api-client";
+import { apiServer } from "@/utils/api/api-server";
 
 const voteResponseSchema = z.object({
     success: z.boolean(),
@@ -15,7 +15,9 @@ const voteResponseSchema = z.object({
 export type VoteResponse = z.infer<typeof voteResponseSchema>;
 
 export async function toggleVoteAction(productId: Product['id']): Promise<VoteResponse> {
-    const response = await apiPatch(`/products/${productId}/vote`, {}, voteResponseSchema);
+    const response = await apiServer(`/products/${productId}/vote`, voteResponseSchema, {
+        method: "PATCH"
+    });
 
     if (!response.success) {
         throw new Error("Vote failed")

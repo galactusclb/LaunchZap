@@ -1,3 +1,5 @@
+import 'client-only';
+
 import type { AxiosRequestConfig } from 'axios';
 import { z } from 'zod';
 
