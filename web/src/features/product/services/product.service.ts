@@ -1,6 +1,6 @@
 'use cache'
 
-import { cacheLife } from "next/cache"
+import { cacheLife, cacheTag } from "next/cache"
 
 import { Product, ProductListFullResponse, productListFullResponseSchema, productSingleResponseSchema } from "@/models/product.schema"
 import { constants } from "@/utils/constants/server"
@@ -17,30 +17,34 @@ async function fetchProducts(endpoint: string): Promise<ProductFeedResult> {
 }
 
 export async function getDailyProducts(): Promise<ProductFeedResult> {
-    cacheLife('hours')
+    cacheLife('hours');
+    cacheTag('products');
 
-    return fetchProducts('/products?q=daily')
+    return fetchProducts('/products?q=daily');
 }
 
 export async function getWeeklyProducts(): Promise<ProductFeedResult> {
-    cacheLife('days')
+    cacheLife('days');
+    cacheTag('products');
 
-    return fetchProducts('/products?q=weekly')
+    return fetchProducts('/products?q=weekly');
 }
 
 export async function getNewProducts(): Promise<ProductFeedResult> {
-    cacheLife('minutes')
+    cacheLife('minutes');
+    cacheTag('products');
 
-    return fetchProducts('/products?q=new')
+    return fetchProducts('/products?q=new');
 }
 
 export async function getProductById(id: number): Promise<Product> {
-    cacheLife('minutes')
+    cacheLife('minutes');
+    cacheTag('products', `product-${id}`);
 
     const response = await fetch(`${constants.API.URL}/products/${id}`)
     if (!response.ok) throw new Error(`Failed to fetch product ${id}`)
 
     const { data } = productSingleResponseSchema.parse(await response.json())
     if (!data) throw new Error(`Product ${id} not found`)
-    return data
+    return data;
 }

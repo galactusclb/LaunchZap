@@ -1,3 +1,6 @@
+'use server'
+
+import { revalidateTag } from "next/cache";
 import z from "zod";
 
 import { Product } from "@/models/product.schema";
@@ -18,5 +21,6 @@ export async function toggleVoteAction(productId: Product['id']): Promise<VoteRe
         throw new Error("Vote failed")
     }
 
+    revalidateTag(`product-${productId}`, 'max');
     return response;
-}
+};
