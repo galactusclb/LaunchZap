@@ -262,7 +262,7 @@ So I thought, why not just copy the files into the correct locations using `cp`?
 That is roughly **~45% reduction** in token usage per scaffold run.
 
 
-## 7. (Infra) CDN optimization
+## 7. [Infra] CDN optimization
 ```
 Cache-Control: public, max-age=31536000, immutable
 ```
@@ -275,3 +275,45 @@ Since most files uploaded to S3 use UUID-based filenames, I can add the `Cache-C
 Since most assets have UUID-based filenames for each upload, they are considered immutable; these types of URLs never serve updated content, only the same data every time. Therefore, I can safely use a 31536000 (1 year) duration instead of a shorter TTL like 86400 (1 day).
 
 `immutable` and `max-age` are defined followings. `max-age` is for freshness window on normal navigation while `immutable` tells the broswer not to revalidate even on page refresh.
+
+
+## 8. [Web] Used `generateStaticParams` and ~~`revalidate`~~ stretergies to cache fequently visit pages
+
+```txt
+Request
+  │
+  ▼
+CDN (CloudFront) ← controlled by Cache-Control headers
+  │
+  ▼
+Next.js Full Page HTML cache ← controlled by `revalidate` (ISR)
+  │
+  ▼
+`use cache` / cacheLife() cache ← caches the data fetch / component render result
+  │
+  ▼
+Your API server
+```
+Inorder get the full usage of CDN cacheing + Nextjs 16 caching, SSG, ISR...
+
+## 9. [WEB] Used `revalidateTag` properly
+
+Used `cacheTag` and `revalidateTag` to handle cache on demand and when necessary to invalidate specific pages like update product or vote is happened, not frquently invalide the whole `product` tags based pages.
+
+**use case**
+`revalidateTag` of specific launch details, `cacheTag('products', `product-${id}`)`, not `cacheTag('products']`
+like since voting are happend frequently, if we invalidate `products` group cache tag, we would be missed the real benefits of NextJs caching.
+
+### 9.1 Handle CDN level cache invalidation on `revalidateTag` on server pages
+
+```txt
+User request
+     ↓
+[CloudFront / CDN]  ← has cached HTML, doesn't know about revalidateTag
+     ↓ (cache miss only)
+[Next.js server]    ← revalidateTag lives here
+     ↓
+["use cache" data]
+
+```
+If I deployed app on the `Vercel`, it automatically invalidate the `Vercel` CDN cache, however since I deployed the app on AWS infrastructure, and since I want to specifically handle the situation instead of waiting for TTL expiration, I have used `OpenNext (@opennextjs/aws)` AWS+Next adapter to do that based on use cases.
