@@ -6,7 +6,7 @@ export default function LandingPageContainer() {
 	return (
 		<div className="flex flex-col w-full">
 			<div className="mb-12">
-				<h1 className="text-5xl font-black tracking-tight">Today's Launches</h1>
+				<h1 className="text-5xl font-black tracking-tight">Today&apos;s Launches</h1>
 				<p className="mt-2 text-muted-foreground text-lg">
 					Discover what makers are shipping right now.
 				</p>
