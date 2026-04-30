@@ -1,6 +1,7 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ReactNode, useState } from 'react';
 
 import AuthProvider from './auth-provider';
@@ -20,6 +21,7 @@ export default function ProviderWrapper({ children }: { children: ReactNode }) {
             <AuthProvider>
                 {children}
             </AuthProvider>
+            <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     );
 }
