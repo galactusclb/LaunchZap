@@ -55,14 +55,14 @@ const eslintConfig = defineConfig([
               // ✅ features can import other features (via barrel only)
               from: { type: "feature" },
               allow: {
-                to: { type: "feature", internalPath: [null] },
+                to: { type: "feature", internalPath: [null, "index.server"] },
               },
             },
             {
               // ✅ views can import features (via barrel only)
               from: { type: "views" },
               allow: {
-                to: { type: "feature", internalPath: [null] },
+                to: { type: "feature", internalPath: [null, "index.server"] },
               },
             },
           ]
@@ -72,12 +72,12 @@ const eslintConfig = defineConfig([
         patterns: [
           {
             // block deep feature imports from anywhere
-            group: ["@/features/*/**", "!@/features/views/**"],
+            group: ["@/features/*/**", "!@/features/views/**", "!@/features/*/index.server"],
             message: "Use the feature entry-point (barrel import) (@/features/<name>) instead of deep imports.",
           },
           {
             // block deep view imports from anywhere
-            group: ["@/features/views/*/*/**"],
+            group: ["@/features/views/*/*/**", "!@/features/views/*/*/index.server"],
             message: "Use the view entry-point (@/features/views/<group>/<name>) instead of deep imports.",
           },
         ]
