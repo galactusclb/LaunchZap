@@ -3,8 +3,8 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { ReactNode } from "react";
 
-import { fetchMeServer } from "@/features/auth/index.server";
-import { fetchVotesServer } from "@/features/user/index.server";
+import { authQueries, fetchMeServer } from "@/features/auth/index.server";
+import { fetchVotesServer, userQueries } from "@/features/user/index.server";
 
 export default async function ServerDataProvider({
     children
@@ -13,8 +13,8 @@ export default async function ServerDataProvider({
     const queryClient = new QueryClient();
 
     await Promise.all([
-        queryClient.prefetchQuery({ queryKey: ['me'], queryFn: fetchMeServer }),
-        queryClient.prefetchQuery({ queryKey: ['users', 'me', 'votes'], queryFn: fetchVotesServer }),
+        queryClient.prefetchQuery({ queryKey: authQueries.me.key(), queryFn: fetchMeServer }),
+        queryClient.prefetchQuery({ queryKey: userQueries.myVotes.key(), queryFn: fetchVotesServer }),
     ]);
 
     return (
