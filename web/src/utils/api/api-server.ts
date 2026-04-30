@@ -51,7 +51,8 @@ export async function apiServer<T extends z.ZodTypeAny>(
         return schema.parse(json);
     } catch (error) {
         if (error instanceof ApiError && error.status === 401) redirect('/login');
-        console.error('[apiServer]', error);
+        if (error instanceof DOMException && error.name === 'AbortError') throw error;
+        logError(init?.method, path, error);
         throw toFetchApiError(error);
     }
 }
@@ -61,7 +62,8 @@ export async function apiServerVoid(path: string, init?: RequestInit): Promise<v
         await baseFetch(path, init);
     } catch (error) {
         if (error instanceof ApiError && error.status === 401) redirect('/login');
-        console.error('[apiServer]', error);
+        if (error instanceof DOMException && error.name === 'AbortError') throw error;
+        logError(init?.method, path, error);
         throw toFetchApiError(error);
     }
 }
@@ -99,3 +101,17 @@ async function tokenRotation(): Promise<boolean>{
 
     return true;
 }
+
+function logError(method: string | undefined, path: string, error: unknown): void {
+    const ctx = { method: method ?? 'GET', path };
+
+    if (error instanceof ApiError) {
+        console.error('[apiServer]', { ...ctx, status: error.status, code: error.code, message: error.message, details: error.details });
+    } else if (error instanceof z.ZodError) {
+        console.error('[apiServer]', { ...ctx, type: 'ZodError', issues: z.treeifyError(error) });
+    } else if (error instanceof Error) {
+        console.error('[apiServer]', { ...ctx, message: error.message, stack: error.stack });
+    } else {
+        console.error('[apiServer]', { ...ctx, error });
+    }
+};
