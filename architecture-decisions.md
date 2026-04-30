@@ -317,3 +317,31 @@ User request
 
 ```
 If I deployed app on the `Vercel`, it automatically invalidate the `Vercel` CDN cache, however since I deployed the app on AWS infrastructure, and since I want to specifically handle the situation instead of waiting for TTL expiration, I have used `OpenNext (@opennextjs/aws)` AWS+Next adapter to do that based on use cases.
+
+
+## 10. [WEB] Prefetch on SSR water based fetchings
+
+I noticed that there is a waterfall fetch pattern: `/auth/me` → `/user/me/votes` to get the logged-in user's voted product list on the client side after hydration to show the voted state. This means the voted state isn't available until after hydration + two sequential round trips, causing a visible flash of unvoted state on every page load.
+
+1. Client hydrates
+2. `/auth/me` request fires → waits for response (`50–200ms`)
+3. `/user/me/votes` request fires → waits for response (`50–200ms`)
+4. Voted state renders (`~100–400ms`)
+
+Since user-specific data is generally not cached, I thought to use SSR prefetch pettern. So I implemented prefetching logic in `ServerDataProvider.tsx` using React Query's
+`HydrationBoundary` + `prefetchQuery`, and both fetch in parallelly.
+
+```tsx
+  const queryClient = new QueryClient();
+
+  await Promise.all([
+      queryClient.prefetchQuery({ queryKey: ['me'], queryFn: fetchMeServer }),
+      queryClient.prefetchQuery({ queryKey: ['users', 'me', 'votes'], queryFn: fetchVotesServer }),
+  ]);
+
+  return (
+      <HydrationBoundary state={dehydrate(queryClient)}>
+          {children}
+      </HydrationBoundary>
+  )
+```
