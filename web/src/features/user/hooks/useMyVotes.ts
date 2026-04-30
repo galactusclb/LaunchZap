@@ -16,8 +16,9 @@ export default function useMyVotes(){
         queryFn: async () => {
             const parsed = await apiGet('/users/me/votes', myVotesResponseSchema);
             if (!parsed.success) throw new Error(parsed.error.message);
-            return new Set(parsed.data.map(v => v.productId));
+            return parsed.data.map(v => v.productId);
         },
+        select: (data)=> new Set(data),
         enabled: !!user,
     });
 }

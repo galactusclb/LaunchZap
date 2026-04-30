@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense } from "react";
 
-import "./globals.css";
 import Header from "@/components/shared/header/header";
 import ProviderWrapper from "@/components/shared/providers/provider-wrapper";
+import ServerDataProvider from "@/components/shared/providers/server-data-provider";
 import { Toaster } from "@/components/ui/sonner";
+
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +24,7 @@ export const metadata: Metadata = {
   description: "Discover and launch products",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -34,10 +36,12 @@ export default function RootLayout({
       >
         <Suspense>
           <ProviderWrapper>
-            <Header />
-            <main className="flex-1 overflow-auto">
-              {children}
-            </main>
+            <ServerDataProvider>
+              <Header />
+              <main className="flex-1 overflow-auto">
+                {children}
+              </main>
+            </ServerDataProvider>
           </ProviderWrapper>
         </Suspense>
         <Toaster />
