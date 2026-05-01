@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 import { type User } from '@/models/user.schema';
 
@@ -10,10 +11,15 @@ type AuthState = {
     setLoading: (loading: boolean) => void;
 };
 
-export const useAuthStore = create<AuthState>((set) => ({
-    user: null,
-    isLoading: true,
-    setUser: (user) => set({ user }),
-    clearUser: () => set({ user: null }),
-    setLoading: (isLoading) => set({ isLoading }),
-}));
+export const useAuthStore = create<AuthState>()(
+    devtools (
+        (set) => ({
+            user: null,
+            isLoading: true,
+            setUser: (user) => set({ user }, false, 'setUser'),
+            clearUser: () => set({ user: null }, false, 'clearUser'),
+            setLoading: (isLoading) => set({ isLoading }, false, 'setLoading'),
+        }),
+        { name: 'AuthStore', trace: true, traceLimit: 25 }
+    )
+);
