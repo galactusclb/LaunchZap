@@ -89,7 +89,7 @@ const logout = async (req: Request, res: Response) => {
   const token = req.cookies?.refresh_token as string | undefined;
   await handleLogout(token);
   clearAuthCookies(res);
-  res.json({ ok: true });
+  res.status(200).json({ success: true, message: "User logout successful" });
 };
 
 export default { googleStart, googleCallback, me, refresh, logout };
