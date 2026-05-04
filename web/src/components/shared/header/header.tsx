@@ -1,7 +1,7 @@
 'use client';
 
+import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -13,18 +13,19 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ROUTES } from '@/config/routes';
+import { authQueries } from '@/features/auth';
 import { logoutResponseSchema } from '@/models/user.schema';
 import { useAuthStore } from '@/store/auth.store';
 import { apiPost } from '@/utils/api/api-client';
 
 export default function Header() {
     const { user, isLoading, clearUser } = useAuthStore();
-    const router = useRouter();
+    const queryClient = useQueryClient();
 
     async function handleLogout() {
         await apiPost(`/auth/logout`, {}, logoutResponseSchema);
+        queryClient.removeQueries({queryKey: authQueries.me.key()});
         clearUser();
-        router.push(ROUTES.login);
     }
 
     return (
