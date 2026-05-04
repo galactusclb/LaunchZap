@@ -16,7 +16,7 @@ export default function useMyVotes(){
     return useQuery({
         queryKey: userQueries.myVotes.key(),
         queryFn: async () => {
-            const parsed = await apiGet('/users/me/votes', myVotesResponseSchema);
+            const parsed = await apiGet(userQueries.myVotes.endpoint, myVotesResponseSchema);
             if (!parsed.success) throw new Error(parsed.error.message);
             return parsed.data.map(v => v.productId);
         },
