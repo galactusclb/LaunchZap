@@ -1,4 +1,4 @@
-import { getDailyProducts, getNewProducts, getWeeklyProducts } from "@/features/product";
+import { getDailyProducts, getNewProducts, getWeeklyProducts } from "@/features/product/index.server";
 
 import FeedSection from "./components/feed-section";
 

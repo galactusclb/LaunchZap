@@ -1,4 +1,4 @@
-import { getProductById } from "@/features/product";
+import { getProductById } from "@/features/product/index.server";
 
 import LaunchDetails from "./launch-details";
 import LaunchHero from "./launch-hero";
