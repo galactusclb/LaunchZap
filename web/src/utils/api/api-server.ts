@@ -1,14 +1,36 @@
 import "server-only"
 
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { cookies, headers } from "next/headers";
+import { redirect, unstable_rethrow } from "next/navigation";
 import z from "zod";
 
 import { constants } from "../constants/server";
 
 import { ApiError, toFetchApiError } from "./api-error";
 
-async function baseFetch(path: string, init?: RequestInit): Promise<Response> {
+type FetchOutcome =
+    | { ok: true;  response: Response }
+    | { ok: false; status: number; message: string };
+
+export async function apiServer<T extends z.ZodTypeAny>(
+    path: string,
+    schema: T,
+    init?: RequestInit,
+    allowRetryOn401: boolean = false
+): Promise<z.infer<T>> {
+    try {
+        const response = await fetchOrRedirect(path, init, allowRetryOn401);
+        return schema.parse(await response.json());
+    } catch (error) {
+        console.log('error', error)
+        unstable_rethrow(error);          // NEXT_REDIRECT / NEXT_NOT_FOUND pass through
+        if (error instanceof DOMException && error.name === 'AbortError') throw error;
+        logError(init?.method, path, error);
+        throw toFetchApiError(error);
+    }
+}
+
+async function baseFetch(path: string, init?: RequestInit, allowRetryOn401: boolean = false): Promise<FetchOutcome> {
     const cookieStore = await cookies();
 
     const doFetch = ()=> 
@@ -21,82 +43,77 @@ async function baseFetch(path: string, init?: RequestInit): Promise<Response> {
                 Cookie: cookieStore.toString()
             }
     });
-
+    
     let response = await doFetch();
 
-    if (response.status === 401) {
-        const refreshed = await tokenRotation();
-        if (refreshed) {
-            response = await doFetch();
-        }
+    if (response.ok) return { ok: true, response };
+
+    if (response.status === 401 && allowRetryOn401 && await tokenRotation()) {
+        response = await doFetch();
+
+        if (response.ok) return { ok: true, response };
     }
 
-    if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        const message = typeof data?.error === 'string' ? data.error : 'Request failed';
-        throw new ApiError(message, { status: response.status });
-    }
+    const data = await response.json().catch(() => ({}));
+    const message = typeof data?.error === 'string' ? data.error : 'Request failed';
+    return { ok: false, status: response.status, message };
+};
 
-    return response;
-}
-
-export async function apiServer<T extends z.ZodTypeAny>(
+async function fetchOrRedirect(
     path: string,
-    schema: T,
-    init?: RequestInit
-): Promise<z.infer<T>> {
-    try {
-        const response = await baseFetch(path, init);
-        const json = await response.json();
-        return schema.parse(json);
-    } catch (error) {
-        if (error instanceof ApiError && error.status === 401) redirect('/login');
-        if (error instanceof DOMException && error.name === 'AbortError') throw error;
-        logError(init?.method, path, error);
-        throw toFetchApiError(error);
+    init: RequestInit | undefined,
+    allowRetryOn401: boolean,
+): Promise<Response>  {
+    const outcome = await baseFetch(path, init, allowRetryOn401);
+    if (outcome.ok) return outcome.response;
+
+    if(outcome.status === 401) {
+        const returnTo = await currentPath();
+        console.log('returnTo', returnTo)
+        redirect(`/login?returnTo=${encodeURIComponent(returnTo)}`);
     }
+
+    throw new ApiError(outcome.message, { status: outcome.status });
 }
 
-export async function apiServerVoid(path: string, init?: RequestInit): Promise<void> {
-    try {
-        await baseFetch(path, init);
-    } catch (error) {
-        if (error instanceof ApiError && error.status === 401) redirect('/login');
-        if (error instanceof DOMException && error.name === 'AbortError') throw error;
-        logError(init?.method, path, error);
-        throw toFetchApiError(error);
-    }
+export async function callRefreshEndpoint(cookieString: string): Promise<Response> {
+    return await fetch(`${constants.API.URL}/auth/refresh`, {
+        method: 'POST',
+        cache: 'no-store',
+        headers: {
+            Cookie: cookieString
+        }
+    })
 }
 
 async function tokenRotation(): Promise<boolean>{
     const cookieStore = await cookies();
-    const response = await fetch(`${constants.API.URL}/auth/refresh`, {
-        method: 'POST',
-        cache: 'no-store',
-        headers: {
-            Cookie: cookieStore.toString()
-        }
-    })
+    const response = await callRefreshEndpoint(cookieStore.toString());
 
     if(!response.ok) return false;
 
-    for (const raw of response.headers.getSetCookie()) {
-        const [nameValue, ...parts] = raw.split(';');
-        const eqIdx = nameValue.indexOf('=');
-        const name = nameValue.slice(0, eqIdx).trim();
-        const value = nameValue.slice(eqIdx+1).trim();
+    try {
+        for (const raw of response.headers.getSetCookie()) {
+            const [nameValue, ...parts] = raw.split(';');
+            const eqIdx = nameValue.indexOf('=');
+            const name = nameValue.slice(0, eqIdx).trim();
+            const value = nameValue.slice(eqIdx + 1).trim();
 
-        // Preserve the original attributes (HttpOnly, Path, SameSite, etc.)
-        const attrs = Object.fromEntries(
-            parts.map(p => p.trim().split('=')).map(([k, v]) => [k.toLowerCase(), v ?? true])
-        );
+            // Preserve the original attributes (HttpOnly, Path, SameSite, etc.)
+            const attrs = Object.fromEntries(
+                parts.map(p => p.trim().split('=')).map(([k, v]) => [k.toLowerCase(), v ?? true])
+            );
 
-        cookieStore.set(name, value, {
-            httpOnly: !!attrs['httponly'],
-            secure: !!attrs['secure'],
-            path: typeof attrs['path'] === 'string' ? attrs['path'] : '/',
-            sameSite: attrs['samesite'] as 'lax' | 'strict' | 'none' | undefined,
-        })
+            cookieStore.set(name, value, {
+                httpOnly: !!attrs['httponly'],
+                secure: !!attrs['secure'],
+                path: typeof attrs['path'] === 'string' ? attrs['path'] : '/',
+                sameSite: attrs['samesite'] as 'lax' | 'strict' | 'none' | undefined,
+            });
+        }
+    } catch {
+        console.warn('[apiServer] tokenRotation cannot set cookies in this context. Use allowRetryOn401: true only from Server Actions.');
+        return false;
     }
 
     return true;
@@ -115,3 +132,10 @@ function logError(method: string | undefined, path: string, error: unknown): voi
         console.error('[apiServer]', { ...ctx, error });
     }
 };
+
+async function currentPath(): Promise<string> {
+    const h = await headers();
+    const pathName = h.get('x-pathname') ?? '/';
+    const search = h.get('x-search') ?? '';
+    return `${pathName}${search}`;
+}

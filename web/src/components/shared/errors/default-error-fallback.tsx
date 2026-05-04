@@ -1,9 +1,11 @@
+'use client'
+
 import { AlertCircle } from "lucide-react";
-import { FallbackProps } from "react-error-boundary";
+import { ErrorInfo, unstable_catchError } from "next/error";
 
 import { Button } from "@/components/ui/button";
 
-export default function DefaultErrorFallback({ resetErrorBoundary }: FallbackProps) {
+function DefaultErrorFallback(_props: object, { error, unstable_retry }: ErrorInfo) {
     return (
         <div role="alert" className="flex flex-col items-center justify-center gap-4 rounded-2xl bg-muted/60 py-16 text-center">
             <AlertCircle className="size-12 text-destructive" aria-hidden="true" />
@@ -14,7 +16,7 @@ export default function DefaultErrorFallback({ resetErrorBoundary }: FallbackPro
                 </p>
             </div>
             <div className="flex items-center gap-3">
-                <Button variant="outline" onClick={resetErrorBoundary}>
+                <Button variant="outline" onClick={unstable_retry}>
                     Try again
                 </Button>
                 <button
@@ -28,3 +30,6 @@ export default function DefaultErrorFallback({ resetErrorBoundary }: FallbackPro
         </div>
     );
 }
+
+
+export default unstable_catchError(DefaultErrorFallback);
