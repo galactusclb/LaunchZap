@@ -1,6 +1,6 @@
 import { Rocket } from "lucide-react";
 
-import { ProductFeedResult } from "@/features/product";
+import { ProductFeedResult } from "@/features/product/index.server";
 
 import ProductItem from "./product-item";
 import ProductLoadMore from "./product-load-more";

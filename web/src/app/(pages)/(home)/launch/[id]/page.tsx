@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { getDailyProducts, getNewProducts, getWeeklyProducts } from "@/features/product";
+import { getDailyProducts, getNewProducts, getWeeklyProducts } from "@/features/product/index.server";
 import { LaunchPageContainer } from "@/features/views/home/launch";
 import type { LaunchPageContainerProps } from "@/features/views/home/launch";
 import { ProductIdParam } from "@/models/product.schema";

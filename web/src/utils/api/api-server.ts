@@ -15,12 +15,12 @@ type FetchOutcome =
     | { ok: true;  response: Response }
     | { ok: false; status: number; message: string };
 
-export async function apiServer<T extends z.ZodTypeAny>(
+export const apiServer = async <T extends z.ZodTypeAny>(
     path: string,
     schema: T,
     init?: RequestInit,
     allowRetryOn401: boolean = false
-): Promise<z.infer<T>> {
+): Promise<z.infer<T>> =>{
     try {
         const response = await fetchOrRedirect(path, init, allowRetryOn401);
         return schema.parse(await response.json());
@@ -31,7 +31,34 @@ export async function apiServer<T extends z.ZodTypeAny>(
         logError(init?.method, path, error);
         throw toFetchApiError(error);
     }
-}
+};
+
+export const apiCacheable = async <T extends z.ZodTypeAny>(
+    path: string,
+    schema: T,
+    init?: RequestInit,
+): Promise<z.infer<T>> => {
+    try {
+        const response = await fetch(`${constants.API.URL}${path}`, {
+            ...init,
+            headers: {
+                'Content-Type': 'application/json',
+                ...init?.headers,
+            },
+        });
+
+        if (!response.ok) {
+            const { status, message } = await parseErrorBody(response);
+            throw new ApiError(message, { status });
+        }
+
+        return schema.parse(await response.json());
+    } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') throw error;
+        logError(init?.method, path, error);
+        throw toFetchApiError(error);
+    }
+};
 
 async function baseFetch(path: string, init?: RequestInit, allowRetryOn401: boolean = false): Promise<FetchOutcome> {
     const cookieStore = await cookies();
@@ -57,9 +84,8 @@ async function baseFetch(path: string, init?: RequestInit, allowRetryOn401: bool
         if (response.ok) return { ok: true, response };
     }
 
-    const data = await response.json().catch(() => ({}));
-    const message = typeof data?.error === 'string' ? data.error : 'Request failed';
-    return { ok: false, status: response.status, message };
+    const { status, message } = await parseErrorBody(response);
+    return { ok: false, status, message };
 };
 
 async function fetchOrRedirect(
@@ -141,4 +167,10 @@ async function currentPath(): Promise<string> {
     const pathName = h.get(PROXY_HEADERS.PATHNAME) ?? '/';
     const search = h.get(PROXY_HEADERS.SEARCH) ?? '';
     return `${pathName}${search}`;
+}
+
+async function parseErrorBody(response: Response): Promise<{ status: number; message: string }> {
+    const data = await response.json().catch(() => ({}));
+    const message = typeof data?.error === 'string' ? data.error : 'Request failed';
+    return { status: response.status, message };
 }
