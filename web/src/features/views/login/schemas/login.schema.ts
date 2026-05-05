@@ -1,13 +1,9 @@
 import { z } from 'zod';
 
+import { returnToSchema } from '@/utils';
+
 export const loginSearchParamsSchema = z.object({
-    returnTo: z
-        .string()
-        .optional()
-        .transform((value) => {
-            if (!value || !value.startsWith('/') || value.startsWith('//')) return '/';
-            return value;
-        }),
+    returnTo: returnToSchema,
 });
 
 export type LoginSearchParams = z.infer<typeof loginSearchParamsSchema>;

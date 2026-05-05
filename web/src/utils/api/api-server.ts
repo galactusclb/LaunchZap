@@ -4,6 +4,9 @@ import { cookies, headers } from "next/headers";
 import { redirect, unstable_rethrow } from "next/navigation";
 import z from "zod";
 
+import { ROUTES } from "@/config/routes";
+
+import { AUTH, PROXY_HEADERS } from "../constants/auth";
 import { constants } from "../constants/server";
 
 import { ApiError, toFetchApiError } from "./api-error";
@@ -70,7 +73,7 @@ async function fetchOrRedirect(
     if(outcome.status === 401) {
         const returnTo = await currentPath();
         console.log('returnTo', returnTo)
-        redirect(`/login?returnTo=${encodeURIComponent(returnTo)}`);
+        redirect(`${ROUTES.login}?${AUTH.QUERY_PARAMS.RETURN_TO}=${encodeURIComponent(returnTo)}`);
     }
 
     throw new ApiError(outcome.message, { status: outcome.status });
@@ -135,7 +138,7 @@ function logError(method: string | undefined, path: string, error: unknown): voi
 
 async function currentPath(): Promise<string> {
     const h = await headers();
-    const pathName = h.get('x-pathname') ?? '/';
-    const search = h.get('x-search') ?? '';
+    const pathName = h.get(PROXY_HEADERS.PATHNAME) ?? '/';
+    const search = h.get(PROXY_HEADERS.SEARCH) ?? '';
     return `${pathName}${search}`;
 }

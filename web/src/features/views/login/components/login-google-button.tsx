@@ -1,5 +1,6 @@
 import Image from 'next/image';
 
+import { AUTH } from '@/utils/constants/auth';
 import { constants } from '@/utils/constants/client';
 
 import { loginSearchParamsSchema, type LoginSearchParams } from '../schemas/login.schema';
@@ -9,8 +10,9 @@ export default async function LoginGoogleButton({
 }: {
     searchParams: Promise<LoginSearchParams>;
 }) {
-    const { returnTo } = loginSearchParamsSchema.parse(await searchParams);
-    const googleStartUrl = `${constants.API.URL}/auth/google/start?returnTo=${encodeURIComponent(returnTo)}`;
+    const result = loginSearchParamsSchema.safeParse(await searchParams);
+    const returnTo = result.success ? result.data.returnTo : '/';
+    const googleStartUrl = `${constants.API.URL}/auth/google/start?${AUTH.QUERY_PARAMS.RETURN_TO}=${encodeURIComponent(returnTo)}`;
 
     return (
         <a

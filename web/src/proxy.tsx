@@ -3,17 +3,19 @@ import type { NextRequest } from 'next/server'
 
 import { AUTH_ROUTES, PROTECTED_ROUTES, ROUTES } from '@/config/routes'
 
+import { parseReturnTo } from './utils';
 import { callRefreshEndpoint } from './utils/api/api-server';
+import { AUTH, PROXY_HEADERS } from './utils/constants/auth';
 
 export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
   const requestHeader = new Headers(request.headers);
-  requestHeader.set('x-pathname', pathname);
-  requestHeader.set('x-search', search);
+  requestHeader.set(PROXY_HEADERS.PATHNAME, pathname);
+  requestHeader.set(PROXY_HEADERS.SEARCH, search);
 
-  let hasRefreshToken = request.cookies.has('refresh_token');
-  let hasAccessToken = request.cookies.has('access_token');
+  let hasRefreshToken = request.cookies.has(AUTH.COOKIES.REFRESH_TOKEN);
+  let hasAccessToken = request.cookies.has(AUTH.COOKIES.ACCESS_TOKEN);
 
   console.log('isAuthenticated', hasRefreshToken, hasAccessToken);
 
@@ -37,11 +39,11 @@ export async function proxy(request: NextRequest) {
 
   if (isProtected && !isAuthenticated) {
     const loginUrl = new URL(ROUTES.login, request.url);
-    loginUrl.searchParams.set('returnTo', pathname);
+    loginUrl.searchParams.set(AUTH.QUERY_PARAMS.RETURN_TO, pathname);
     response = NextResponse.redirect(loginUrl);
   } else if (isAuthRoute && isAuthenticated) {
-    const returnTo = request.nextUrl.searchParams.get('returnTo');
-    const destination = isSafeReturnTo(returnTo) ? returnTo : ROUTES.home;
+    const returnTo = request.nextUrl.searchParams.get(AUTH.QUERY_PARAMS.RETURN_TO);
+    const destination = parseReturnTo(returnTo) ?? ROUTES.home;
     response = NextResponse.redirect(new URL(destination, request.url));
   } else {
     response = NextResponse.next({ request: { headers: requestHeader } });
@@ -52,14 +54,6 @@ export async function proxy(request: NextRequest) {
   }
 
   return response;
-}
-
-function isSafeReturnTo(returnTo: string | null): returnTo is string {
-  if (!returnTo) return false;
-
-  // Must be a same-origin path: starts with "/" but not "//" (which is a protocol-relative URL).
-  // Also reject backslashes which some browsers normalize to "/".
-  return returnTo.startsWith('/') && !returnTo.startsWith('//') && !returnTo.startsWith('/\\');
 }
 
 export const config = {
