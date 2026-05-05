@@ -41,10 +41,12 @@ export async function proxy(request: NextRequest) {
     const loginUrl = new URL(ROUTES.login, request.url);
     loginUrl.searchParams.set(AUTH.QUERY_PARAMS.RETURN_TO, pathname);
     response = NextResponse.redirect(loginUrl);
+
   } else if (isAuthRoute && isAuthenticated) {
     const returnTo = request.nextUrl.searchParams.get(AUTH.QUERY_PARAMS.RETURN_TO);
     const destination = parseReturnTo(returnTo) ?? ROUTES.home;
     response = NextResponse.redirect(new URL(destination, request.url));
+
   } else {
     response = NextResponse.next({ request: { headers: requestHeader } });
   }
