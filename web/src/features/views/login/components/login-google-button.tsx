@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 import { AUTH } from '@/utils/constants/auth';
-import { constants } from '@/utils/constants/client';
+import { constants } from '@/utils/constants/env/client';
 
 import { loginSearchParamsSchema, type LoginSearchParams } from '../schemas/login.schema';
 

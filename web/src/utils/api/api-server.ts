@@ -7,7 +7,7 @@ import z from "zod";
 import { ROUTES } from "@/config/routes";
 
 import { AUTH, PROXY_HEADERS } from "../constants/auth";
-import { constants } from "../constants/server";
+import { constants } from "../constants/env/server";
 
 import { ApiError, toFetchApiError } from "./api-error";
 

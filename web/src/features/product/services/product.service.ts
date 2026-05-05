@@ -3,7 +3,8 @@
 import { cacheLife, cacheTag } from "next/cache"
 
 import { Product, ProductListFullResponse, productListFullResponseSchema, productSingleResponseSchema } from "@/models/product.schema"
-import { constants } from "@/utils/constants/server"
+import { apiServer } from "@/utils/api/api-server"
+import { constants } from "@/utils/constants/env/server"
 
 export type ProductFeedResult = Pick<ProductListFullResponse, 'data' | 'meta'>
 

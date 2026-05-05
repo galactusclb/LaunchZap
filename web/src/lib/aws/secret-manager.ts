@@ -3,7 +3,7 @@ import {
     SecretsManagerClient
 } from "@aws-sdk/client-secrets-manager";
 
-import { constants } from "@/utils/constants/server";
+import { constants } from "@/utils/constants/env/server";
 
 import { secretManagerResponse, secretManagerResponseSchema } from "./secrett-manager.schema";
 

@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 import { ApiError } from '@/utils/api/api-error';
-import { constants } from '@/utils/constants/client';
+import { constants } from '@/utils/constants/env/client';
 
 import { extractApiError } from './extract-api-error';
 

@@ -1,6 +1,6 @@
 import { S3Client } from "@aws-sdk/client-s3";
 
-import { constants } from "@/utils/constants/server";
+import { constants } from "@/utils/constants/env/server";
 
 type S3Instance = {
     client: S3Client
