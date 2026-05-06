@@ -8,13 +8,14 @@ import { ProductIdParam } from "@/models/product.schema";
 type ProductStaticParams = Record<keyof ProductIdParam, string>;
 
 export async function generateStaticParams(): Promise<ProductStaticParams[]> {
-    const [daily, weekly] = await Promise.all([
+    const [newP, daily, weekly] = await Promise.all([
         getNewProducts(),
         getDailyProducts(),
         getWeeklyProducts(),
     ]);
 
     const ids = new Set([
+        ...newP.data?.map(p => p.id) ?? [],
         ...daily.data?.map(p => p.id) ?? [],
         ...weekly.data?.map(p => p.id) ?? [],
     ]);
