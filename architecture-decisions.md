@@ -319,7 +319,7 @@ User request
 If I deployed app on the `Vercel`, it automatically invalidate the `Vercel` CDN cache, however since I deployed the app on AWS infrastructure, and since I want to specifically handle the situation instead of waiting for TTL expiration, I have used `OpenNext (@opennextjs/aws)` AWS+Next adapter to do that based on use cases.
 
 
-## 10. [WEB] Prefetch on SSR water based fetchings
+## 10. [WEB] Prefetch on SSR waterfall based fetchings
 
 I noticed that there is a waterfall fetch pattern: `/auth/me` → `/user/me/votes` to get the logged-in user's voted product list on the client side after hydration to show the voted state. This means the voted state isn't available until after hydration + two sequential round trips, causing a visible flash of unvoted state on every page load.
 
@@ -345,3 +345,25 @@ Since user-specific data is generally not cached, I thought to use SSR prefetch 
       </HydrationBoundary>
   )
 ```
+
+
+## 11. [WEB] Centralized server-side auth in apiServer with seamless token rotation for SSR and server actions
+
+In Next.js 15+, we have to handle token rotation in on two sides and here how I have done it:
+
+1. **Client-side:** is already covered by Axios interceptors in api-client.ts,
+including edge cases like de-duplicating concurrent requests during rotation.
+
+2. **Server-side:** is the trickiest one. I previously assumed my previous implementation of `apiServer`'s token rotation could cover all server-side scenarios — server components, server actions, and route handlers. But that assumption breaks in server components due to a core Next.js constraint: cookies cannot be set after streaming has begun (Set-Cookie headers must be flushed before the streamed body starts, https://www.youtube.com/watch?v=ejO8V5vt-7I). This is also what prevents CSRF attacks in SSR.
+
+So server-side token rotation has to be split across two surfaces:
+
+1. **Server Actions / Route Handlers:** can call cookies().set(...), so `apiServer` rotates the token inline, retries the original request (preserving the mutation body), and the caller opts in via allowRetryOn401: true.
+
+2. **Server Components (SSR):** cannot set cookies during render. Instead, `apiServer` redirects to `/login?returnTo=...`, and `proxy.ts` takes over either preemptively (when the access_token cookie is missing) or reactively (on the redirect from `apiServer`). The preemptive path is the common case for SSR.
+
+Since this project uses JWT-based tokens (no DB lookup needed per request, unlike session-based auth), splitting rotation across these two surfaces is
+acceptable (https://nextjs.org/docs/app/getting-started/proxy#use-cases).
+In both paths, rotation happens seamlessly under the hood; even when tokens expire mid-request, the user never has to manually retry.
+
+If refresh_token itself is expired, both paths redirect to `/login?returnTo=...`, so the user can re-authenticate and return to where they were.
