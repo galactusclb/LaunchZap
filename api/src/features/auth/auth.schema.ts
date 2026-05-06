@@ -9,15 +9,15 @@ export const baseSchema = z.object({
         message: 'Name can only contain letters, numbers, and underscores',
     }),
     email:      normalizedEmail,
-    pictureUrl: z.string().url().optional(),
+    pictureUrl: z.string().url().nullable(),
 });
 
 export const userSchema = baseSchema.extend({
     id:            z.string().cuid(),
     emailVerified: z.boolean(),
-    googleSub:     z.string().optional(),
+    googleSub:     z.string().nullable(),
     role:          z.nativeEnum(Roles),
-    lastLoginAt:   z.date().optional(),
+    lastLoginAt:   z.date().nullable(),
     createdAt:     z.date(),
     updatedAt:     z.date(),
 });

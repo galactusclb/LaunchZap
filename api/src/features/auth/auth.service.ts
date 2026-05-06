@@ -91,7 +91,7 @@ export async function handleGoogleOAuthStart(returnTo: string): Promise<string> 
 }
 
 export async function handleGoogleCallback(originalUrl: string, state: string): Promise<{
-  user: any;
+  user: User;
   tokens: { accessToken: string; refreshToken: string };
   redirectTo: string;
 } | null> {
