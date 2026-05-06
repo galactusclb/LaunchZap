@@ -367,3 +367,17 @@ acceptable (https://nextjs.org/docs/app/getting-started/proxy#use-cases).
 In both paths, rotation happens seamlessly under the hood; even when tokens expire mid-request, the user never has to manually retry.
 
 If refresh_token itself is expired, both paths redirect to `/login?returnTo=...`, so the user can re-authenticate and return to where they were.
+
+Supporting changes required to make this work end-to-end:
+
+- apiServer's try/catch now calls unstable_rethrow before normalizing errors, 
+  so Next.js framework signals (`redirect()`, `notFound()`, `unauthorized()`) are
+  not accidentally swallowed by the catch block and corrupted on the way out.
+  Without this, nothing works, because the catch block treats framework errors like
+  regular errors.
+
+- ErrorBoundary now uses next/error's unstable_catchError so framework-level
+  errors bypass the React boundary and reach Next.js directly for navigation.
+
+- `proxy.ts` injects `x-pathname` and `x-search` into forwarded request headerss.
+  so `apiServer` can compute the correct returnTo value via currentPath() during SSR.
