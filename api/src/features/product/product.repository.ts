@@ -3,7 +3,7 @@ import { CreateProduct, ProductFilterQuery } from "./product.schema"
 import { categoryFilter, getDateRange } from "./product.utils"
 
 import { Prisma, Product, User, Vote } from "@/lib/prisma/generated/client"
-import prisma from "@/lib/prisma/prisma.ts"
+import prisma, { PrismaTransactionClient } from "@/lib/prisma/prisma.ts"
 import { paginate } from "@/utils/paginate-helpers"
 
 
@@ -30,7 +30,7 @@ export const findAll = async (query: ProductFilterQuery) => {
     //     : { createdAt: query.sortOrder}
     // const orderBy = categoryOrderBy(query.q ?? '')
     
-    const [data, total] = await prisma.$transaction([
+    const [data, total] = await Promise.all([
         prisma.product.findMany({
             where,
             // orderBy,
@@ -44,7 +44,7 @@ export const findAll = async (query: ProductFilterQuery) => {
     return { data: sorted, total }
 }
 
-export const findById = async (id: Product['id'], prismaIntance: Prisma.TransactionClient = prisma) => {
+export const findById = async (id: Product['id'], prismaIntance: PrismaTransactionClient = prisma) => {
     return await prismaIntance.product.findFirst({
         where: { id },
         include: getProductInclude().include
@@ -73,7 +73,7 @@ export const createProduct = async (makerId: User['id'],input: CreateProduct)=>{
     })
 }
 
-export const findVote = async (userId: User['id'], productId: Product['id'], prismaIntance: Prisma.TransactionClient = prisma) => {
+export const findVote = async (userId: User['id'], productId: Product['id'], prismaIntance: PrismaTransactionClient = prisma) => {
     return await prismaIntance.vote.findFirst({
         where: { 
             userId,
@@ -82,7 +82,7 @@ export const findVote = async (userId: User['id'], productId: Product['id'], pri
     })
 }
 
-export const removeVote = async (id: Vote['id'], prismaIntance: Prisma.TransactionClient = prisma)=>{
+export const removeVote = async (id: Vote['id'], prismaIntance: PrismaTransactionClient = prisma)=>{
     return await prismaIntance.vote.delete({
         where: {
             id
@@ -90,7 +90,7 @@ export const removeVote = async (id: Vote['id'], prismaIntance: Prisma.Transacti
     })
 }
 
-export const createVote = async (userId: User['id'], productId: Product['id'], prismaIntance: Prisma.TransactionClient = prisma)=>{
+export const createVote = async (userId: User['id'], productId: Product['id'], prismaIntance: PrismaTransactionClient = prisma)=>{
     return await prismaIntance.vote.create({
         data: {
             productId: productId,
