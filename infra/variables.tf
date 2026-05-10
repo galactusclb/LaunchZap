@@ -15,6 +15,30 @@ variable "common_tags" {
   default     = {}
 }
 
+variable "vpc_name" {
+  type = string
+}
+
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC"
+  type        = string
+
+  validation {
+    condition     = can(cidrnetmask(var.vpc_cidr))
+    error_message = "vpc_cidr must be a valid CIDR block."
+  }
+}
+
+variable "availability_zones" {
+  description = "List of availability zones to deploy subnets into"
+  type        = list(string)
+}
+
+variable "subnets" {
+  description = "Map of subnet tiers to lists of CIDR blocks"
+  type        = map(list(string))
+}
+
 variable "s3_bucket_name" {
   description = "Globally unique name for the S3 bucket"
   type        = string

@@ -7,6 +7,15 @@ provider "aws" {
   }
 }
 
+module "vpc" {
+  source = "./resources/vpc"
+
+  vpc_name = var.vpc_name
+  availability_zones = var.availability_zones
+  vpc_cidr = var.vpc_cidr
+  subnets = var.subnets
+}
+
 module "s3" {
   source = "./resources/s3"
 
