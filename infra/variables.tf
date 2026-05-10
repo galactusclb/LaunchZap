@@ -48,3 +48,18 @@ variable "secret_manager_name" {
   description = "Name of the Secrets Manager secret"
   type        = string
 }
+
+variable "name_prefix" {
+  description = "Prefix applied to all resource names (e.g. launchwap-dev)"
+  type        = string
+}
+
+variable "api_port" {
+  type    = number
+  default = 4000
+}
+
+variable "web_port" {
+  type    = number
+  default = 3000
+}

@@ -10,10 +10,19 @@ provider "aws" {
 module "vpc" {
   source = "./resources/vpc"
 
-  vpc_name = var.vpc_name
+  vpc_name           = var.vpc_name
   availability_zones = var.availability_zones
-  vpc_cidr = var.vpc_cidr
-  subnets = var.subnets
+  vpc_cidr           = var.vpc_cidr
+  subnets            = var.subnets
+}
+
+module "security_groups" {
+  source = "./resources/security-groups"
+
+  vpc_id      = module.vpc.vpc_id
+  name_prefix = var.name_prefix
+  api_port    = var.api_port
+  web_port    = var.web_port
 }
 
 module "s3" {

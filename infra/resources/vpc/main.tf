@@ -63,7 +63,7 @@ resource "aws_nat_gateway" "this" {
     Name= "Nat-GW"
   }
 
-  depends_on = [ aws_internet_gateway.this ]
+  depends_on = [ aws_eip.this ]
 }
 
 resource "aws_route_table" "this" {
@@ -89,14 +89,14 @@ resource "aws_route" "public-rt-igw" {
   destination_cidr_block = "0.0.0.0/0"
 }
 
-resource "aws_route" "private_db_rt_to_nat" {
-  route_table_id = aws_route_table.this["private-db"].id
-  nat_gateway_id = aws_nat_gateway.this.id
+resource "aws_route" "private_data_rt_to_nat" {
+  route_table_id         = aws_route_table.this["private-data"].id
+  nat_gateway_id         = aws_nat_gateway.this.id
   destination_cidr_block = "0.0.0.0/0"
 }
 
-resource "aws_route" "private_api_rt_to_nat" {
-  route_table_id = aws_route_table.this["private-api"].id
-  nat_gateway_id = aws_nat_gateway.this.id
+resource "aws_route" "private_compute_rt_to_nat" {
+  route_table_id         = aws_route_table.this["private-compute"].id
+  nat_gateway_id         = aws_nat_gateway.this.id
   destination_cidr_block = "0.0.0.0/0"
 }
