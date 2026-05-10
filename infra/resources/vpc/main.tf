@@ -1,3 +1,5 @@
+data "aws_region" "current" {}
+
 locals {
     subnets_with_az = merge([
         for tier, cidrs in var.subnets : {
@@ -99,4 +101,17 @@ resource "aws_route" "private_compute_rt_to_nat" {
   route_table_id         = aws_route_table.this["private-compute"].id
   nat_gateway_id         = aws_nat_gateway.this.id
   destination_cidr_block = "0.0.0.0/0"
+}
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id = aws_vpc.this.id
+  service_name = "com.amazonaws.${data.aws_region.current.name}.s3"
+  vpc_endpoint_type = "Gateway"
+
+  route_table_ids = [
+    aws_route_table.this["private-compute"].id,
+    aws_route_table.this["private-data"].id
+  ]
+
+  tags = { Name = "${var.vpc_name}-s3-endpoint" }
 }
