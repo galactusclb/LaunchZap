@@ -7,6 +7,19 @@ provider "aws" {
   }
 }
 
+module "kms" {
+  source = "./resources/kms"
+
+  name_prefix = var.name_prefix
+}
+
+module "iam" {
+  source = "./resources/iam"
+
+  kms_key_arn = module.kms.key_arn
+  name_prefix = var.name_prefix
+}
+
 module "vpc" {
   source = "./resources/vpc"
 

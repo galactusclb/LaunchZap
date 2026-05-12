@@ -85,7 +85,7 @@ resource "aws_vpc_security_group_ingress_rule" "ecs_api_from_alb" {
 resource "aws_vpc_security_group_ingress_rule" "ecs_api_from_ecs_web" {
   security_group_id = aws_security_group.ecs_api.id
   
-  referenced_security_group_id = aws_security_group.ecs_web
+  referenced_security_group_id = aws_security_group.ecs_web.id
   from_port = var.api_port
   to_port = var.api_port
   ip_protocol = "tcp"
