@@ -126,15 +126,15 @@ resource "aws_vpc_security_group_egress_rule" "rds_proxy_egress" {
 }
 
 # Aurora — RDS Proxy only
-resource "aws_security_group" "aurora" {
+resource "aws_security_group" "rds_cluster" {
   vpc_id      = var.vpc_id
   name        = "${var.name_prefix}-sg-aurora"
-  description = "Aurora: from RDS Proxy only"
+  description = "RDS Cluster: from RDS Proxy only"
   tags = { Name = "${var.name_prefix}-sg-aurora" }
 }
 
 resource "aws_vpc_security_group_ingress_rule" "aurora_from_proxy" {
-  security_group_id            = aws_security_group.aurora.id
+  security_group_id            = aws_security_group.rds_cluster.id
   
   referenced_security_group_id = aws_security_group.rds_proxy.id
   from_port = 5432
@@ -143,7 +143,7 @@ resource "aws_vpc_security_group_ingress_rule" "aurora_from_proxy" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "aurora_egress" {
-  security_group_id = aws_security_group.aurora.id
+  security_group_id = aws_security_group.rds_cluster.id
 
   cidr_ipv4 = "0.0.0.0/0"
   ip_protocol = -1

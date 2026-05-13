@@ -18,9 +18,9 @@ output "rds_proxy_sg_id" {
   value       = aws_security_group.rds_proxy.id
 }
 
-output "aurora_sg_id" {
-  description = "Security group ID of the Aurora cluster"
-  value       = aws_security_group.aurora.id
+output "rds_cluster_sg_id" {
+  description = "Security group ID of the RDS cluster cluster"
+  value       = aws_security_group.rds_cluster.id
 }
 
 output "elasticache_sg_id" {
