@@ -17,3 +17,7 @@ variable "web_port" {
   description = "Port the web ECS service listens on"
   type        = number
 }
+
+variable "redis_port" {
+  type    = number
+}

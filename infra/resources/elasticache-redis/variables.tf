@@ -4,7 +4,6 @@ variable "name_prefix" {
 
 variable "redis_port" {
   type    = number
-  default = 6379
 }
 
 variable "private_subnet_ids" {

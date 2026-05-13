@@ -161,8 +161,8 @@ resource "aws_vpc_security_group_ingress_rule" "elasticache_from_api" {
   security_group_id            = aws_security_group.elasticache.id
 
   referenced_security_group_id = aws_security_group.ecs_api.id
-  from_port = 6379
-  to_port = 6379
+  from_port = var.redis_port
+  to_port = var.redis_port
   ip_protocol = "tcp"
 }
 

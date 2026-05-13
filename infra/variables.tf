@@ -80,3 +80,9 @@ variable "db_user" {
   description = "Master username for the Aurora cluster"
   type        = string
 }
+
+#Elasti Cache
+variable "redis_port" {
+  type    = number
+  default = 6379
+}
