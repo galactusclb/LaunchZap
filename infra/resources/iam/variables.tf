@@ -7,3 +7,8 @@ variable "kms_key_arn" {
   description = "ARN of the KMS key the roles are allowed to decrypt with"
   type        = string
 }
+
+variable "db_user" {
+  description = "Master username used to scope the rds-db:connect IAM permission"
+  type = string
+}

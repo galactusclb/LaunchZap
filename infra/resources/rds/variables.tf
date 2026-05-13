@@ -50,3 +50,7 @@ variable "iam_role_rds_proxy_id" {
 variable "iam_role_rds_proxy_arn" {
   type = string
 }
+
+variable "iam_role_ecs_task_id" {
+  type = string
+}

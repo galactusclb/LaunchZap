@@ -18,6 +18,7 @@ module "iam" {
 
   kms_key_arn = module.kms.key_arn
   name_prefix = var.name_prefix
+  db_user     = var.db_user
 }
 
 module "vpc" {
@@ -41,17 +42,18 @@ module "security_groups" {
 module "rds" {
   source = "./resources/rds"
 
-  name_prefix           = var.name_prefix
-  az                    = var.availability_zones
-  postgresql_version    = var.postgresql_version
-  db_name               = var.db_name
-  db_user               = var.db_user
-  kms_key_arn            = module.kms.key_arn
+  name_prefix               = var.name_prefix
+  az                        = var.availability_zones
+  postgresql_version        = var.postgresql_version
+  db_name                   = var.db_name
+  db_user                   = var.db_user
+  kms_key_arn               = module.kms.key_arn
   cluster_security_group_id = module.security_groups.rds_cluster_sg_id
-  proxy_security_group_id = module.security_groups.rds_proxy_sg_id
-  private_db_subnet_ids = module.vpc.private_data_subnet_ids
-  iam_role_rds_proxy_id = module.iam.rds_proxy_role_id
-  iam_role_rds_proxy_arn = module.iam.rds_proxy_role_arn
+  proxy_security_group_id   = module.security_groups.rds_proxy_sg_id
+  private_db_subnet_ids     = module.vpc.private_data_subnet_ids
+  iam_role_rds_proxy_id     = module.iam.rds_proxy_role_id
+  iam_role_rds_proxy_arn    = module.iam.rds_proxy_role_arn
+  iam_role_ecs_task_id      = module.iam.ecs_task_role_id
 }
 
 module "s3" {

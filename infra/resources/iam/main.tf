@@ -1,3 +1,6 @@
+data "aws_region" "current" { }
+data "aws_caller_identity" "current" { }
+
 # Task Execution Role - used by ECS agent to start the container
 resource "aws_iam_role" "ecs_task_execution" {
   name = "${var.name_prefix}-ecs-execution-role"
@@ -82,8 +85,8 @@ resource "aws_iam_role_policy" "ecs_task" {
       },
       {
         Effect = "Allow"
-        Action = ["rds-db:connect"]
-        Resource = "arn:aws:rds-db:REGION:ACCOUNT_ID:dbuser:*/DB_USER"
+        Action = [ "rds-db:connect" ]
+        Resource = "arn:aws:rds-db:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:dbuser:*/${var.db_user}"
       }
     ]
   })
@@ -91,7 +94,7 @@ resource "aws_iam_role_policy" "ecs_task" {
 
 
 # RDS Proxy
-# Extract role policies to the rds/main.tf to omit the circualr dependancy with rds/main.tf
+# Extract role policies to the rds/main.tf to avoid the circualr dependancy with rds/main.tf
 resource "aws_iam_role" "rds_proxy" {
   name = "${var.name_prefix}-rds-proxy-role"
 
