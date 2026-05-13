@@ -7,19 +7,19 @@ resource "aws_iam_role" "ecs_task_execution" {
     Statement = [{
         Effect = "Allow"
         Action = "sts:AssumeRole"
-        Principle = {
+        Principal = {
             Service = "ecs-tasks.amazonaws.com"
         }
     }]
   })
 }
 
-resource "aws_iam_role_policy_attachment" "ecs_execution_managed" {
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_managed" {
   role = aws_iam_role.ecs_task_execution.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-resource "aws_iam_role_policy" "ecs_execution_secrets" {
+resource "aws_iam_role_policy" "ecs_task_execution_secrets" {
   name = "${var.name_prefix}-ecs-execution-secrets"
   role = aws_iam_role.ecs_task_execution.id
 
@@ -50,7 +50,7 @@ resource "aws_iam_role" "ecs_task" {
     Statement = [{
       Effect = "Allow"
       Action = "sts:AssumeRole"
-      Principle = {
+      Principal = {
         Service = "ecs-tasks.amazonaws.com"
       }
     }]
