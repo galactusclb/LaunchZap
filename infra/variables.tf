@@ -63,3 +63,20 @@ variable "web_port" {
   type    = number
   default = 3000
 }
+
+
+#RDS
+variable "postgresql_version" {
+  description = "Aurora PostgreSQL engine version"
+  type        = string
+}
+
+variable "db_name" {
+  description = "Initial database name"
+  type        = string
+}
+
+variable "db_user" {
+  description = "Master username for the Aurora cluster"
+  type        = string
+}

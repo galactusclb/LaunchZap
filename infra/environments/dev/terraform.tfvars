@@ -18,8 +18,13 @@ subnets = {
   "private-data"     = ["10.0.12.0/24", "10.0.22.0/24", "10.0.32.0/24"]
 }
 
+#Secret Manager
+secret_manager_name="launchzap/app-config/dev"
+
 #S3
 s3_bucket_name="launchzap-bucket-dev-1"
 
-#Secret Manager
-secret_manager_name="launchzap/app-config/dev"
+#RDS
+postgresql_version = "17.7"
+db_name = "postgres"
+db_user = "launchzap_user"

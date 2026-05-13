@@ -78,7 +78,32 @@ resource "aws_iam_role_policy" "ecs_task" {
           "kms:Decrypt", 
           "kms:GenerateDataKey"
         ]
-        resource = var.kms_key_arn
+        Resource = var.kms_key_arn
+      },
+      {
+        Effect = "Allow"
+        Action = ["rds-db:connect"]
+        Resource = "arn:aws:rds-db:REGION:ACCOUNT_ID:dbuser:*/DB_USER"
+      }
+    ]
+  })
+}
+
+
+# RDS Proxy
+# Extract role policies to the rds/main.tf to omit the circualr dependancy with rds/main.tf
+resource "aws_iam_role" "rds_proxy" {
+  name = "${var.name_prefix}-rds-proxy-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = "sts:AssumeRole"
+        Principal = {
+          Service = "rds.amazonaws.com"
+        }
       }
     ]
   })
