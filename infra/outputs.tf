@@ -63,6 +63,19 @@ output "rds_master_user_secret_arn" {
   value       = module.rds.master_user_secret_arn
 }
 
+
+# Elastic Cache Redis
+output "elasticache_primary_endpoint_address" {
+  description = "Primary node endpoint for read/write"
+  value       = module.elasticache-redis.primary_endpoint_address
+}
+
+output "elasticache_reader_endpoint_address" {
+  description = "Reader endpoint for load-balanced reads"
+  value       = module.elasticache-redis.reader_endpoint_address
+}
+
+
 # S3
 output "cloudfront_domain_name" {
   value = module.cloudfront.cloudfront_domain_name

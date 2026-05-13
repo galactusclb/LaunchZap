@@ -56,6 +56,15 @@ module "rds" {
   iam_role_ecs_task_id      = module.iam.ecs_task_role_id
 }
 
+module "elasticache-redis" {
+  source = "./resources/elasticache-redis"
+
+  name_prefix = var.name_prefix
+  kms_key_arn = module.kms.key_arn
+  private_subnet_ids = module.vpc.private_data_subnet_ids
+  redis_sg_ids = [module.security_groups.elasticache_sg_id]
+}
+
 module "s3" {
   source = "./resources/s3"
 
