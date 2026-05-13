@@ -6,14 +6,14 @@ resource "aws_kms_key" "this" {
   enable_key_rotation = true
 
   policy = jsonencode({
-    Version = "2012-19-17"
+    Version = "2012-10-17"
     Statement = [{
         Sid = "Enable IAM User Permissions"
         Effect = "Allow"
-        Principle = {
+        Principal = {
             AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         }
-        Action = "kmsL*"
+        Action = "kms:*"
         Resource = "*"
     }]
   })
