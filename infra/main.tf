@@ -78,6 +78,25 @@ module "alb" {
   public_subnets_ids = module.vpc.public_subnet_ids
 }
 
+module "ecs" {
+  source = "./resources/ecs"
+
+  name_prefix = var.name_prefix
+  ecs_subnet_ids = module.vpc.private_compute_subnet_ids
+  ecs_execution_role_arn = module.iam.execution_role_arn
+  ecs_task_role_arn = module.iam.ecs_task_role_arn
+
+  ecs_web_image = ""
+  web_port = var.web_port
+  target_group_web_arn = module.alb.alb_tg_web_arn
+  ecs_web_sg_ids = [module.security_groups.ecs_web_sg_id]
+
+  ecs_api_image = ""
+  api_port = var.api_port
+  target_group_api_arn = module.alb.alb_tg_api_arn
+  ecs_api_sg_ids = [module.security_groups.ecs_api_sg_id]
+}
+
 module "s3" {
   source = "./resources/s3"
 
