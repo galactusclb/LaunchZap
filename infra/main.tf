@@ -67,6 +67,17 @@ module "elasticache-redis" {
   redis_sg_ids = [module.security_groups.elasticache_sg_id]
 }
 
+module "alb" {
+  source = "./resources/alb"
+
+  vpc_id = module.vpc.vpc_id
+  name_prefix = var.name_prefix
+  web_port = var.web_port
+  api_port = var.api_port
+  security_groups_ids = [ module.security_groups.alb_sg_id ]
+  public_subnets_ids = module.vpc.public_subnet_ids
+}
+
 module "s3" {
   source = "./resources/s3"
 
