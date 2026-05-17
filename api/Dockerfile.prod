@@ -4,10 +4,13 @@ RUN npm install -g pnpm
 
 WORKDIR /app
 
-COPY . .
+COPY package.json pnpm-lock.yaml tsconfig.json pnpm-workspace.yaml ./
 
 RUN pnpm install 
-RUN npx generate
+
+COPY . .
+
+RUN DATABASE_URL=postgresql://x:x@localhost:5432/x pnpm run generate
 
 RUN pnpm run build
 
