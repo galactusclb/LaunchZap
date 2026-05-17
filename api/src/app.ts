@@ -40,14 +40,14 @@ app.use((req: Request, res: Response, next) => {
   next();
 });
 
-app.get('/', (req: Request, res: Response) => {
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+apiRouter.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: 'Welcome to CleanSweep API' });
 });
 
-app.get('/api/health', (_, res) => res.sendStatus(200))
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+apiRouter.get('/health', (_, res) => res.sendStatus(200))
 
 apiRouter.use('/auth', authRoutes);
 apiRouter.use('/users', userRoutes);
