@@ -44,11 +44,6 @@ variable "s3_bucket_name" {
   type        = string
 }
 
-variable "secret_manager_name" {
-  description = "Name of the Secrets Manager secret"
-  type        = string
-}
-
 variable "name_prefix" {
   description = "Prefix applied to all resource names (e.g. launchwap-dev)"
   type        = string
@@ -86,3 +81,13 @@ variable "redis_port" {
   type    = number
   default = 6379
 }
+
+#Secret Manager
+variable "secret_manager_name" {
+  description = "Name of the Secrets Manager secret"
+  type        = string
+}
+
+variable "access_secret" { sensitive = true }
+variable "google_client_id" { sensitive = true }
+variable "google_client_secret" { sensitive = true }

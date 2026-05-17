@@ -9,7 +9,7 @@ common_tags = {
 
 availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c"]
 
-name_prefix = "launchwap-dev"
+name_prefix = "launchzap-dev"
 vpc_name = "LaunchZap-vpc"
 vpc_cidr = "10.0.0.0/16"
 subnets = {

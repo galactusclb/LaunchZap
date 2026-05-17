@@ -121,11 +121,14 @@ module "cloudfront" {
   bucket_arn                  = module.s3.s3_bucket_arn
 }
 
-# module "secret-manager" {
-#   source = "./resources/secret-manager"
+module "secret-manager" {
+  source = "./resources/secret-manager"
 
-#   secret_manager_name = var.secret_manager_name
-#   secrets_object = {
-#     S3_BUCKET_NAME = module.s3.s3_bucket_name
-#   }
-# }
+  secret_manager_name = var.secret_manager_name
+  secrets_object = {
+    S3_BUCKET_NAME = module.s3.s3_bucket_name
+    ACCESS_SECRET = var.access_secret
+    GOOGLE_CLIENT_ID = var.google_client_id
+    GOOGLE_CLIENT_SECRET = var.google_client_secret
+  }
+}
