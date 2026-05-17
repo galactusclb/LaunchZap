@@ -21,7 +21,7 @@ resource "aws_lb_listener" "this" {
 }
 
 resource "aws_lb_listener_rule" "api-rule" {
-  listener_arn = aws_lb.this.arn
+  listener_arn = aws_lb_listener.this.id
   priority = 100
 
   action {
@@ -39,7 +39,7 @@ resource "aws_lb_listener_rule" "api-rule" {
 resource "aws_lb_target_group" "tg-web" {
   name = "${var.name_prefix}-alb-tg-web"
   vpc_id = var.vpc_id
-  target_type = "instance"
+  target_type = "ip"
   protocol = "HTTP"
   port = var.web_port
 
@@ -53,7 +53,7 @@ resource "aws_lb_target_group" "tg-web" {
 resource "aws_lb_target_group" "tg-api" {
   name = "${var.name_prefix}-alb-tg-api"
   vpc_id = var.vpc_id
-  target_type = "instance"
+  target_type = "ip"
   protocol = "HTTP"
   port = var.api_port
 
