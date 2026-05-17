@@ -86,15 +86,25 @@ module "ecs" {
   ecs_execution_role_arn = module.iam.execution_role_arn
   ecs_task_role_arn = module.iam.ecs_task_role_arn
 
-  ecs_web_image = ""
+  ecs_web_image = "galactusclb/launchzap-web:202605161353"
   web_port = var.web_port
   target_group_web_arn = module.alb.alb_tg_web_arn
   ecs_web_sg_ids = [module.security_groups.ecs_web_sg_id]
 
-  ecs_api_image = ""
+  ecs_api_image = "566895563031.dkr.ecr.us-east-1.amazonaws.com/launchzap-api:202605172305"
   api_port = var.api_port
   target_group_api_arn = module.alb.alb_tg_api_arn
   ecs_api_sg_ids = [module.security_groups.ecs_api_sg_id]
+
+  db_name = var.db_name
+  db_port = module.rds.cluster_port
+  db_user = var.db_user
+  rds_proxy_endpoint = module.rds.proxy_endpoint
+  redis_client_url = module.elasticache-redis.primary_endpoint_address
+
+  web_app_url = module.alb.alb_dns_name
+  google_redirect_uri = "${module.alb.alb_dns_name}/api/auth/google/callback"
+  secret_manager_arn = module.secret-manager.arn
 }
 
 module "s3" {

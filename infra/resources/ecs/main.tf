@@ -4,73 +4,89 @@ resource "aws_ecs_cluster" "ecs-cluster" {
   name = "${var.name_prefix}-ecs-cluster"
 }
 
-resource "aws_ecs_task_definition" "web" {
-  family = "web-service"
+# resource "aws_ecs_task_definition" "web" {
+#   family = "web-service"
 
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
-  cpu = 1024
-  memory = 2048
+#   requires_compatibilities = ["FARGATE"]
+#   network_mode             = "awsvpc"
+#   cpu = 1024
+#   memory = 2048
 
-  execution_role_arn = var.ecs_execution_role_arn
+#   execution_role_arn = var.ecs_execution_role_arn
 
-  container_definitions = jsonencode([
-    {
-        name = "web-container"
-        image = var.ecs_web_image
-        cpu = 10
-        memory = 512
-        portMappings = [
-            {
-                containerPort = var.web_port
-                hostPort = var.web_port
-            }
-        ]
-        environment = [
+#   container_definitions = jsonencode([
+#     {
+#         name = "web-container"
+#         image = var.ecs_web_image
+#         cpu = 10
+#         memory = 512
+#         portMappings = [
+#             {
+#                 containerPort = var.web_port
+#                 hostPort = var.web_port
+#             }
+#         ]
+#         environment = [
+#             { 
+#                 name = "API_BASE_URL", 
+#                 value = "https://your-api-domain/api/products"
+#             },
+#             { 
+#                 name = "NEXT_PUBLIC_API_BASE_URL", 
+#                 value = "https://your-api-domain/api/products"
+#             },
+#             { 
+#                 name = "AWS_REGION", 
+#                 value = "us-east-1"
+#             },
+#             { 
+#                 name = "AWS_SECRET_MANAGER_SECRET_NAME", 
+#                 value = "launchzap/app-config/dev"
+#             },
+#         ]
+#         essential = true
+#         logConfiguration = {
+#             logDriver =  "awslogs",
+#             options =  {
+#                 "awslogs-group" =  "/ecs/web",
+#                 "awslogs-region" =  data.aws_region.current.region,
+#                 "awslogs-stream-prefix" =  "web"
+#             }
+#         }
+#     }
+#   ])
 
-        ]
-        essential = true
-        logConfiguration = {
-            logDriver =  "awslogs",
-            options =  {
-                "awslogs-group" =  "/ecs/web",
-                "awslogs-region" =  data.aws_region.current.region,
-                "awslogs-stream-prefix" =  "web"
-            }
-        }
-    }
-  ])
+#   runtime_platform {
+#     cpu_architecture        = "X86_64"
+#     operating_system_family = "LINUX"
+#   }
 
-  runtime_platform {
-    cpu_architecture        = "X86_64"
-    operating_system_family = "LINUX"
-  }
+#   depends_on = [ aws_cloudwatch_log_group.web ]
+# }
 
-  depends_on = [ aws_cloudwatch_log_group.web ]
-}
+# resource "aws_ecs_service" "web" {
+#   name = "${var.name_prefix}-ecs-web-service"
 
-resource "aws_ecs_service" "web" {
-  name = "${var.name_prefix}-ecs-web-service"
+#   cluster = aws_ecs_cluster.ecs-cluster.id
+#   task_definition = aws_ecs_task_definition.web.id
 
-  cluster = aws_ecs_cluster.ecs-cluster.id
+#   desired_count = var.ecs_web_desired_count
   
-  desired_count = var.ecs_web_desired_count
-  
-  launch_type = "FARGATE"
-  scheduling_strategy = "REPLICA"
+#   launch_type = "FARGATE"
+#   scheduling_strategy = "REPLICA"
 
-  network_configuration {
-    assign_public_ip = false
-    subnets = var.ecs_subnet_ids
-    security_groups = var.ecs_web_sg_ids
-  }
+#   network_configuration {
+#     assign_public_ip = false
+#     subnets = var.ecs_subnet_ids
+#     security_groups = var.ecs_web_sg_ids
+#   }
 
-  load_balancer {
-    target_group_arn = var.target_group_web_arn
-    container_name = "web-container"
-    container_port = var.web_port
-  }
-}
+#   load_balancer {
+#     target_group_arn = var.target_group_web_arn
+#     container_name = "web-container"
+#     container_port = var.web_port
+#   }
+# }
 
 resource "aws_ecs_task_definition" "api" {
   family = "api-service"
@@ -89,15 +105,32 @@ resource "aws_ecs_task_definition" "api" {
         image = var.ecs_api_image
         cpu = 10
         memory = 512
+
         portMappings = [
             {
                 containerPort = var.api_port
                 hostPort = var.api_port
             }
         ]
-        environment = [
 
+        environment = [
+            { name = "NODE_ENV",             value = "production" },
+            { name = "RDS_PROXY_ENDPOINT",   value = var.rds_proxy_endpoint },
+            { name = "REDIS_CLIENT_URL",     value = var.redis_client_url },
+            { name = "DB_USER",              value = var.db_user },
+            { name = "DB_NAME",              value = var.db_name },
+            { name = "DB_PORT",              value = tostring(var.db_port) },
+            { name = "GOOGLE_REDIRECT_URI",  value = var.google_redirect_uri },
+            { name = "WEB_APP_URL",          value = var.web_app_url },
+            { name = "AWS_DEFAULT_REGION",   value = data.aws_region.current.region }
         ]
+
+        secrets = [
+            { name = "ACCESS_SECRET",         valueFrom = "${var.secret_manager_arn}:ACCESS_SECRET::" },
+            { name = "GOOGLE_CLIENT_ID",      valueFrom = "${var.secret_manager_arn}:GOOGLE_CLIENT_ID::" },
+            { name = "GOOGLE_CLIENT_SECRET",  valueFrom = "${var.secret_manager_arn}:GOOGLE_CLIENT_SECRET::" },
+        ]
+
         essential = true
         logConfiguration = {
             logDriver =  "awslogs",
