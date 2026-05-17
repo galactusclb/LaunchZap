@@ -1,5 +1,5 @@
 import { ProductFeedSection, ProductFeedSectionHeader } from "@/components/shared/product-feed";
-import { ProductFeedResult } from "@/features/product";
+import { ProductFeedResult } from "@/features/product/index.server";
 
 import FeedAsyncBoundary from "./feed-async-boundary";
 
