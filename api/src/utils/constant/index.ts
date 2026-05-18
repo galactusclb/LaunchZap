@@ -6,6 +6,12 @@ export const constants = {
     ACCESS_SECRET: process.env.ACCESS_SECRET,
     REFRESH_SECRET: process.env.REFRESH_SECRET,
   },
+  aws: {
+    xray: {
+      enabled: process.env.AWS_XRAY_ENABLED ?? false,
+      serviceName: process.env.AWS_XRAY_SERVICE_NAME ?? "launchzap-api"
+    } 
+  },
   message: {
     validation: {
       required: 'This field is required',

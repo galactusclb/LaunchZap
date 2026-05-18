@@ -4,6 +4,8 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
 
+import { configureXray, xrayClose, xrayOpen } from './lib/aws/xray';
+
 import { routes as authRoutes } from '@/features/auth';
 import { routes as productRoutes } from '@/features/product';
 import { routes as userRoutes } from "@/features/user";
@@ -18,6 +20,9 @@ const allowedOrigins = [
   'https://cs-dev.cleaoo.com',
   'http://localhost:8081',
 ];
+
+configureXray();
+app.use(xrayOpen);
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -55,6 +60,7 @@ apiRouter.use('/products', productRoutes);
 
 app.use('/api', apiRouter);
 
+app.use(xrayClose);
 app.use(errorHandler);
 
 export default app;
