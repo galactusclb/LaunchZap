@@ -133,6 +133,7 @@ module "secret-manager" {
   source = "./resources/secret-manager"
 
   secret_manager_name = var.secret_manager_name
+  recovery_window_in_days = var.secret_manager_recovery_window_in_days
   secrets_object = {
     S3_BUCKET_NAME = module.s3.s3_bucket_name
     ACCESS_SECRET = var.access_secret

@@ -88,6 +88,13 @@ variable "secret_manager_name" {
   type        = string
 }
 
+variable "secret_manager_recovery_window_in_days" {
+  type = number
+  default = 7
+}
+
+
+# ECS
 variable "access_secret" { sensitive = true }
 variable "google_client_id" { sensitive = true }
 variable "google_client_secret" { sensitive = true }
