@@ -75,6 +75,9 @@ output "elasticache_reader_endpoint_address" {
   value       = module.elasticache-redis.reader_endpoint_address
 }
 
+output "alb_dns_name" {
+  value = module.alb.alb_dns_name
+}
 
 # S3
 output "cloudfront_domain_name" {
