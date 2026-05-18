@@ -88,3 +88,11 @@ variable "web_app_url" {
 variable "secret_manager_arn" {
   type = string
 }
+
+variable "ecs_api_aws_xray_enabled" {
+  type = bool
+}
+
+variable "ecs_api_aws_xray_service_name" {
+  type = string
+}

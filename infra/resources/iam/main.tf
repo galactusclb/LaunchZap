@@ -92,6 +92,11 @@ resource "aws_iam_role_policy" "ecs_task" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "xray" {
+  role = aws_iam_role.ecs_task.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+}
+
 
 # RDS Proxy
 # Extract role policies to the rds/main.tf to avoid the circualr dependancy with rds/main.tf

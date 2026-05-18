@@ -91,10 +91,12 @@ module "ecs" {
   target_group_web_arn = module.alb.alb_tg_web_arn
   ecs_web_sg_ids = [module.security_groups.ecs_web_sg_id]
 
-  ecs_api_image = "566895563031.dkr.ecr.us-east-1.amazonaws.com/launchzap-api:202605172305"
+  ecs_api_image = "566895563031.dkr.ecr.us-east-1.amazonaws.com/launchzap-api:202605181202"
   api_port = var.api_port
   target_group_api_arn = module.alb.alb_tg_api_arn
   ecs_api_sg_ids = [module.security_groups.ecs_api_sg_id]
+  ecs_api_aws_xray_enabled = var.ecs_api_aws_xray_enabled
+  ecs_api_aws_xray_service_name = var.ecs_api_aws_xray_service_name
 
   db_name = var.db_name
   db_port = module.rds.cluster_port
@@ -105,6 +107,12 @@ module "ecs" {
   web_app_url = module.alb.alb_dns_name
   google_redirect_uri = "${module.alb.alb_dns_name}/api/auth/google/callback"
   secret_manager_arn = module.secret-manager.arn
+}
+
+module "xray" {
+  source = "./resources/xray"
+
+  name_prefix = var.name_prefix
 }
 
 module "s3" {

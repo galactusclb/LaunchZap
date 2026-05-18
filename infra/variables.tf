@@ -91,3 +91,13 @@ variable "secret_manager_name" {
 variable "access_secret" { sensitive = true }
 variable "google_client_id" { sensitive = true }
 variable "google_client_secret" { sensitive = true }
+
+variable "ecs_api_aws_xray_enabled" {
+  type = bool
+  default = true
+}
+
+variable "ecs_api_aws_xray_service_name" {
+  type = string
+  default = "launchzap-api"
+}
