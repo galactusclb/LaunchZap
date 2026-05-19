@@ -16,11 +16,7 @@ export const getS3ClientInstance = async (): Promise<S3Instance> => {
 
     instance = {
         client: new S3Client({
-            region: constants.AWS.REGION,
-            credentials: {
-                accessKeyId: constants.AWS.ACCESS_KEY_ID,
-                secretAccessKey: constants.AWS.SECRET_ACCESS_KEY,
-            }
+            region: constants.AWS.REGION
         }),
         region: constants.AWS.REGION,
         bucket: constants.AWS.S3_BUCKET_NAME,
