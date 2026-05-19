@@ -96,3 +96,19 @@ variable "ecs_api_aws_xray_enabled" {
 variable "ecs_api_aws_xray_service_name" {
   type = string
 }
+
+variable "web_env_api_base_url" {
+  type = string
+}
+
+variable "web_env_secret_manager_secret_name" {
+  type = string
+}
+
+variable "web_env_cloudfront_domain" {
+  type = string
+}
+
+variable "web_env_s3_bucket_name" {
+  type = string
+}

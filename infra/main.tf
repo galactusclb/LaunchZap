@@ -86,12 +86,16 @@ module "ecs" {
   ecs_execution_role_arn = module.iam.execution_role_arn
   ecs_task_role_arn = module.iam.ecs_task_role_arn
 
-  ecs_web_image = "galactusclb/launchzap-web:202605161353"
+  ecs_web_image = "566895563031.dkr.ecr.us-east-1.amazonaws.com/launchzap-web:202605191314"
   web_port = var.web_port
   target_group_web_arn = module.alb.alb_tg_web_arn
   ecs_web_sg_ids = [module.security_groups.ecs_web_sg_id]
+  web_env_api_base_url = "${module.alb.alb_dns_name}/api"
+  web_env_secret_manager_secret_name = "${module.alb.alb_dns_name}/api"
+  web_env_cloudfront_domain = module.cloudfront.cloudfront_domain_name
+  web_env_s3_bucket_name = module.s3.s3_bucket_name
 
-  ecs_api_image = "566895563031.dkr.ecr.us-east-1.amazonaws.com/launchzap-api:202605181202"
+  ecs_api_image = "566895563031.dkr.ecr.us-east-1.amazonaws.com/launchzap-api:202605181729"
   api_port = var.api_port
   target_group_api_arn = module.alb.alb_tg_api_arn
   ecs_api_sg_ids = [module.security_groups.ecs_api_sg_id]
