@@ -14,4 +14,4 @@ NEXT_PUBLIC_CLOUDFRONT_DOMAIN=$CLOUDFRONT_DOMAIN
 AWS_S3_BUCKET_NAME=$S3_BUCKET_NAME
 EOF
 
-echo "✓ web/.env.local updated ✅"
+echo "✓ web/.env.infra updated ✅"
