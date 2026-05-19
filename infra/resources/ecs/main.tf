@@ -39,6 +39,25 @@ resource "aws_ecs_task_definition" "web" {
               "awslogs-stream-prefix" =  "web"
           }
       }
+    },
+    {
+      name = "xray-daemon"
+      image = "amazon/aws-xray-daemon"
+      portMappings = [
+        {
+          containerPort = 2000
+          protocol = "udp"
+        }
+      ]
+      essential = false
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = "/ecs/xray/web"
+          "awslogs-region"        = data.aws_region.current.region
+          "awslogs-stream-prefix" = "xray"
+        }
+      }
     }
   ])
 
