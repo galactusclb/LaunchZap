@@ -7,6 +7,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 const nextConfig: NextConfig = {
   /* config options here */
+  output: 'standalone',
   cacheComponents: true,
   reactCompiler: true,
   images: {

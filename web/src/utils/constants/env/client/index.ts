@@ -1,11 +1,18 @@
 import { clientEnvSchema } from "./schema"
 
-const env = clientEnvSchema.parse({
-    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
-})
+let _env: ReturnType<typeof clientEnvSchema.parse> | undefined
+
+function getEnv() {
+    if (!_env) {
+        _env = clientEnvSchema.parse({
+            NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+        })
+    }
+    return _env
+}
 
 export const constants = {
-    API: {
-        URL: env.NEXT_PUBLIC_API_BASE_URL,
+    get API() {
+        return { URL: getEnv().NEXT_PUBLIC_API_BASE_URL }
     },
 }
