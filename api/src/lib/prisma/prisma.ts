@@ -21,16 +21,14 @@ const createPool = async (host: string) =>{
         region: AWS_DEFAULT_REGION
     });
 
-    const token = await signer.getAuthToken();
-
     return new Pool({
         host,
         user: DB_USER,
         database: DB_NAME,
         port: DB_PORT,
         ssl: { rejectUnauthorized: true },
-        password: await token
-    })
+        password: ()=> signer.getAuthToken()
+    });
 }
 
 const mainAdapter = new PrismaPg(await createPool(RDS_PROXY_ENDPOINT));
