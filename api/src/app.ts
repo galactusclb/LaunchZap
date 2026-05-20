@@ -16,9 +16,7 @@ const apiRouter = express.Router();
 
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://cs.cleaoo.com',
-  'https://cs-dev.cleaoo.com',
-  'http://localhost:8081',
+  process.env.WEB_APP_URL
 ];
 
 configureXray();
@@ -41,7 +39,9 @@ app.use(cookieParser());
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 
 app.use((req: Request, res: Response, next) => {
-  console.log(`[${req.method}] ${req.originalUrl}`);
+  if (req.originalUrl !== '/api/health') {
+    console.log(`[${req.method}] ${req.originalUrl}`);
+  };
   next();
 });
 
