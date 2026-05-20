@@ -1,49 +1,58 @@
-import { Signer } from "@aws-sdk/rds-signer";
+import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { readReplicas } from "@prisma/extension-read-replicas"
 import { Pool } from "pg";
 
+import { getRDSAuthToken } from "../aws/rds";
+
 import { PrismaClient } from "@/prisma/client";
 
-import "dotenv/config";
 
 const DB_USER = process.env.DB_USER!
 const DB_NAME = process.env.DB_NAME!
 const DB_PORT = parseInt(process.env.DB_PORT ?? "5432")
-const AWS_DEFAULT_REGION =  process.env.AWS_DEFAULT_REGION!
 const RDS_PROXY_ENDPOINT = process.env.RDS_PROXY_ENDPOINT!
 
-const createPool = async (host: string) =>{
-    const signer = new Signer({
-        hostname: host,
-        port: DB_PORT,
-        username: DB_USER,
-        region: AWS_DEFAULT_REGION
-    });
+const mainAdapter = new PrismaPg(resolveDBConnection(RDS_PROXY_ENDPOINT));
 
-    return new Pool({
+const mainClient = new PrismaClient({ adapter: mainAdapter });
+
+const replicaAdapter = new PrismaPg(resolveDBConnection(RDS_PROXY_ENDPOINT));
+
+const readClient = new PrismaClient({ adapter: replicaAdapter});
+
+const prisma = mainClient
+    .$extends(readReplicas({
+        replicas: [readClient]
+    }));
+
+function createPool(host: string, password: string | (() => string | Promise<string>)){
+    const pool = new Pool({
         host,
         user: DB_USER,
         database: DB_NAME,
         port: DB_PORT,
         ssl: { rejectUnauthorized: true },
-        password: ()=> signer.getAuthToken()
+        password,
+
+        // for connection recyceling
+        maxLifetimeSeconds: 60 * 13,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 10000,
     });
-}
 
-const mainAdapter = new PrismaPg(await createPool(RDS_PROXY_ENDPOINT));
+    pool.on('error', (err) => console.error('[pg] idle client error', err.message));
+    
+    return pool;
+};
 
-const mainClient = new PrismaClient({ adapter: mainAdapter });
-
-const replicaAdapter = new PrismaPg(await createPool(RDS_PROXY_ENDPOINT));
-
-const readClient = new PrismaClient({ adapter: replicaAdapter});
-
-const prisma = mainClient.$extends(
-    readReplicas({
-        replicas: [readClient]
-    })
-);
+export function resolveDBConnection(host?: string): string | Pool {
+    if (process.env.DATABASE_URL) return process.env.DATABASE_URL!;
+    
+    if (process.env.DB_PASSWORD) return createPool(host!, process.env.DB_PASSWORD);
+    
+    return createPool(host!, getRDSAuthToken);
+};
 
 export default prisma;
 
