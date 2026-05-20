@@ -1,16 +1,7 @@
-import {PrismaClient} from "../../src/lib/prisma/generated/client"
-import { PrismaPg } from "@prisma/adapter-pg";
+import {PrismaTransactionClient} from "../../src/lib/prisma/prisma.js";
 
-import "dotenv/config"; 
-
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
-});
-
-const prisma = new PrismaClient({ adapter });
-
-async function seedProducts() {
-    await prisma.product.createMany({
+async function seedProducts(prismaIntance: PrismaTransactionClient) {
+    await prismaIntance.product.createMany({
         data: [
             {
                 name: "AI Code Assistant Pro",
