@@ -2,7 +2,11 @@ variable "name_prefix" {
   type = string
 }
 
-variable "ecs_task_role_arn" {
+variable "ecs_api_task_role_arn" {
+  type = string
+}
+
+variable "ecs_web_task_role_arn" {
   type = string
 }
 

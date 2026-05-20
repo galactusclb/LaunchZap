@@ -12,3 +12,11 @@ variable "db_user" {
   description = "Master username used to scope the rds-db:connect IAM permission"
   type = string
 }
+
+variable "s3_bucket_arn" {
+  type = string
+}
+
+variable "cloudfront_arn" {
+  type = string
+}

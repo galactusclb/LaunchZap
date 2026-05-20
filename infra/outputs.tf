@@ -28,11 +28,6 @@ output "ecs_execution_role_arn" {
   value       = module.iam.execution_role_arn
 }
 
-output "ecs_task_role_arn" {
-  description = "ARN of the ECS task role"
-  value       = module.iam.ecs_task_role_arn
-}
-
 # KMS
 output "kms_key_arn" {
   value = module.kms.key_arn

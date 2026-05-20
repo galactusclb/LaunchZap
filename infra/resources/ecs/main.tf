@@ -13,6 +13,7 @@ resource "aws_ecs_task_definition" "web" {
   memory = 2048
 
   execution_role_arn = var.ecs_execution_role_arn
+  task_role_arn = var.ecs_web_task_role_arn
 
   container_definitions = jsonencode([
     {
@@ -93,6 +94,8 @@ resource "aws_ecs_service" "web" {
   }
 }
 
+
+#API
 resource "aws_ecs_task_definition" "api" {
   family = "api-service"
 
@@ -101,7 +104,7 @@ resource "aws_ecs_task_definition" "api" {
   cpu = 1024
   memory = 2048
 
-  task_role_arn = var.ecs_task_role_arn
+  task_role_arn = var.ecs_api_task_role_arn
   execution_role_arn = var.ecs_execution_role_arn
 
   container_definitions = jsonencode([
@@ -185,6 +188,8 @@ resource "aws_ecs_service" "api" {
 
   cluster = aws_ecs_cluster.ecs-cluster.id
   task_definition = aws_ecs_task_definition.api.id
+
+  enable_execute_command = true
 
   desired_count = var.ecs_api_desired_count
 

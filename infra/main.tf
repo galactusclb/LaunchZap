@@ -19,6 +19,8 @@ module "iam" {
   kms_key_arn = module.kms.key_arn
   name_prefix = var.name_prefix
   db_user     = var.db_user
+  cloudfront_arn = module.cloudfront.cloudfront_distribution_arn
+  s3_bucket_arn = module.s3.s3_bucket_arn
 }
 
 module "vpc" {
@@ -54,7 +56,7 @@ module "rds" {
   private_db_subnet_ids     = module.vpc.private_data_subnet_ids
   iam_role_rds_proxy_id     = module.iam.rds_proxy_role_id
   iam_role_rds_proxy_arn    = module.iam.rds_proxy_role_arn
-  iam_role_ecs_task_id      = module.iam.ecs_task_role_id
+  iam_role_ecs_task_id      = module.iam.ecs_api_task_role_id
 }
 
 module "elasticache-redis" {
@@ -84,18 +86,19 @@ module "ecs" {
   name_prefix = var.name_prefix
   ecs_subnet_ids = module.vpc.private_compute_subnet_ids
   ecs_execution_role_arn = module.iam.execution_role_arn
-  ecs_task_role_arn = module.iam.ecs_task_role_arn
+  ecs_api_task_role_arn = module.iam.ecs_api_task_role_arn
+  ecs_web_task_role_arn = module.iam.ecs_web_task_role_arn
 
-  ecs_web_image = "566895563031.dkr.ecr.us-east-1.amazonaws.com/launchzap-web:202605191314"
+  ecs_web_image = "566895563031.dkr.ecr.us-east-1.amazonaws.com/launchzap-web:202605191441"
   web_port = var.web_port
   target_group_web_arn = module.alb.alb_tg_web_arn
   ecs_web_sg_ids = [module.security_groups.ecs_web_sg_id]
-  web_env_api_base_url = "${module.alb.alb_dns_name}/api"
-  web_env_secret_manager_secret_name = "${module.alb.alb_dns_name}/api"
+  web_env_api_base_url = "http://${module.alb.alb_dns_name}/api"
+  web_env_secret_manager_secret_name = var.secret_manager_name
   web_env_cloudfront_domain = module.cloudfront.cloudfront_domain_name
   web_env_s3_bucket_name = module.s3.s3_bucket_name
 
-  ecs_api_image = "566895563031.dkr.ecr.us-east-1.amazonaws.com/launchzap-api:202605181729"
+  ecs_api_image = "566895563031.dkr.ecr.us-east-1.amazonaws.com/launchzap-api:202605201840"
   api_port = var.api_port
   target_group_api_arn = module.alb.alb_tg_api_arn
   ecs_api_sg_ids = [module.security_groups.ecs_api_sg_id]
@@ -108,8 +111,8 @@ module "ecs" {
   rds_proxy_endpoint = module.rds.proxy_endpoint
   redis_client_url = module.elasticache-redis.primary_endpoint_address
 
-  web_app_url = module.alb.alb_dns_name
-  google_redirect_uri = "${module.alb.alb_dns_name}/api/auth/google/callback"
+  web_app_url = "http://${module.alb.alb_dns_name}"
+  google_redirect_uri = "http://${module.alb.alb_dns_name}/api/auth/google/callback"
   secret_manager_arn = module.secret-manager.arn
 }
 
