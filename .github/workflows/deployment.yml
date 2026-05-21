@@ -38,11 +38,17 @@ jobs:
             context: ./web
 
     steps:
-      - name: Skip if not changed
-        if: |
-          (matrix.app == 'api' && needs.detect-changes.outputs.api != 'true') ||
-          (matrix.app == 'web' && needs.detect-changes.outputs.web != 'true')
-        run: echo "No changes in ${{ matrix.app }}, skipping." && exit 0
+      - name: Check if changed
+        id: check
+        run: |
+          if [[ "${{ matrix.app }}" == "api" && "${{ needs.detect-changes.outputs.api }}" == "true" ]] || \
+             [[ "${{ matrix.app }}" == "web" && "${{ needs.detect-changes.outputs.web }}" == "true" ]]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes in ${{ matrix.app }}, skipping."
+          fi
 
       - name: Log which app will be built
+        if: steps.check.outputs.changed == 'true'
         run: echo "Changes detected in ${{ matrix.app }} — will build image from ${{ matrix.context }}"

@@ -5,4 +5,4 @@ export async function register() {
         void constants.API;
         void constants.AWS;
     }
-}
+};
