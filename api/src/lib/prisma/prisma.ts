@@ -3,8 +3,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { readReplicas } from "@prisma/extension-read-replicas"
 import { Pool } from "pg";
 
-import { getRDSAuthToken } from "../aws/rds";
-
+import { getRDSAuthToken } from "@/lib/aws/rds";
 import { PrismaClient } from "@/prisma/client";
 
 
