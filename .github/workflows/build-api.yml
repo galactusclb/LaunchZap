@@ -18,6 +18,15 @@ jobs:
         id: tag
         run: echo "value=$(date +'%y%m%d')-$RANDOM" >> $GITHUB_OUTPUT
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build API Docker Image
-        run: |
-          docker build -t launchzap-api:${{ steps.tag.outputs.value }} -f ./api/Dockerfile.prod ./api
+        uses: docker/build-push-action@v5
+        with:
+          context: ./api
+          file: ./api/Dockerfile.prod
+          tags: launchzap-api:${{ steps.tag.outputs.value }}
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
