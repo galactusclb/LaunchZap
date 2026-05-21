@@ -16,7 +16,7 @@ jobs:
 
       - name: Generate Image Tag
         id: tag
-        run: echo "value=$(date + '%y%m%d')-$RANDOM" >> $GITHUB_OUTPUT
+        run: echo "value=$(date +'%y%m%d')-$RANDOM" >> $GITHUB_OUTPUT
 
       - name: Build API Docker Image
         run: |
