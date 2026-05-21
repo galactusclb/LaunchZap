@@ -1,0 +1,16 @@
+name: Build & Push to ECR
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'web/**'
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log
+        run: echo "Changes detected in web — will build image from ./web"
