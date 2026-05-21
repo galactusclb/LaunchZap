@@ -10,7 +10,14 @@ on:
 jobs:
   build-api:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Log
-        run: echo "Changes detected in api — will build image from ./api"
+      - uses: actions/checkout@v5
+
+      - name: Generate Image Tag
+        id: tag
+        run: echo "value=$(date + '%y%m%d')-$RANDOM" >> $GITHUB_OUTPUT
+
+      - name: Build API Docker Image
+        run: |
+          docker build -t launchzap-api:${{ steps.tag.outputs.value }} -f Dockerfile.prod ./api
