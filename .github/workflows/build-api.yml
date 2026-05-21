@@ -20,4 +20,4 @@ jobs:
 
       - name: Build API Docker Image
         run: |
-          docker build -t launchzap-api:${{ steps.tag.outputs.value }} -f Dockerfile.prod ./api
+          docker build -t launchzap-api:${{ steps.tag.outputs.value }} -f ./api/Dockerfile.prod ./api
