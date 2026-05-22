@@ -1,25 +1,28 @@
-FROM node:lts-alpine
-
-RUN npm install -g pnpm
-
+FROM node:lts-alpine as builder
+RUN corepack enable
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml tsconfig.json pnpm-workspace.yaml ./
-
-RUN pnpm install 
-
+RUN pnpm install --frozen-lockfile
 COPY . .
-
 RUN DATABASE_URL=postgresql://x:x@localhost:5432/x pnpm run generate
-
 RUN pnpm run build
 
+
+FROM node:lts-alpine as runner
+RUN corepack enable
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile --prod
+
+COPY entrypoint.sh ./
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+
 ENV NODE_ENV=production
-
 EXPOSE 4000
-
 RUN chmod +x ./entrypoint.sh
-
 ENTRYPOINT ["./entrypoint.sh"]
 
 CMD ["pnpm", "start"]
