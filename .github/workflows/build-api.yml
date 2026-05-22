@@ -32,7 +32,7 @@ jobs:
       - name: Generate Image Tag
         id: tag
         run: |
-          TAG=$(date +'%y%m%d')-$RANDOM
+          TAG=$(date +'%y%m%d%H%M%S')-$RANDOM
           REGISTRY=${{ steps.login-ecr.outputs.registry }}
           echo "value=${TAG}" >> $GITHUB_OUTPUT
           echo "image=${REGISTRY}/${{ vars.ECR_API_REPOSITORY }}:${TAG}" >> $GITHUB_OUTPUT
