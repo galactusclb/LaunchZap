@@ -39,7 +39,7 @@ jobs:
         with:
           context: ./api
           file: ./api/Dockerfile.prod
-          tags: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ steps.tag.outputs.value }}
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_API_REPOSITORY }}:${{ steps.tag.outputs.value }}
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max

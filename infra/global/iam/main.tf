@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "github_oidc_trust" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:galactus-clb/LaunchZap:ref:refs/heads/main"]
+      values   = ["repo:galactusclb/LaunchZap:ref:refs/heads/main"]
     }
   }
 }
