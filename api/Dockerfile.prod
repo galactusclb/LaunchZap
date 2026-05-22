@@ -18,7 +18,7 @@ RUN pnpm install --frozen-lockfile --prod
 
 COPY entrypoint.sh ./
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/src/lib/prisma/generated ./src/lib/prisma/generated
 
 ENV NODE_ENV=production
 EXPOSE 4000
