@@ -46,6 +46,7 @@ jobs:
           file: ./web/Dockerfile.prod
           build-args: |
             NEXT_PUBLIC_API_BASE_URL=${{ vars.NEXT_PUBLIC_API_BASE_URL }}
+            API_BASE_URL=${{ vars.NEXT_PUBLIC_API_BASE_URL }}
           tags: ${{ steps.tag.outputs.image }}
           push: true
           cache-from: type=gha

@@ -8,19 +8,24 @@ import { ProductIdParam } from "@/models/product.schema";
 type ProductStaticParams = Record<keyof ProductIdParam, string>;
 
 export async function generateStaticParams(): Promise<ProductStaticParams[]> {
-    const [newP, daily, weekly] = await Promise.all([
-        getNewProducts(),
-        getDailyProducts(),
-        getWeeklyProducts(),
-    ]);
+    try {
+        const [newP, daily, weekly] = await Promise.all([
+            getNewProducts(),
+            getDailyProducts(),
+            getWeeklyProducts(),
+        ]);
 
-    const ids = new Set([
-        ...newP.data?.map(p => p.id) ?? [],
-        ...daily.data?.map(p => p.id) ?? [],
-        ...weekly.data?.map(p => p.id) ?? [],
-    ]);
+        const ids = new Set([
+            ...newP.data?.map(p => p.id) ?? [],
+            ...daily.data?.map(p => p.id) ?? [],
+            ...weekly.data?.map(p => p.id) ?? [],
+        ]);
 
-    return Array.from(ids).map(id=>({id: String(id)}));
+        return Array.from(ids).map(id=>({id: String(id)}));
+    } catch (error) {
+        console.warn('API unreachable at build, falling back to ISR:', error);
+        return [];
+    }
 };
 
 export default async function LaunchItemPage({
