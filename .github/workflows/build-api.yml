@@ -72,7 +72,7 @@ jobs:
 
       - name: Download task definition
         run: |
-          aws ecs describe-task-definition \ 
+          aws ecs describe-task-definition \
             --task-definition ${{ vars.ECS_API_TASK_DEFINITION_FAMILY_NAME }} \
             --query taskDefinition \
             > task-def.json
