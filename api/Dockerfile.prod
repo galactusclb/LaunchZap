@@ -20,6 +20,7 @@ COPY entrypoint.sh ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/src/lib/prisma/generated ./src/lib/prisma/generated
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.ts /app/tsconfig.json ./
 
 ENV NODE_ENV=production
 EXPOSE 4000
