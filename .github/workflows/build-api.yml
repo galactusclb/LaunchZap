@@ -68,7 +68,7 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Debug vars.ECS_API_TASK_DEFINITION_FAMILY_NAME
-        run: "Family name : ${{vars.ECS_API_TASK_DEFINITION_FAMILY_NAME}}"
+        run: "echo Family name : ${{vars.ECS_API_TASK_DEFINITION_FAMILY_NAME}}"
 
       - name: Download task definition
         run: |
