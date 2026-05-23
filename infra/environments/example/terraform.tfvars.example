@@ -29,6 +29,9 @@ postgresql_version = "17.7"
 db_name            = "postgres"
 db_user            = "launchzap_user"
 
+#ECR
 access_secret        = "<access_secret>"
 google_client_id     = "<google_client_id>"
 google_client_secret = "<google_client_secret>"
+ecr_web_repository_name=
+ecr_api_repository_name=
