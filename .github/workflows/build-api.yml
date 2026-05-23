@@ -67,6 +67,9 @@ jobs:
           role-to-assume: ${{ secrets.AWS_INFRA_DEPLOYMENT_ROLE }}
           aws-region: ${{ vars.AWS_REGION }}
 
+      - name: Debug vars.ECS_API_TASK_DEFINITION_FAMILY_NAME
+        run: "Family name : ${{vars.ECS_API_TASK_DEFINITION_FAMILY_NAME}}"
+
       - name: Download task definition
         run: |
           aws ecs describe-task-definition \ 
