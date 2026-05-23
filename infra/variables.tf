@@ -99,6 +99,16 @@ variable "access_secret" { sensitive = true }
 variable "google_client_id" { sensitive = true }
 variable "google_client_secret" { sensitive = true }
 
+variable "ecr_web_repository_name" {
+  type = string
+  description = "ECR repository name for web images"
+}
+
+variable "ecr_api_repository_name" {
+  type = string
+  description = "ECR repository name for api images"
+}
+
 variable "ecs_api_aws_xray_enabled" {
   type = bool
   default = true

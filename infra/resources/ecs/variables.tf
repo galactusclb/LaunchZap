@@ -14,11 +14,11 @@ variable "ecs_execution_role_arn" {
   type = string
 }
 
-variable "ecs_web_image" {
+variable "ecr_web_repository_name" {
   type = string
 }
 
-variable "ecs_api_image" {
+variable "ecr_api_repository_name" {
   type = string
 }
 

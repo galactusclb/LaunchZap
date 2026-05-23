@@ -89,7 +89,7 @@ module "ecs" {
   ecs_api_task_role_arn = module.iam.ecs_api_task_role_arn
   ecs_web_task_role_arn = module.iam.ecs_web_task_role_arn
 
-  ecs_web_image = "566895563031.dkr.ecr.us-east-1.amazonaws.com/launchzap-web:202605191441"
+  ecr_web_repository_name = var.ecr_web_repository_name
   web_port = var.web_port
   target_group_web_arn = module.alb.alb_tg_web_arn
   ecs_web_sg_ids = [module.security_groups.ecs_web_sg_id]
@@ -98,7 +98,7 @@ module "ecs" {
   web_env_cloudfront_domain = module.cloudfront.cloudfront_domain_name
   web_env_s3_bucket_name = module.s3.s3_bucket_name
 
-  ecs_api_image = "566895563031.dkr.ecr.us-east-1.amazonaws.com/launchzap-api:202605210750"
+  ecr_api_repository_name = var.ecr_api_repository_name
   api_port = var.api_port
   target_group_api_arn = module.alb.alb_tg_api_arn
   ecs_api_sg_ids = [module.security_groups.ecs_api_sg_id]

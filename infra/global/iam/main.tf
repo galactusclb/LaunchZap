@@ -5,8 +5,9 @@ resource "aws_iam_openid_connect_provider" "github" {
   thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
 }
 
+# Role github pushing images to ECR
 resource "aws_iam_role" "github_actions_ecr" {
-  name               = "github-actions-ecr-push"
+  name               = "launchzap-github-action-ecr-push"
   assume_role_policy = data.aws_iam_policy_document.github_oidc_trust.json
 }
 
@@ -33,4 +34,17 @@ data "aws_iam_policy_document" "github_oidc_trust" {
 resource "aws_iam_role_policy_attachment" "ecr_push" {
   role       = aws_iam_role.github_actions_ecr.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
+}
+
+
+
+# Role for Github action to run infra provisioning
+resource "aws_iam_role" "github_actions_terraform" {
+  name = "launchzap-github-infra-deploy"
+  assume_role_policy = data.aws_iam_policy_document.github_oidc_trust.json
+}
+
+resource "aws_iam_role_policy_attachment" "terraform_admin" {
+  role = aws_iam_role.github_actions_terraform.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }

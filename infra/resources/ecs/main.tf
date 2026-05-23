@@ -1,5 +1,15 @@
 data "aws_region" "current" { }
 
+data "aws_ecr_image" "web" {
+  repository_name = var.ecr_web_repository_name
+  most_recent = true
+}
+
+data "aws_ecr_image" "api" {
+  repository_name = var.ecr_api_repository_name
+  most_recent = true
+}
+
 resource "aws_ecs_cluster" "ecs-cluster" {
   name = "${var.name_prefix}-ecs-cluster"
 }
@@ -18,7 +28,7 @@ resource "aws_ecs_task_definition" "web" {
   container_definitions = jsonencode([
     {
       name = "web-container"
-      image = var.ecs_web_image
+      image = data.aws_ecr_image.web.image_uri
       cpu = 10
       memory = 512
       portMappings = [
@@ -81,6 +91,10 @@ resource "aws_ecs_service" "web" {
   launch_type = "FARGATE"
   scheduling_strategy = "REPLICA"
 
+  lifecycle {
+    ignore_changes = [ task_definition ]
+  }
+
   network_configuration {
     assign_public_ip = false
     subnets = var.ecs_subnet_ids
@@ -110,7 +124,7 @@ resource "aws_ecs_task_definition" "api" {
   container_definitions = jsonencode([
     {
       name = "api-container"
-      image = var.ecs_api_image
+      image = data.aws_ecr_image.api.image_uri
       cpu = 10
       memory = 512
 
@@ -195,6 +209,10 @@ resource "aws_ecs_service" "api" {
 
   launch_type = "FARGATE"
   scheduling_strategy = "REPLICA"
+
+  lifecycle {
+    ignore_changes = [ task_definition ]
+  }
 
   network_configuration {
     assign_public_ip = false
