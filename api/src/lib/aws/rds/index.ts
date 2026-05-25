@@ -7,4 +7,16 @@ const signer = new Signer({
     region: process.env.AWS_DEFAULT_REGION!,
 });
 
-export const getRDSAuthToken = () => signer.getAuthToken();
+let cachedToken: string | null = null;
+let tokenExpiresAt = 0;
+
+export const TOKEN_TTL = 14 * 60;
+
+export const getRDSAuthToken = async (): Promise<string> => {
+    const now = Date.now();
+    if (cachedToken && now < tokenExpiresAt) return cachedToken;
+    
+    cachedToken = await signer.getAuthToken();
+    tokenExpiresAt = now + (TOKEN_TTL * 1000);
+    return cachedToken;
+}

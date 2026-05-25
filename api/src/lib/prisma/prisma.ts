@@ -3,7 +3,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { readReplicas } from "@prisma/extension-read-replicas"
 import { Pool } from "pg";
 
-import { getRDSAuthToken } from "@/lib/aws/rds";
+import { getRDSAuthToken, TOKEN_TTL } from "@/lib/aws/rds";
 import { traceAsync } from "@/lib/aws/xray";
 import { PrismaClient } from "@/prisma/client";
 
@@ -45,7 +45,7 @@ function createPool(host: string, password: string | (() => string | Promise<str
         password,
 
         // for connection recyceling
-        maxLifetimeSeconds: 60 * 13,
+        maxLifetimeSeconds: TOKEN_TTL, //Keep as 1min less than or more not to exceed the IAM token TTL (15min) 
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: 10000,
     });
