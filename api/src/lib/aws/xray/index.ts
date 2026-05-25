@@ -19,3 +19,19 @@ const noopError: ErrorRequestHandler = (_err, _req, _res, next) => next();
 
 export const xrayOpen: RequestHandler = ENABLED ? AWSXRay.express.openSegment(SERVICE_NAME) : noop;
 export const xrayClose: ErrorRequestHandler = ENABLED ? AWSXRay.express.closeSegment(): noopError;
+
+export async function traceAsync<T>(name: string, fn: () => Promise<T>): Promise<T> {
+    if (!ENABLED) return fn();
+    const segment = AWSXRay.resolveSegment();
+    if (!segment) return fn();
+    const sub = segment.addNewSubsegment(name);
+    try {
+        const result = await fn();
+        sub.close();
+        return result;
+    } catch (err) {
+        sub.addError(err as Error);
+        sub.close();
+        throw err;
+    }
+}

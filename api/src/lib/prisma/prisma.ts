@@ -4,6 +4,7 @@ import { readReplicas } from "@prisma/extension-read-replicas"
 import { Pool } from "pg";
 
 import { getRDSAuthToken } from "@/lib/aws/rds";
+import { traceAsync } from "@/lib/aws/xray";
 import { PrismaClient } from "@/prisma/client";
 
 
@@ -23,7 +24,16 @@ const readClient = new PrismaClient({ adapter: replicaAdapter});
 const prisma = mainClient
     .$extends(readReplicas({
         replicas: [readClient]
-    }));
+    }))
+    .$extends({
+        query: {
+            $allModels: {
+                async $allOperations({model, operation, args, query}) {
+                    return await traceAsync(`db:${model}.${operation}`, () => query(args));
+                }
+            }
+        }
+    });
 
 function createPool(host: string, password: string | (() => string | Promise<string>)){
     const pool = new Pool({
@@ -53,9 +63,9 @@ export function resolveDBConnection(host?: string): string | Pool {
     return createPool(host!, getRDSAuthToken);
 };
 
-export default prisma;
-
 export type PrismaTransactionClient = Omit<
     typeof prisma,
     '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends' | '$primary' | '$replica'
 >
+
+export default prisma;

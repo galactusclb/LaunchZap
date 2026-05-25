@@ -2,6 +2,8 @@ import {Redis} from 'ioredis';
 
 import type { Redis as RedisClient } from 'ioredis';
 
+import { traceAsync } from '@/lib/aws/xray';
+
 export type RedisConfig = {
   url?: string;
   host: string;
@@ -9,6 +11,16 @@ export type RedisConfig = {
   password?: string;
   db?: number;
 };
+
+type RedisCommandFn = (...args: unknown[]) => Promise<unknown>;
+
+const TRACED_COMMANDS = [
+  'get', 'set', 'setex', 'setnx', 'getex',
+  'del', 'exists', 'expire', 'ttl',
+  'hget', 'hset', 'hdel', 'hgetall', 'hmset',
+  'sadd', 'srem', 'smembers',
+  'incr', 'decr',
+] as const;
 
 export let redisClient: RedisClient | null = null;
 
@@ -29,7 +41,19 @@ export function getRedisClient(config: RedisConfig): RedisClient {
         redisClient.on('error', (err) => {
           console.error('[redis]', err);
         });
-    }
+
+        traceRedis(redisClient)
+    };
 
   return redisClient;
+}
+
+function traceRedis(client: RedisClient): void {
+  TRACED_COMMANDS.forEach(cmd => {
+    const original = (client[cmd] as RedisCommandFn).bind(client);
+    Object.assign(client, {
+      [cmd]: (...args: unknown[]) =>
+        traceAsync(`redis:${cmd}`, () => original(...args)),
+    });
+  })
 }
