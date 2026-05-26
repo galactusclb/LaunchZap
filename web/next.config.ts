@@ -1,3 +1,5 @@
+import path from "path";
+
 import bundleAnalyzer from "@next/bundle-analyzer";
 import type { NextConfig } from "next";
 
@@ -9,6 +11,9 @@ const nextConfig: NextConfig = {
   /* config options here */
   output: 'standalone',
   cacheComponents: true,
+  cacheHandlers: {
+    default: path.resolve('./src/lib/redis/index.mjs')
+  },
   reactCompiler: true,
   images: {
     remotePatterns: [
