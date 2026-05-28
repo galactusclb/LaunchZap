@@ -15,11 +15,15 @@ const CACHE_KEY_PREFIX = "lz:api:product";
 const CACHE_KEY_LIST = `${CACHE_KEY_PREFIX}:list`;
 const CACHE_KEY_VERSION = `${CACHE_KEY_PREFIX}:version`;
 const CACHE_KEY_ITEM = `${CACHE_KEY_PREFIX}:item`;
+const CACHE_KEY_ITEM_VOTE_COUNT = `${CACHE_KEY_PREFIX}:item:vote`;
+
+const VOTE_COUNT_TTL = 60 * 60 * 24;
 
 export const doGetById = async (id: Product['id']) => {
     const cacheKey = `${CACHE_KEY_ITEM}:${id}`;
+    const voteKey = `${CACHE_KEY_ITEM_VOTE_COUNT}:${id}`
 
-    const product = await redisUtils.swrCache(
+    const getProduct = redisUtils.swrCache(
         cacheKey,
         async ()=> {
             logger.debug('[product] item cache miss', { cacheKey, id });
@@ -27,8 +31,25 @@ export const doGetById = async (id: Product['id']) => {
         }
     );
 
+    const cachedVoteCount = redisClient?.get(voteKey) ?? null;
+
+    const [product, cachedCount] = await Promise.all([ getProduct, cachedVoteCount ]);
+
     if (!product) throw new NotFoundError("Product not found");
-    return product;
+
+    if (cachedCount === null) {
+        void redisClient?.set(voteKey, String(product._count.votes), "EX", VOTE_COUNT_TTL, "NX");
+    }else {
+        void redisClient?.expire(voteKey, VOTE_COUNT_TTL);
+    }
+
+    return {
+        ...product,
+        _count: {
+            ...product._count,
+            votes: cachedCount !== null ? parseInt(cachedCount) : product._count.votes
+        }
+    };
 };
 
 export const doGetAllProducts = async (query: ProductFilterQuery) => {
@@ -62,17 +83,46 @@ export const doCreateProduct = async (makerId: string,input: CreateProduct) => {
 };
 
 export const doVoteProduct = async (userId: User['id'], productId: Product['id']) => {
-    return prisma.$transaction(async (tx) => {
-
+    const result = await prisma.$transaction(async (tx) => {
         const existing = await repo.findVote(userId, productId, tx);
 
         if (existing) {
             await repo.removeVote(existing.id, tx);
             return { isUpvoted: false };
         }
-
-        await repo.createVote(userId, productId, tx);
         
+        await repo.createVote(userId, productId, tx);
         return { isUpvoted: true };
     });
+  
+    const voteKey = `${CACHE_KEY_ITEM_VOTE_COUNT}:${productId}`;
+    
+    const keyExists = await redisClient?.exists(voteKey);
+
+    if (!keyExists) {
+        const lockKey = `${voteKey}:lock:init`;
+        const acquired = await redisClient?.set(lockKey, "1", "PX", 5000, "NX");
+
+        if (acquired) {
+            try {
+                const fresh = await repo.findById(productId);
+                await redisClient?.set(voteKey, String(fresh?._count.votes), "EX", VOTE_COUNT_TTL, "NX");
+            } finally {
+                await redisClient?.del(lockKey);
+            }
+        };
+
+        return result;
+    };
+
+    try {
+        await (result.isUpvoted
+            ? redisClient?.incr(voteKey)
+            : redisClient?.decr(voteKey)
+        );
+    } catch (err) {
+        logger.error('[product] vote count cache drift', { err, productId, isUpvoted: result.isUpvoted });
+    };
+
+    return result;
 };
