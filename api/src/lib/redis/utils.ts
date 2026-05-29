@@ -4,6 +4,9 @@ import { redisClient } from "./redis-client";
 import { logger } from "@/lib/logger";
 
 import { ServiceUnavailableError } from "@/utils/errors/http-error";
+class FetcherError {
+    constructor(public cause: unknown) {}
+}
 
 type CachedValue<T> = {
     data: T,
@@ -69,24 +72,50 @@ async function refresh<T>(
     const jitterMs = 50; // de-sync simultaneous retries
 
     for (let attempt = 0; attempt < maxRetryCount; attempt++) {
-        const result = await withLock(
-            key,
-            async ()=> {
-                const data = await fetcher();
-                const entry: CachedValue<T> = {
-                    data,
-                    freshUntil: Date.now() + opts.freshTtl * 1000
-                };
+        let result: T | null;
 
-                await redisClient?.setex(key, opts.staleTtl, JSON.stringify(entry));
-                return data;
-            },
-            maxLockTtlMs
-        );
+        try {
+            result = await withLock(
+                key,
+                async () => {
+                    let data: T;
+
+                    try {
+                        data = await fetcher();
+                    } catch (cause) {
+                        throw new FetcherError(cause);
+                    }
+
+                    try {
+                        const entry: CachedValue<T> = {
+                            data,
+                            freshUntil: Date.now() + opts.freshTtl * 1000
+                        };
+
+                        await redisClient?.setex(key, opts.staleTtl, JSON.stringify(entry));
+
+                    } catch { };
+
+                    return data;
+                },
+                maxLockTtlMs
+            );
+
+        } catch (err) {
+            if (err instanceof FetcherError) throw err.cause;
+            throw new ServiceUnavailableError("Cache temporarily unavailable, please retry");
+        }
 
         if (result !== null) return result;
 
-        const cached = await redisClient?.get(key);
+        let cached: string | null | undefined;
+
+        try {
+            cached = await redisClient?.get(key);
+        } catch {
+            throw new ServiceUnavailableError("Cache temporarily unavailable, please retry");
+        };
+
         if (cached) return (JSON.parse(cached) as CachedValue<T>).data;
 
         const delay = Math.min(minRetryIntervalMs * 2 ** attempt, maxRetryIntervalMs) + Math.random() * jitterMs;
