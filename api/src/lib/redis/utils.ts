@@ -1,4 +1,7 @@
+import { LRUCache } from "lru-cache";
+
 import { redisClient } from "./redis-client";
+import { logger } from "@/lib/logger";
 
 import { ServiceUnavailableError } from "@/utils/errors/http-error";
 
@@ -19,27 +22,39 @@ const initOptions: Required<SwrOptions> = {
     lockTtl: 10 //10s
 }
 
+const l2 = new LRUCache<string, string>({
+    max: 500,
+    ttl: 30 * 1000
+});
+
 export async function swrCache<T>(
     key: string,
     fetcher: () => Promise<T>,
     opts: SwrOptions = initOptions
 ) {
-    const cached = await redisClient?.get(key);
+    try {
+        const cached = await redisClient?.get(key);
 
-    if (cached) {
-        const entry: CachedValue<T> = JSON.parse(cached);
+        if (cached) {
+            const entry: CachedValue<T> = JSON.parse(cached);
 
-        if (Date.now() < entry.freshUntil) {
-            return entry.data
-        }
-        
-        void refresh(key, fetcher, opts).catch((err)=> {
-            console.error(`[swr] background refresh failed for ${key}`, err);
-        });
-        return entry.data;
-    };
+            if (Date.now() < entry.freshUntil) {
+                return entry.data
+            }
 
-    return refresh(key, fetcher, opts);
+            void refresh(key, fetcher, opts).catch((err) => {
+                console.error(`[swr] background refresh failed for ${key}`, err);
+            });
+            return entry.data;
+        };
+
+        return refresh(key, fetcher, opts);
+    } catch (error) {
+        if (!(error instanceof ServiceUnavailableError)) throw error;
+        logger.error(`[swr] Redis unavailable for ${key}, falling back to L2`, { error });
+    }
+
+    return lruHit(key, fetcher, opts);
 };
 
 async function refresh<T>(
@@ -97,3 +112,25 @@ export async function withLock<T>(
         await redisClient?.del(lockKey);
     };
 }
+
+const l2Inflight = new Map<string, Promise<unknown>>();
+
+async function lruHit<T>(
+    key: string,
+    fetcher: () => Promise<T>,
+    opts: SwrOptions = initOptions
+) {
+    const l2Hit = l2.get(key);
+    if (l2Hit) return (JSON.parse(l2Hit) as CachedValue<T>).data;
+
+    const inFlight = l2Inflight.get(key) as Promise<T> | undefined;
+    if (inFlight) return inFlight;
+
+    const promise = fetcher().then(data=>{
+        l2.set(key, JSON.stringify({ data, freshUntil: Date.now() + (opts.freshTtl * 1000) }));
+        return data;
+    }).finally(()=> l2Inflight.delete(key));
+
+    l2Inflight.set(key, promise);
+    return promise;
+} 
