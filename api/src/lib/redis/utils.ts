@@ -1,5 +1,7 @@
 import { redisClient } from "./redis-client";
 
+import { ServiceUnavailableError } from "@/utils/errors/http-error";
+
 type CachedValue<T> = {
     data: T,
     freshUntil: number
@@ -45,7 +47,6 @@ async function refresh<T>(
     fetcher: () => Promise<T>,
     opts: SwrOptions
 ): Promise<T>{
-    const lockKey = `${key}:lock`;
     const maxLockTtlMs = (opts.lockTtl ?? initOptions.lockTtl) * 1000;
     const minRetryIntervalMs   = 30; //fetcher duration - min
     const maxRetryIntervalMs   = 1000; //fetcher duration - max
@@ -53,10 +54,9 @@ async function refresh<T>(
     const jitterMs = 50; // de-sync simultaneous retries
 
     for (let attempt = 0; attempt < maxRetryCount; attempt++) {
-        const acquired = await redisClient?.set(lockKey, "1", "PX", maxLockTtlMs, "NX");
-
-        if (acquired) {
-            try {
+        const result = await withLock(
+            key,
+            async ()=> {
                 const data = await fetcher();
                 const entry: CachedValue<T> = {
                     data,
@@ -65,10 +65,11 @@ async function refresh<T>(
 
                 await redisClient?.setex(key, opts.staleTtl, JSON.stringify(entry));
                 return data;
-            } finally {
-                await redisClient?.del(lockKey);
-            }
-        }
+            },
+            maxLockTtlMs
+        );
+
+        if (result !== null) return result;
 
         const cached = await redisClient?.get(key);
         if (cached) return (JSON.parse(cached) as CachedValue<T>).data;
@@ -77,5 +78,22 @@ async function refresh<T>(
         await new Promise(r => setTimeout(r, delay));
     }
 
-    throw new Error("swr: failed to acquire lock or read cache after retries");
+    throw new ServiceUnavailableError("Cache temporarily unavailable, please retry");
 };
+
+export async function withLock<T>(
+    key: string,
+    fn: () => Promise<T>,
+    ttlMs: number = 5000
+): Promise<T | null> {
+    const lockKey = `${key}:lock`;
+    const acquired = await redisClient?.set(lockKey, "1", "PX", ttlMs, "NX");
+
+    if (!acquired) return null;
+
+    try {
+        return await fn();
+    } finally {
+        await redisClient?.del(lockKey);
+    };
+}

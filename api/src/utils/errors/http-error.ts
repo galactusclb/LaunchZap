@@ -48,6 +48,13 @@ class InternalServerError extends HttpError {
     }
 }
 
+class ServiceUnavailableError extends HttpError {
+    constructor(message = "Service unavailable", details?: number) {
+        super(503, message);
+        this.details = details;
+    }
+}
+
 export {
     HttpError,
     BadRequestError,
@@ -56,4 +63,5 @@ export {
     NotFoundError,
     ConflictError,
     InternalServerError,
+    ServiceUnavailableError
 }

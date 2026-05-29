@@ -100,17 +100,15 @@ export const doVoteProduct = async (userId: User['id'], productId: Product['id']
     const keyExists = await redisClient?.exists(voteKey);
 
     if (!keyExists) {
-        const lockKey = `${voteKey}:lock:init`;
-        const acquired = await redisClient?.set(lockKey, "1", "PX", 5000, "NX");
-
-        if (acquired) {
-            try {
+        await redisUtils?.withLock(
+            `${voteKey}:init`,
+            async () => {
                 const fresh = await repo.findById(productId);
-                await redisClient?.set(voteKey, String(fresh?._count.votes), "EX", VOTE_COUNT_TTL, "NX");
-            } finally {
-                await redisClient?.del(lockKey);
+                if (fresh) {
+                    void redisClient?.set(voteKey, String(fresh?._count.votes), "EX", VOTE_COUNT_TTL, "NX");
+                }
             }
-        };
+        );
 
         return result;
     };
