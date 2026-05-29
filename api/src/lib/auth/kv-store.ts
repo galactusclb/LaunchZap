@@ -1,27 +1,21 @@
+import { LRUCache } from 'lru-cache';
+
 import type { Redis as RedisClient } from 'ioredis';
 
-type StoredValue = {
-  value: string;
-  expiresAtMs: number;
-};
-
-const memory = new Map<string, StoredValue>();
-
-function nowMs() {
-  return Date.now();
-}
-
-function gcMemory() {
-  const now = nowMs();
-  for (const [key, entry] of memory.entries()) {
-    if (entry.expiresAtMs <= now) memory.delete(key);
-  }
-}
+const memory = new LRUCache<string, string>({
+  max: 1000,
+  ttl: 60 * 60 * 27 * 7
+});
 
 export async function kvGet(redis: RedisClient | null | undefined, key: string): Promise<string | null> {
-  if (redis) return await redis.get(key);
-  gcMemory();
-  return memory.get(key)?.value ?? null;
+  if (redis) {
+    try {
+      return await redis.get(key);
+    } catch {
+      return memory.get(key) ?? null;
+    }
+  }
+  return memory.get(key) ?? null;
 }
 
 export async function kvSetEx(
@@ -31,16 +25,25 @@ export async function kvSetEx(
   value: string,
 ): Promise<void> {
   if (redis) {
-    await redis.setex(key, ttlSeconds, value);
-    return;
+    try {
+      await redis.setex(key, ttlSeconds, value);
+      return;
+    } catch {
+      memory.set(key, value, { ttl: ttlSeconds * 1000 });
+      return;
+    }
   }
-  gcMemory();
-  memory.set(key, { value, expiresAtMs: nowMs() + ttlSeconds * 1000 });
+  memory.set(key, value, { ttl: ttlSeconds * 1000 });
 }
 
 export async function kvDel(redis: RedisClient | null | undefined, key: string): Promise<void> {
   if (redis) {
-    await redis.del(key);
+    try {
+      await redis.del(key);
+      return;
+    } catch {
+      memory.delete(key);
+    }
     return;
   }
   memory.delete(key);
