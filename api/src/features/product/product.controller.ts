@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 
-import { User } from "../auth/auth.schema.ts";
-
 import { toProductDTO } from "./product.dto.ts";
 import { CreateProduct, GetProductById, ProductFilterQuery, VoteProduct } from "./product.schema.ts";
 import * as service from "./product.service.ts";
 
 import { requireAuth } from "@/middleware/auth.middleware.ts";
+import { User } from "@/schemas/user.schema";
 
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
     const result = await service.doGetAllProducts(req.validatedQuery as ProductFilterQuery);

@@ -1,13 +1,12 @@
 import { createHash } from 'crypto';
 
-import { User } from '../auth/auth.schema.ts';
-
 import * as repo from './product.repository.ts';
 import { CreateProduct, Product, ProductFilterQuery } from './product.schema.ts';
 
 import { logger } from '@/lib/logger';
 import prisma from '@/lib/prisma/prisma.ts';
 import { redisClient, redisUtils } from '@/lib/redis/redis-client.ts';
+import { User } from '@/schemas/user.schema';
 import { ConflictError, NotFoundError } from '@/utils/errors/http-error.ts';
 import { paginatedResponse } from '@/utils/paginate-helpers.ts';
 
