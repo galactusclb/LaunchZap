@@ -6,16 +6,22 @@ import * as service from "./product.service.ts";
 
 import { requireAuth } from "@/middleware/auth.middleware.ts";
 import { User } from "@/schemas/user.schema";
+import { toCacheControlHeader } from "@/utils/constant/cache.ts";
+import { constants } from "@/utils/constant/index.ts";
 
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
     const result = await service.doGetAllProducts(req.validatedQuery as ProductFilterQuery);
-    const parsed = result.data?.map((item)=>toProductDTO(item));
+    const parsed = result.data?.map((item) => toProductDTO(item));
+
+    res.header('Cache-Control', toCacheControlHeader(constants.cache.product.list));
     res.status(200).json({ success: true, meta: result.meta, data: parsed });
 }
 
 export const getProductById = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.validatedParams as GetProductById;
     const product = await service.doGetById(id);
+
+    res.header('Cache-Control', toCacheControlHeader(constants.cache.product.item));
     res.status(200).json({ success: true, data: toProductDTO(product) });
 }
 

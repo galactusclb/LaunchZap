@@ -7,6 +7,7 @@ import { logger } from '@/lib/logger';
 import prisma from '@/lib/prisma/prisma.ts';
 import { redisClient, redisUtils } from '@/lib/redis/redis-client.ts';
 import { User } from '@/schemas/user.schema';
+import { constants } from '@/utils/constant/index.ts';
 import { ConflictError, NotFoundError } from '@/utils/errors/http-error.ts';
 import { paginatedResponse } from '@/utils/paginate-helpers.ts';
 
@@ -27,7 +28,8 @@ export const doGetById = async (id: Product['id']) => {
         async ()=> {
             logger.debug('[product] item cache miss', { cacheKey, id });
             return repo.findById(id);
-        }
+        },
+        { ...constants.cache.product.item}
     );
 
     const cachedVoteCount = redisClient?.get(voteKey) ?? null;
@@ -63,7 +65,8 @@ export const doGetAllProducts = async (query: ProductFilterQuery) => {
             logger.debug('[product] list cache miss', { cacheKey, query });
             const { data, total } = await repo.findAll(query);
             return paginatedResponse(data, total, query);
-        }
+        },
+        { ...constants.cache.product.list}
     );
 };
 

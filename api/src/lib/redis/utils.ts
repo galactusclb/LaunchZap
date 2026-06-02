@@ -1,8 +1,8 @@
 import { LRUCache } from "lru-cache";
 
 import { redisClient } from "./redis-client";
-import { logger } from "@/lib/logger";
 
+import { logger } from "@/lib/logger";
 import { ServiceUnavailableError } from "@/utils/errors/http-error";
 class FetcherError {
     constructor(public cause: unknown) {}
@@ -14,14 +14,14 @@ type CachedValue<T> = {
 };
 
 type SwrOptions = {
-    freshTtl: number,
-    staleTtl: number,
+    redis_fresh_ttl: number,
+    redis_stale_ttl: number,
     lockTtl?: number
 }
 
 const initOptions: Required<SwrOptions> = {
-    freshTtl: 60, //1min
-    staleTtl: 300, //5min
+    redis_fresh_ttl: 60, //1min
+    redis_stale_ttl: 300, //5min
     lockTtl: 10 //10s
 }
 
@@ -89,10 +89,10 @@ async function refresh<T>(
                     try {
                         const entry: CachedValue<T> = {
                             data,
-                            freshUntil: Date.now() + opts.freshTtl * 1000
+                            freshUntil: Date.now() + opts.redis_fresh_ttl * 1000
                         };
 
-                        await redisClient?.setex(key, opts.staleTtl, JSON.stringify(entry));
+                        await redisClient?.setex(key, opts.redis_stale_ttl, JSON.stringify(entry));
 
                     } catch { };
 
@@ -156,7 +156,7 @@ async function lruHit<T>(
     if (inFlight) return inFlight;
 
     const promise = fetcher().then(data=>{
-        l2.set(key, JSON.stringify({ data, freshUntil: Date.now() + (opts.freshTtl * 1000) }));
+        l2.set(key, JSON.stringify({ data, freshUntil: Date.now() + (opts.redis_fresh_ttl * 1000) }));
         return data;
     }).finally(()=> l2Inflight.delete(key));
 

@@ -1,3 +1,4 @@
+import { cacheConfig } from "./cache";
 import { RoleList } from "./role";
 
 export const constants = {
@@ -19,5 +20,6 @@ export const constants = {
       nameTooShort: 'Name must be at least 2 characters',
     }
   },
-  role: RoleList
+  role: RoleList,
+  cache: cacheConfig
 }
