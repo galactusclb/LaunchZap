@@ -1,0 +1,5 @@
+exec < /dev/tty && node_modules/.bin/cz --hook || {
+  echo ""
+  echo "commitizen not found — run 'pnpm install' at the repo root first."
+  exit 1
+}
