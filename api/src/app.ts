@@ -49,12 +49,14 @@ app.use((req: Request, res: Response, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-apiRouter.get('/', (req: Request, res: Response) => {
-  res.status(200).json({ message: 'Welcome to CleanSweep API' });
-});
+const handleRoot = (_req: Request, res: Response) => {
+  res.status(200).json({ message: 'Welcome to LaunchZap API' });
+};
 
+app.get('/', handleRoot);
+
+apiRouter.get('/', handleRoot);
 apiRouter.get('/health', (_, res) => res.sendStatus(200))
-
 apiRouter.use('/auth', authRoutes);
 apiRouter.use('/users', userRoutes);
 apiRouter.use('/products', productRoutes);
