@@ -7,7 +7,7 @@ ENV DATABASE_URL=${DATABASE_URL}
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml tsconfig.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json ./
 
 RUN pnpm install
 
