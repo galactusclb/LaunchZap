@@ -1,75 +1,94 @@
 import tseslint from 'typescript-eslint';
 import importX from 'eslint-plugin-import-x';
 
-export default tseslint.config(
-  tseslint.configs.recommended,
-  {
+export default tseslint.config(tseslint.configs.recommended, {
     files: ['src/**/*.ts'],
     plugins: {
-      'import-x': importX,
+        'import-x': importX,
     },
     rules: {
-      'import-x/order': ['warn', {
-        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
-        'newlines-between': 'always',
-        alphabetize: { order: 'asc', caseInsensitive: true },
-      }],
-
-      'import-x/no-restricted-paths': ['error', {
-        zones: [
-          // route → cannot skip to service or repository
-          {
-            target: './src/features/**/*.route.ts',
-            from: './src/features/**/*.service.ts',
-            message: 'Routes must not import services directly. Go through a controller.',
-          },
-          {
-            target: './src/features/**/*.route.ts',
-            from: './src/features/**/*.repository.ts',
-            message: 'Routes must not import repositories directly.',
-          },
-
-          // controller → cannot skip to repository
-          {
-            target: './src/features/**/*.controller.ts',
-            from: './src/features/**/*.repository.ts',
-            message: 'Controllers must not import repositories directly. Go through a service.',
-          },
-
-          // service → no upward imports
-          {
-            target: './src/features/**/*.service.ts',
-            from: './src/features/**/*.route.ts',
-            message: 'Services must not import from routes.',
-          },
-          {
-            target: './src/features/**/*.service.ts',
-            from: './src/features/**/*.controller.ts',
-            message: 'Services must not import from controllers.',
-          },
-
-          // repository → nothing above it
-          {
-            target: './src/features/**/*.repository.ts',
-            from: './src/features/**/*.route.ts',
-            message: 'Repositories are the bottom layer — no upward imports allowed.',
-          },
-          {
-            target: './src/features/**/*.repository.ts',
-            from: './src/features/**/*.controller.ts',
-            message: 'Repositories are the bottom layer — no upward imports allowed.',
-          },
-          {
-            target: './src/features/**/*.repository.ts',
-            from: './src/features/**/*.service.ts',
-            message: 'Repositories are the bottom layer — no upward imports allowed.',
-          },
+        'import-x/order': [
+            'warn',
+            {
+                groups: [
+                    'builtin',
+                    'external',
+                    'internal',
+                    'parent',
+                    'sibling',
+                    'index',
+                    'object',
+                    'type',
+                ],
+                pathGroups: [{ pattern: '@/**', group: 'internal', position: 'after' }],
+                pathGroupsExcludedImportTypes: ['builtin'],
+                'newlines-between': 'always',
+                alphabetize: { order: 'asc', caseInsensitive: true },
+            },
         ],
-      }],
-      '@typescript-eslint/no-unused-vars': ['error', {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-      }],
+
+        'import-x/no-restricted-paths': [
+            'error',
+            {
+                zones: [
+                    // route → cannot skip to service or repository
+                    {
+                        target: './src/features/**/*.route.ts',
+                        from: './src/features/**/*.service.ts',
+                        message:
+                            'Routes must not import services directly. Go through a controller.',
+                    },
+                    {
+                        target: './src/features/**/*.route.ts',
+                        from: './src/features/**/*.repository.ts',
+                        message: 'Routes must not import repositories directly.',
+                    },
+
+                    // controller → cannot skip to repository
+                    {
+                        target: './src/features/**/*.controller.ts',
+                        from: './src/features/**/*.repository.ts',
+                        message:
+                            'Controllers must not import repositories directly. Go through a service.',
+                    },
+
+                    // service → no upward imports
+                    {
+                        target: './src/features/**/*.service.ts',
+                        from: './src/features/**/*.route.ts',
+                        message: 'Services must not import from routes.',
+                    },
+                    {
+                        target: './src/features/**/*.service.ts',
+                        from: './src/features/**/*.controller.ts',
+                        message: 'Services must not import from controllers.',
+                    },
+
+                    // repository → nothing above it
+                    {
+                        target: './src/features/**/*.repository.ts',
+                        from: './src/features/**/*.route.ts',
+                        message: 'Repositories are the bottom layer — no upward imports allowed.',
+                    },
+                    {
+                        target: './src/features/**/*.repository.ts',
+                        from: './src/features/**/*.controller.ts',
+                        message: 'Repositories are the bottom layer — no upward imports allowed.',
+                    },
+                    {
+                        target: './src/features/**/*.repository.ts',
+                        from: './src/features/**/*.service.ts',
+                        message: 'Repositories are the bottom layer — no upward imports allowed.',
+                    },
+                ],
+            },
+        ],
+        '@typescript-eslint/no-unused-vars': [
+            'error',
+            {
+                argsIgnorePattern: '^_',
+                varsIgnorePattern: '^_',
+            },
+        ],
     },
-  },
-);
+});
