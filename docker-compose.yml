@@ -78,6 +78,7 @@ services:
       GOOGLE_CLIENT_SECRET: REDACTED_GOOGLE_CLIENT_SECRET
       GOOGLE_REDIRECT_URI: http://localhost:4000/api/auth/google/callback
       WEB_APP_URL: http://localhost:3000
+      LOG_LEVEL: trace
     volumes:
       - ./api:/app
       - /app/node_modules
@@ -108,6 +109,7 @@ services:
       NEXT_PUBLIC_API_BASE_URL: http://localhost:4000/api
       AWS_REGION: 'us-east-1'
       AWS_SECRET_MANAGER_SECRET_NAME: 'launchzap/app-config/dev'
+      AWS_CLOUDFRONT_DOMAIN: 'https://sample.com'
     env_file:
       - .env.infra
       - ./web/.env.infra
