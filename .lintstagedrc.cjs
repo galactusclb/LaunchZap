@@ -1,11 +1,11 @@
 const path = require('path')
 
 module.exports = {
-    'api/**/*.{js,ts}': (files) => {
-        const apiDir = path.join(process.cwd(), 'api')
+    'apps/api/**/*.{js,ts}': (files) => {
+        const apiDir = path.join(process.cwd(), 'apps/api')
         const relative = files.map((f) => path.relative(apiDir, f)).join(' ')
         return [
-            `cd api && npx eslint --fix ${relative}`,
+            `cd apps/api && npx eslint --fix ${relative}`,
             `npx prettier --write ${files.join(' ')}`,
         ]
     },

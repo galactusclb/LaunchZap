@@ -63,7 +63,7 @@ services:
 
   api:
     build:
-      context: ./api
+      context: ./apps/api
       dockerfile: Dockerfile
     container_name: api
     ports:
@@ -80,7 +80,7 @@ services:
       WEB_APP_URL: http://localhost:3000
       LOG_LEVEL: trace
     volumes:
-      - ./api:/app
+      - ./apps/api:/app
       - /app/node_modules
     networks:
       - inner-net

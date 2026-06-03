@@ -1,0 +1,72 @@
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express, { Request, Response } from 'express';
+import rateLimit from 'express-rate-limit';
+
+import { configureXray, xrayClose, xrayOpen } from './lib/aws/xray';
+
+import { routes as authRoutes } from '@/features/auth';
+import { routes as productRoutes } from '@/features/product';
+import { routes as userRoutes } from '@/features/user';
+import { errorHandler } from '@/middleware/error.middleware.ts';
+
+const app = express();
+const apiRouter = express.Router();
+
+const allowedOrigins = ['http://localhost:3000', process.env.WEB_APP_URL];
+
+configureXray();
+app.use(xrayOpen);
+
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            if (!origin) return callback(null, true);
+
+            if (allowedOrigins.indexOf(origin) === -1) {
+                return callback(
+                    new Error(
+                        'The CORS policy for this site does not allow access from the specified Origin.'
+                    ),
+                    false
+                );
+            }
+            return callback(null, true);
+        },
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    })
+);
+
+app.use(cookieParser());
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+
+app.use((req: Request, res: Response, next) => {
+    if (req.originalUrl !== '/api/health') {
+        console.log(`[${req.method}] ${req.originalUrl}`);
+    }
+    next();
+});
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const handleRoot = (_req: Request, res: Response) => {
+    res.status(200).json({ message: 'Welcome to LaunchZap API' });
+};
+
+app.get('/', handleRoot);
+
+apiRouter.get('/', handleRoot);
+apiRouter.get('/health', (_, res) => res.sendStatus(200));
+apiRouter.use('/auth', authRoutes);
+apiRouter.use('/users', userRoutes);
+apiRouter.use('/products', productRoutes);
+
+app.use('/api', apiRouter);
+
+app.use(xrayClose);
+app.use(errorHandler);
+
+export default app;

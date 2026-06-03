@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'api/**'
+      - 'apps/api/**'
 
 jobs:
   build-api:
@@ -42,8 +42,8 @@ jobs:
       - name: Build API Docker Image
         uses: docker/build-push-action@v5
         with:
-          context: ./api
-          file: ./api/Dockerfile.prod
+          context: ./apps/api
+          file: ./apps/api/Dockerfile.prod
           tags: ${{ steps.tag.outputs.image }}
           push: true
           cache-from: type=gha

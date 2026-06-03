@@ -1,0 +1,94 @@
+import { Request, Response } from 'express';
+
+import {
+    handleGoogleOAuthStart,
+    handleGoogleCallback,
+    handleTokenRefresh,
+    handleLogout,
+    handleGetMe,
+} from './auth.service.ts';
+import { clearAuthCookies, setAuthCookies } from './utils/auth.cookies.ts';
+import { getGoogleOAuthConfig } from './utils/google-oauth.config.ts';
+
+import { requireAuth } from '@/middleware/auth.middleware.ts';
+
+function safeReturnTo(input: unknown): string {
+    if (typeof input !== 'string') return '/';
+    if (!input.startsWith('/')) return '/';
+    if (input.startsWith('//')) return '/';
+    return input;
+}
+
+const googleStart = async (req: Request, res: Response) => {
+    const returnTo = safeReturnTo(req.query.returnTo);
+    const authUrl = await handleGoogleOAuthStart(returnTo);
+    res.redirect(authUrl);
+};
+
+const googleCallback = async (req: Request, res: Response) => {
+    const { webAppUrl } = getGoogleOAuthConfig();
+
+    try {
+        const error = typeof req.query.error === 'string' ? req.query.error : null;
+        if (error) {
+            res.redirect(`${webAppUrl}/login?error=${encodeURIComponent(error)}`);
+            return;
+        }
+
+        const state = typeof req.query.state === 'string' ? req.query.state : null;
+        if (!state) {
+            res.redirect(`${webAppUrl}/login?error=invalid_state`);
+            return;
+        }
+
+        const result = await handleGoogleCallback(req.originalUrl, state);
+        if (!result) {
+            res.redirect(`${webAppUrl}/login?error=invalid_state`);
+            return;
+        }
+
+        setAuthCookies(res, result.tokens);
+        res.redirect(result.redirectTo);
+    } catch (err) {
+        console.error('[googleCallback] Unexpected error:', err);
+        res.redirect(`${webAppUrl}/login?error=server_error`);
+    }
+};
+
+const refresh = async (req: Request, res: Response) => {
+    const token = req.cookies?.refresh_token as string | undefined;
+    if (!token) {
+        res.status(401).json({ ok: false });
+        return;
+    }
+
+    const rotated = await handleTokenRefresh(token);
+    if (!rotated) {
+        clearAuthCookies(res);
+        res.status(401).json({ ok: false });
+        return;
+    }
+
+    setAuthCookies(res, rotated);
+    res.status(200).json({ ok: true });
+};
+
+const me = async (req: Request, res: Response) => {
+    const user = requireAuth(req);
+    const data = await handleGetMe(user.id);
+
+    if (!data) {
+        res.status(401).json({ error: 'Profile not found' });
+        return;
+    }
+    res.status(200).json({ success: true, data });
+};
+
+const logout = async (req: Request, res: Response) => {
+    const token = req.cookies?.refresh_token as string | undefined;
+    await handleLogout(token);
+    clearAuthCookies(res);
+    res.status(200).json({ success: true, message: 'User logout successful' });
+};
+
+export default { googleStart, googleCallback, me, refresh, logout };
