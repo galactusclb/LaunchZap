@@ -16,7 +16,7 @@ sync-dev:
 deploy: infra-apply sync-dev
 
 analyze-bundle:
-	cd web && \
+	cd apps/web && \
 	ANALYZE=true \
 	NEXT_PUBLIC_API_BASE_URL=http://localhost:3001 \
 	API_BASE_URL=http://localhost:3001 \
@@ -29,7 +29,7 @@ analyze-bundle:
 	npx next build --webpack
 
 web-build:
-	cd web && \
+	cd apps/web && \
 	NEXT_PUBLIC_API_BASE_URL=http://localhost:4000/api \
 	API_BASE_URL=http://localhost:4000/api \
 	AWS_REGION=us-east-1 \

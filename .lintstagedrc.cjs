@@ -9,11 +9,11 @@ module.exports = {
             `npx prettier --write ${files.join(' ')}`,
         ]
     },
-    'web/**/*.{js,ts,tsx}': (files) => {
-        const webDir = path.join(process.cwd(), 'web')
+    'apps/web/**/*.{js,ts,tsx}': (files) => {
+        const webDir = path.join(process.cwd(), 'apps/web')
         const relative = files.map((f) => path.relative(webDir, f)).join(' ')
         return [
-            `cd web && npx eslint --fix ${relative}`,
+            `cd apps/web && npx eslint --fix ${relative}`,
             `npx prettier --write ${files.join(' ')}`,
         ]
     },

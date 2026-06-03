@@ -99,7 +99,7 @@ services:
 
   web:
     build: 
-      context: ./web
+      context: ./apps/web
       dockerfile: Dockerfile.dev
     container_name: web
     ports:
@@ -112,11 +112,11 @@ services:
       AWS_CLOUDFRONT_DOMAIN: 'https://sample.com'
     env_file:
       - .env.infra
-      - ./web/.env.infra
+      - ./apps/web/.env.infra
     volumes:
-      - ./web/src:/app/src
-      - ./web/public:/app/public
-      - ./web/.env.local:/app/.env.local
+      - ./apps/web/src:/app/src
+      - ./apps/web/public:/app/public
+      - ./apps/web/.env.local:/app/.env.local
       - /app/.next
       - /app/node_modules
     networks:

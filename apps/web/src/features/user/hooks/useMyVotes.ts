@@ -1,0 +1,28 @@
+import { useQuery } from '@tanstack/react-query';
+import z from 'zod';
+
+import { apiResponseSchema } from '@/models/api-response.schema';
+import { productResponseSchema } from '@/models/product.schema';
+import { useAuthStore } from '@/store/auth.store';
+import { apiGet } from '@/utils/api/api-client';
+
+import { userQueries } from '../queries';
+
+const myVotesResponseSchema = apiResponseSchema.list(
+    z.object({ productId: productResponseSchema.shape.id })
+);
+
+export default function useMyVotes() {
+    const user = useAuthStore((store) => store.user);
+
+    return useQuery({
+        queryKey: userQueries.myVotes.key(),
+        queryFn: async () => {
+            const parsed = await apiGet(userQueries.myVotes.endpoint, myVotesResponseSchema);
+            if (!parsed.success) throw new Error(parsed.error.message);
+            return parsed.data.map((v) => v.productId);
+        },
+        select: (data) => new Set(data),
+        enabled: !!user,
+    });
+}

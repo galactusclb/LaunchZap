@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'web/**'
+      - 'apps/web/**'
 
 jobs:
   build-web:
@@ -42,8 +42,8 @@ jobs:
       - name: Build WEB Docker Image
         uses: docker/build-push-action@v5
         with:
-          context: ./web
-          file: ./web/Dockerfile.prod
+          context: ./apps/web
+          file: ./apps/web/Dockerfile.prod
           build-args: |
             NEXT_PUBLIC_API_BASE_URL=${{ vars.NEXT_PUBLIC_API_BASE_URL }}
             API_BASE_URL=${{ vars.NEXT_PUBLIC_API_BASE_URL }}
