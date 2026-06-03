@@ -7,7 +7,7 @@ WORKDIR /app
 ENV NODE_ENV=development
 ENV HOSTNAME=0.0.0.0
 
-COPY package.json pnpm-lock.yaml tsconfig.json ./
+COPY package.json pnpm-lock.yaml tsconfig.json pnpm-workspace.yaml ./
 
 RUN pnpm i
 
