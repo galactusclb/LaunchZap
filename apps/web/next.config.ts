@@ -3,6 +3,14 @@ import path from 'path';
 import bundleAnalyzer from '@next/bundle-analyzer';
 import type { NextConfig } from 'next';
 
+const REDIS_CLIENT_URL = process.env.REDIS_CLIENT_URL;
+
+if (!REDIS_CLIENT_URL) {
+    console.warn(
+        '[cache] REDIS_CLIENT_URL is not set — falling back to Next.js v16 default file-system cache.'
+    );
+}
+
 const withBundleAnalyzer = bundleAnalyzer({
     enabled: process.env.ANALYZE === 'true',
 });
@@ -11,9 +19,11 @@ const nextConfig: NextConfig = {
     /* config options here */
     output: 'standalone',
     cacheComponents: true,
-    cacheHandlers: {
-        default: path.resolve('./src/lib/redis/index.mjs'),
-    },
+    ...(REDIS_CLIENT_URL && {
+        cacheHandlers: {
+            default: path.resolve('./src/lib/redis/index.mjs'),
+        },
+    }),
     reactCompiler: true,
     images: {
         remotePatterns: [

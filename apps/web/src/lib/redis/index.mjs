@@ -1,11 +1,16 @@
 import { createClient } from "redis";
 
-const REDIS_URL = process.env.REDIS_URL
+const REDIS_CLIENT_URL = process.env.REDIS_CLIENT_URL;
+
+if (!REDIS_CLIENT_URL) {
+    console.error('[cache-handler] REDIS_CLIENT_URL is not set but custom cache handler was loaded. Cache will not work.');
+}
+
 const PREFIX = process.env.CACHE_PREFIX ?? 'lz:nextcache:';
 
 const REVALIDATED_TAGS = `${PREFIX}revalidatedAt`;
 
-const client = createClient({ url: REDIS_URL});
+const client = createClient({ url: REDIS_CLIENT_URL});
 client.connect().catch(console.error);
 
 const localTagTimestamps = new Map();
