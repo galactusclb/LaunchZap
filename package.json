@@ -2,8 +2,10 @@
   "name": "launchzap-monorepo-root",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "commit": "cz"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
@@ -13,5 +15,10 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-git"
+    }
   }
 }
