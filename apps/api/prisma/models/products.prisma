@@ -8,8 +8,7 @@ model Product {
   logoUrl    String?
   gallery    Json?
 
-  status     ProductStatus @default(PENDING)
-  launchDate DateTime?
+  status String @default("PENDING")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -19,25 +18,10 @@ model Product {
   maker   User?   @relation(fields: [makerId], references: [id])
 
   categories ProductCategory[]
-  votes      Vote[]
+  launches   Launch[]
 
   @@unique([makerId, name])
   @@map("products")
-}
-
-model Vote {
-  id String @id @default(cuid())
-
-  userId    String
-  productId Int
-
-  createdAt DateTime @default(now())
-
-  user    User    @relation(fields: [userId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
-
-  @@unique([userId, productId])
-  @@map("votes")
 }
 
 model Category {
@@ -58,10 +42,4 @@ model ProductCategory {
 
   @@id([productId, categoryId])
   @@map("ProductCategories")
-}
-
-enum ProductStatus {
-  PENDING
-  APPROVED
-  REJECTED
 }
