@@ -1,15 +1,16 @@
 import { Router } from 'express';
 
-import { isAuth } from '@/middleware/auth.middleware.ts';
 import { validate } from '@/middleware/validate.middleware.ts';
+import { isAuth } from '@/middleware/auth.middleware.ts';
 
-import { createProduct, getAllProducts, getProductById, toggleVote } from './product.controller.ts';
+import { createProduct, getAllProducts, getProductById, toggleVote } from './launch.controller.ts';
+
 import {
     createProductSchema,
     getProductByIdSchema,
     getProductsSchema,
     voteProductSchema,
-} from './product.schema.ts';
+} from './launch.schema.ts';
 
 const router = Router();
 
