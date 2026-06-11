@@ -19,68 +19,50 @@ export type VoteModel = runtime.Types.Result.DefaultSelection<Prisma.$VotePayloa
 
 export type AggregateVote = {
     _count: VoteCountAggregateOutputType | null;
-    _avg: VoteAvgAggregateOutputType | null;
-    _sum: VoteSumAggregateOutputType | null;
     _min: VoteMinAggregateOutputType | null;
     _max: VoteMaxAggregateOutputType | null;
-};
-
-export type VoteAvgAggregateOutputType = {
-    productId: number | null;
-};
-
-export type VoteSumAggregateOutputType = {
-    productId: number | null;
 };
 
 export type VoteMinAggregateOutputType = {
     id: string | null;
     userId: string | null;
-    productId: number | null;
+    launchId: string | null;
     createdAt: Date | null;
 };
 
 export type VoteMaxAggregateOutputType = {
     id: string | null;
     userId: string | null;
-    productId: number | null;
+    launchId: string | null;
     createdAt: Date | null;
 };
 
 export type VoteCountAggregateOutputType = {
     id: number;
     userId: number;
-    productId: number;
+    launchId: number;
     createdAt: number;
     _all: number;
-};
-
-export type VoteAvgAggregateInputType = {
-    productId?: true;
-};
-
-export type VoteSumAggregateInputType = {
-    productId?: true;
 };
 
 export type VoteMinAggregateInputType = {
     id?: true;
     userId?: true;
-    productId?: true;
+    launchId?: true;
     createdAt?: true;
 };
 
 export type VoteMaxAggregateInputType = {
     id?: true;
     userId?: true;
-    productId?: true;
+    launchId?: true;
     createdAt?: true;
 };
 
 export type VoteCountAggregateInputType = {
     id?: true;
     userId?: true;
-    productId?: true;
+    launchId?: true;
     createdAt?: true;
     _all?: true;
 };
@@ -125,18 +107,6 @@ export type VoteAggregateArgs<
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      *
-     * Select which fields to average
-     **/
-    _avg?: VoteAvgAggregateInputType;
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
-     * Select which fields to sum
-     **/
-    _sum?: VoteSumAggregateInputType;
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     *
      * Select which fields to find the minimum value
      **/
     _min?: VoteMinAggregateInputType;
@@ -166,8 +136,6 @@ export type VoteGroupByArgs<
     take?: number;
     skip?: number;
     _count?: VoteCountAggregateInputType | true;
-    _avg?: VoteAvgAggregateInputType;
-    _sum?: VoteSumAggregateInputType;
     _min?: VoteMinAggregateInputType;
     _max?: VoteMaxAggregateInputType;
 };
@@ -175,16 +143,14 @@ export type VoteGroupByArgs<
 export type VoteGroupByOutputType = {
     id: string;
     userId: string;
-    productId: number;
+    launchId: string;
     createdAt: Date;
     _count: VoteCountAggregateOutputType | null;
-    _avg: VoteAvgAggregateOutputType | null;
-    _sum: VoteSumAggregateOutputType | null;
     _min: VoteMinAggregateOutputType | null;
     _max: VoteMaxAggregateOutputType | null;
 };
 
-type GetVoteGroupByPayload<T extends VoteGroupByArgs> = Prisma.PrismaPromise<
+export type GetVoteGroupByPayload<T extends VoteGroupByArgs> = Prisma.PrismaPromise<
     Array<
         Prisma.PickEnumerable<VoteGroupByOutputType, T['by']> & {
             [P in keyof T & keyof VoteGroupByOutputType]: P extends '_count'
@@ -202,47 +168,45 @@ export type VoteWhereInput = {
     NOT?: Prisma.VoteWhereInput | Prisma.VoteWhereInput[];
     id?: Prisma.StringFilter<'Vote'> | string;
     userId?: Prisma.StringFilter<'Vote'> | string;
-    productId?: Prisma.IntFilter<'Vote'> | number;
+    launchId?: Prisma.StringFilter<'Vote'> | string;
     createdAt?: Prisma.DateTimeFilter<'Vote'> | Date | string;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
-    product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>;
+    launch?: Prisma.XOR<Prisma.LaunchScalarRelationFilter, Prisma.LaunchWhereInput>;
 };
 
 export type VoteOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
-    productId?: Prisma.SortOrder;
+    launchId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     user?: Prisma.UserOrderByWithRelationInput;
-    product?: Prisma.ProductOrderByWithRelationInput;
+    launch?: Prisma.LaunchOrderByWithRelationInput;
 };
 
 export type VoteWhereUniqueInput = Prisma.AtLeast<
     {
         id?: string;
-        userId_productId?: Prisma.VoteUserIdProductIdCompoundUniqueInput;
+        userId_launchId?: Prisma.VoteUserIdLaunchIdCompoundUniqueInput;
         AND?: Prisma.VoteWhereInput | Prisma.VoteWhereInput[];
         OR?: Prisma.VoteWhereInput[];
         NOT?: Prisma.VoteWhereInput | Prisma.VoteWhereInput[];
         userId?: Prisma.StringFilter<'Vote'> | string;
-        productId?: Prisma.IntFilter<'Vote'> | number;
+        launchId?: Prisma.StringFilter<'Vote'> | string;
         createdAt?: Prisma.DateTimeFilter<'Vote'> | Date | string;
         user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
-        product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>;
+        launch?: Prisma.XOR<Prisma.LaunchScalarRelationFilter, Prisma.LaunchWhereInput>;
     },
-    'id' | 'userId_productId'
+    'id' | 'userId_launchId'
 >;
 
 export type VoteOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
-    productId?: Prisma.SortOrder;
+    launchId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     _count?: Prisma.VoteCountOrderByAggregateInput;
-    _avg?: Prisma.VoteAvgOrderByAggregateInput;
     _max?: Prisma.VoteMaxOrderByAggregateInput;
     _min?: Prisma.VoteMinOrderByAggregateInput;
-    _sum?: Prisma.VoteSumOrderByAggregateInput;
 };
 
 export type VoteScalarWhereWithAggregatesInput = {
@@ -251,7 +215,7 @@ export type VoteScalarWhereWithAggregatesInput = {
     NOT?: Prisma.VoteScalarWhereWithAggregatesInput | Prisma.VoteScalarWhereWithAggregatesInput[];
     id?: Prisma.StringWithAggregatesFilter<'Vote'> | string;
     userId?: Prisma.StringWithAggregatesFilter<'Vote'> | string;
-    productId?: Prisma.IntWithAggregatesFilter<'Vote'> | number;
+    launchId?: Prisma.StringWithAggregatesFilter<'Vote'> | string;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<'Vote'> | Date | string;
 };
 
@@ -259,13 +223,13 @@ export type VoteCreateInput = {
     id?: string;
     createdAt?: Date | string;
     user: Prisma.UserCreateNestedOneWithoutVotesInput;
-    product: Prisma.ProductCreateNestedOneWithoutVotesInput;
+    launch: Prisma.LaunchCreateNestedOneWithoutVoteInput;
 };
 
 export type VoteUncheckedCreateInput = {
     id?: string;
     userId: string;
-    productId: number;
+    launchId: string;
     createdAt?: Date | string;
 };
 
@@ -273,20 +237,20 @@ export type VoteUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     user?: Prisma.UserUpdateOneRequiredWithoutVotesNestedInput;
-    product?: Prisma.ProductUpdateOneRequiredWithoutVotesNestedInput;
+    launch?: Prisma.LaunchUpdateOneRequiredWithoutVoteNestedInput;
 };
 
 export type VoteUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
-    productId?: Prisma.IntFieldUpdateOperationsInput | number;
+    launchId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 
 export type VoteCreateManyInput = {
     id?: string;
     userId: string;
-    productId: number;
+    launchId: string;
     createdAt?: Date | string;
 };
 
@@ -298,7 +262,7 @@ export type VoteUpdateManyMutationInput = {
 export type VoteUncheckedUpdateManyInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
-    productId?: Prisma.IntFieldUpdateOperationsInput | number;
+    launchId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 
@@ -312,123 +276,115 @@ export type VoteOrderByRelationAggregateInput = {
     _count?: Prisma.SortOrder;
 };
 
-export type VoteUserIdProductIdCompoundUniqueInput = {
+export type VoteUserIdLaunchIdCompoundUniqueInput = {
     userId: string;
-    productId: number;
+    launchId: string;
 };
 
 export type VoteCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
-    productId?: Prisma.SortOrder;
+    launchId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
-};
-
-export type VoteAvgOrderByAggregateInput = {
-    productId?: Prisma.SortOrder;
 };
 
 export type VoteMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
-    productId?: Prisma.SortOrder;
+    launchId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
 };
 
 export type VoteMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
-    productId?: Prisma.SortOrder;
+    launchId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
 };
 
-export type VoteSumOrderByAggregateInput = {
-    productId?: Prisma.SortOrder;
-};
-
-export type VoteCreateNestedManyWithoutProductInput = {
+export type VoteCreateNestedManyWithoutLaunchInput = {
     create?:
         | Prisma.XOR<
-              Prisma.VoteCreateWithoutProductInput,
-              Prisma.VoteUncheckedCreateWithoutProductInput
+              Prisma.VoteCreateWithoutLaunchInput,
+              Prisma.VoteUncheckedCreateWithoutLaunchInput
           >
-        | Prisma.VoteCreateWithoutProductInput[]
-        | Prisma.VoteUncheckedCreateWithoutProductInput[];
+        | Prisma.VoteCreateWithoutLaunchInput[]
+        | Prisma.VoteUncheckedCreateWithoutLaunchInput[];
     connectOrCreate?:
-        | Prisma.VoteCreateOrConnectWithoutProductInput
-        | Prisma.VoteCreateOrConnectWithoutProductInput[];
-    createMany?: Prisma.VoteCreateManyProductInputEnvelope;
+        | Prisma.VoteCreateOrConnectWithoutLaunchInput
+        | Prisma.VoteCreateOrConnectWithoutLaunchInput[];
+    createMany?: Prisma.VoteCreateManyLaunchInputEnvelope;
     connect?: Prisma.VoteWhereUniqueInput | Prisma.VoteWhereUniqueInput[];
 };
 
-export type VoteUncheckedCreateNestedManyWithoutProductInput = {
+export type VoteUncheckedCreateNestedManyWithoutLaunchInput = {
     create?:
         | Prisma.XOR<
-              Prisma.VoteCreateWithoutProductInput,
-              Prisma.VoteUncheckedCreateWithoutProductInput
+              Prisma.VoteCreateWithoutLaunchInput,
+              Prisma.VoteUncheckedCreateWithoutLaunchInput
           >
-        | Prisma.VoteCreateWithoutProductInput[]
-        | Prisma.VoteUncheckedCreateWithoutProductInput[];
+        | Prisma.VoteCreateWithoutLaunchInput[]
+        | Prisma.VoteUncheckedCreateWithoutLaunchInput[];
     connectOrCreate?:
-        | Prisma.VoteCreateOrConnectWithoutProductInput
-        | Prisma.VoteCreateOrConnectWithoutProductInput[];
-    createMany?: Prisma.VoteCreateManyProductInputEnvelope;
+        | Prisma.VoteCreateOrConnectWithoutLaunchInput
+        | Prisma.VoteCreateOrConnectWithoutLaunchInput[];
+    createMany?: Prisma.VoteCreateManyLaunchInputEnvelope;
     connect?: Prisma.VoteWhereUniqueInput | Prisma.VoteWhereUniqueInput[];
 };
 
-export type VoteUpdateManyWithoutProductNestedInput = {
+export type VoteUpdateManyWithoutLaunchNestedInput = {
     create?:
         | Prisma.XOR<
-              Prisma.VoteCreateWithoutProductInput,
-              Prisma.VoteUncheckedCreateWithoutProductInput
+              Prisma.VoteCreateWithoutLaunchInput,
+              Prisma.VoteUncheckedCreateWithoutLaunchInput
           >
-        | Prisma.VoteCreateWithoutProductInput[]
-        | Prisma.VoteUncheckedCreateWithoutProductInput[];
+        | Prisma.VoteCreateWithoutLaunchInput[]
+        | Prisma.VoteUncheckedCreateWithoutLaunchInput[];
     connectOrCreate?:
-        | Prisma.VoteCreateOrConnectWithoutProductInput
-        | Prisma.VoteCreateOrConnectWithoutProductInput[];
+        | Prisma.VoteCreateOrConnectWithoutLaunchInput
+        | Prisma.VoteCreateOrConnectWithoutLaunchInput[];
     upsert?:
-        | Prisma.VoteUpsertWithWhereUniqueWithoutProductInput
-        | Prisma.VoteUpsertWithWhereUniqueWithoutProductInput[];
-    createMany?: Prisma.VoteCreateManyProductInputEnvelope;
+        | Prisma.VoteUpsertWithWhereUniqueWithoutLaunchInput
+        | Prisma.VoteUpsertWithWhereUniqueWithoutLaunchInput[];
+    createMany?: Prisma.VoteCreateManyLaunchInputEnvelope;
     set?: Prisma.VoteWhereUniqueInput | Prisma.VoteWhereUniqueInput[];
     disconnect?: Prisma.VoteWhereUniqueInput | Prisma.VoteWhereUniqueInput[];
     delete?: Prisma.VoteWhereUniqueInput | Prisma.VoteWhereUniqueInput[];
     connect?: Prisma.VoteWhereUniqueInput | Prisma.VoteWhereUniqueInput[];
     update?:
-        | Prisma.VoteUpdateWithWhereUniqueWithoutProductInput
-        | Prisma.VoteUpdateWithWhereUniqueWithoutProductInput[];
+        | Prisma.VoteUpdateWithWhereUniqueWithoutLaunchInput
+        | Prisma.VoteUpdateWithWhereUniqueWithoutLaunchInput[];
     updateMany?:
-        | Prisma.VoteUpdateManyWithWhereWithoutProductInput
-        | Prisma.VoteUpdateManyWithWhereWithoutProductInput[];
+        | Prisma.VoteUpdateManyWithWhereWithoutLaunchInput
+        | Prisma.VoteUpdateManyWithWhereWithoutLaunchInput[];
     deleteMany?: Prisma.VoteScalarWhereInput | Prisma.VoteScalarWhereInput[];
 };
 
-export type VoteUncheckedUpdateManyWithoutProductNestedInput = {
+export type VoteUncheckedUpdateManyWithoutLaunchNestedInput = {
     create?:
         | Prisma.XOR<
-              Prisma.VoteCreateWithoutProductInput,
-              Prisma.VoteUncheckedCreateWithoutProductInput
+              Prisma.VoteCreateWithoutLaunchInput,
+              Prisma.VoteUncheckedCreateWithoutLaunchInput
           >
-        | Prisma.VoteCreateWithoutProductInput[]
-        | Prisma.VoteUncheckedCreateWithoutProductInput[];
+        | Prisma.VoteCreateWithoutLaunchInput[]
+        | Prisma.VoteUncheckedCreateWithoutLaunchInput[];
     connectOrCreate?:
-        | Prisma.VoteCreateOrConnectWithoutProductInput
-        | Prisma.VoteCreateOrConnectWithoutProductInput[];
+        | Prisma.VoteCreateOrConnectWithoutLaunchInput
+        | Prisma.VoteCreateOrConnectWithoutLaunchInput[];
     upsert?:
-        | Prisma.VoteUpsertWithWhereUniqueWithoutProductInput
-        | Prisma.VoteUpsertWithWhereUniqueWithoutProductInput[];
-    createMany?: Prisma.VoteCreateManyProductInputEnvelope;
+        | Prisma.VoteUpsertWithWhereUniqueWithoutLaunchInput
+        | Prisma.VoteUpsertWithWhereUniqueWithoutLaunchInput[];
+    createMany?: Prisma.VoteCreateManyLaunchInputEnvelope;
     set?: Prisma.VoteWhereUniqueInput | Prisma.VoteWhereUniqueInput[];
     disconnect?: Prisma.VoteWhereUniqueInput | Prisma.VoteWhereUniqueInput[];
     delete?: Prisma.VoteWhereUniqueInput | Prisma.VoteWhereUniqueInput[];
     connect?: Prisma.VoteWhereUniqueInput | Prisma.VoteWhereUniqueInput[];
     update?:
-        | Prisma.VoteUpdateWithWhereUniqueWithoutProductInput
-        | Prisma.VoteUpdateWithWhereUniqueWithoutProductInput[];
+        | Prisma.VoteUpdateWithWhereUniqueWithoutLaunchInput
+        | Prisma.VoteUpdateWithWhereUniqueWithoutLaunchInput[];
     updateMany?:
-        | Prisma.VoteUpdateManyWithWhereWithoutProductInput
-        | Prisma.VoteUpdateManyWithWhereWithoutProductInput[];
+        | Prisma.VoteUpdateManyWithWhereWithoutLaunchInput
+        | Prisma.VoteUpdateManyWithWhereWithoutLaunchInput[];
     deleteMany?: Prisma.VoteScalarWhereInput | Prisma.VoteScalarWhereInput[];
 };
 
@@ -506,56 +462,56 @@ export type VoteUncheckedUpdateManyWithoutUserNestedInput = {
     deleteMany?: Prisma.VoteScalarWhereInput | Prisma.VoteScalarWhereInput[];
 };
 
-export type VoteCreateWithoutProductInput = {
+export type VoteCreateWithoutLaunchInput = {
     id?: string;
     createdAt?: Date | string;
     user: Prisma.UserCreateNestedOneWithoutVotesInput;
 };
 
-export type VoteUncheckedCreateWithoutProductInput = {
+export type VoteUncheckedCreateWithoutLaunchInput = {
     id?: string;
     userId: string;
     createdAt?: Date | string;
 };
 
-export type VoteCreateOrConnectWithoutProductInput = {
+export type VoteCreateOrConnectWithoutLaunchInput = {
     where: Prisma.VoteWhereUniqueInput;
     create: Prisma.XOR<
-        Prisma.VoteCreateWithoutProductInput,
-        Prisma.VoteUncheckedCreateWithoutProductInput
+        Prisma.VoteCreateWithoutLaunchInput,
+        Prisma.VoteUncheckedCreateWithoutLaunchInput
     >;
 };
 
-export type VoteCreateManyProductInputEnvelope = {
-    data: Prisma.VoteCreateManyProductInput | Prisma.VoteCreateManyProductInput[];
+export type VoteCreateManyLaunchInputEnvelope = {
+    data: Prisma.VoteCreateManyLaunchInput | Prisma.VoteCreateManyLaunchInput[];
     skipDuplicates?: boolean;
 };
 
-export type VoteUpsertWithWhereUniqueWithoutProductInput = {
+export type VoteUpsertWithWhereUniqueWithoutLaunchInput = {
     where: Prisma.VoteWhereUniqueInput;
     update: Prisma.XOR<
-        Prisma.VoteUpdateWithoutProductInput,
-        Prisma.VoteUncheckedUpdateWithoutProductInput
+        Prisma.VoteUpdateWithoutLaunchInput,
+        Prisma.VoteUncheckedUpdateWithoutLaunchInput
     >;
     create: Prisma.XOR<
-        Prisma.VoteCreateWithoutProductInput,
-        Prisma.VoteUncheckedCreateWithoutProductInput
+        Prisma.VoteCreateWithoutLaunchInput,
+        Prisma.VoteUncheckedCreateWithoutLaunchInput
     >;
 };
 
-export type VoteUpdateWithWhereUniqueWithoutProductInput = {
+export type VoteUpdateWithWhereUniqueWithoutLaunchInput = {
     where: Prisma.VoteWhereUniqueInput;
     data: Prisma.XOR<
-        Prisma.VoteUpdateWithoutProductInput,
-        Prisma.VoteUncheckedUpdateWithoutProductInput
+        Prisma.VoteUpdateWithoutLaunchInput,
+        Prisma.VoteUncheckedUpdateWithoutLaunchInput
     >;
 };
 
-export type VoteUpdateManyWithWhereWithoutProductInput = {
+export type VoteUpdateManyWithWhereWithoutLaunchInput = {
     where: Prisma.VoteScalarWhereInput;
     data: Prisma.XOR<
         Prisma.VoteUpdateManyMutationInput,
-        Prisma.VoteUncheckedUpdateManyWithoutProductInput
+        Prisma.VoteUncheckedUpdateManyWithoutLaunchInput
     >;
 };
 
@@ -565,19 +521,19 @@ export type VoteScalarWhereInput = {
     NOT?: Prisma.VoteScalarWhereInput | Prisma.VoteScalarWhereInput[];
     id?: Prisma.StringFilter<'Vote'> | string;
     userId?: Prisma.StringFilter<'Vote'> | string;
-    productId?: Prisma.IntFilter<'Vote'> | number;
+    launchId?: Prisma.StringFilter<'Vote'> | string;
     createdAt?: Prisma.DateTimeFilter<'Vote'> | Date | string;
 };
 
 export type VoteCreateWithoutUserInput = {
     id?: string;
     createdAt?: Date | string;
-    product: Prisma.ProductCreateNestedOneWithoutVotesInput;
+    launch: Prisma.LaunchCreateNestedOneWithoutVoteInput;
 };
 
 export type VoteUncheckedCreateWithoutUserInput = {
     id?: string;
-    productId: number;
+    launchId: string;
     createdAt?: Date | string;
 };
 
@@ -619,25 +575,25 @@ export type VoteUpdateManyWithWhereWithoutUserInput = {
     >;
 };
 
-export type VoteCreateManyProductInput = {
+export type VoteCreateManyLaunchInput = {
     id?: string;
     userId: string;
     createdAt?: Date | string;
 };
 
-export type VoteUpdateWithoutProductInput = {
+export type VoteUpdateWithoutLaunchInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     user?: Prisma.UserUpdateOneRequiredWithoutVotesNestedInput;
 };
 
-export type VoteUncheckedUpdateWithoutProductInput = {
+export type VoteUncheckedUpdateWithoutLaunchInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 
-export type VoteUncheckedUpdateManyWithoutProductInput = {
+export type VoteUncheckedUpdateManyWithoutLaunchInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -645,25 +601,25 @@ export type VoteUncheckedUpdateManyWithoutProductInput = {
 
 export type VoteCreateManyUserInput = {
     id?: string;
-    productId: number;
+    launchId: string;
     createdAt?: Date | string;
 };
 
 export type VoteUpdateWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    product?: Prisma.ProductUpdateOneRequiredWithoutVotesNestedInput;
+    launch?: Prisma.LaunchUpdateOneRequiredWithoutVoteNestedInput;
 };
 
 export type VoteUncheckedUpdateWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
-    productId?: Prisma.IntFieldUpdateOperationsInput | number;
+    launchId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 
 export type VoteUncheckedUpdateManyWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
-    productId?: Prisma.IntFieldUpdateOperationsInput | number;
+    launchId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 
@@ -673,10 +629,10 @@ export type VoteSelect<
     {
         id?: boolean;
         userId?: boolean;
-        productId?: boolean;
+        launchId?: boolean;
         createdAt?: boolean;
         user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
-        product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>;
+        launch?: boolean | Prisma.LaunchDefaultArgs<ExtArgs>;
     },
     ExtArgs['result']['vote']
 >;
@@ -687,10 +643,10 @@ export type VoteSelectCreateManyAndReturn<
     {
         id?: boolean;
         userId?: boolean;
-        productId?: boolean;
+        launchId?: boolean;
         createdAt?: boolean;
         user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
-        product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>;
+        launch?: boolean | Prisma.LaunchDefaultArgs<ExtArgs>;
     },
     ExtArgs['result']['vote']
 >;
@@ -701,10 +657,10 @@ export type VoteSelectUpdateManyAndReturn<
     {
         id?: boolean;
         userId?: boolean;
-        productId?: boolean;
+        launchId?: boolean;
         createdAt?: boolean;
         user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
-        product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>;
+        launch?: boolean | Prisma.LaunchDefaultArgs<ExtArgs>;
     },
     ExtArgs['result']['vote']
 >;
@@ -712,33 +668,33 @@ export type VoteSelectUpdateManyAndReturn<
 export type VoteSelectScalar = {
     id?: boolean;
     userId?: boolean;
-    productId?: boolean;
+    launchId?: boolean;
     createdAt?: boolean;
 };
 
 export type VoteOmit<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-    'id' | 'userId' | 'productId' | 'createdAt',
+    'id' | 'userId' | 'launchId' | 'createdAt',
     ExtArgs['result']['vote']
 >;
 export type VoteInclude<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
-    product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>;
+    launch?: boolean | Prisma.LaunchDefaultArgs<ExtArgs>;
 };
 export type VoteIncludeCreateManyAndReturn<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
-    product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>;
+    launch?: boolean | Prisma.LaunchDefaultArgs<ExtArgs>;
 };
 export type VoteIncludeUpdateManyAndReturn<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
-    product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>;
+    launch?: boolean | Prisma.LaunchDefaultArgs<ExtArgs>;
 };
 
 export type $VotePayload<
@@ -747,13 +703,13 @@ export type $VotePayload<
     name: 'Vote';
     objects: {
         user: Prisma.$UserPayload<ExtArgs>;
-        product: Prisma.$ProductPayload<ExtArgs>;
+        launch: Prisma.$LaunchPayload<ExtArgs>;
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
             id: string;
             userId: string;
-            productId: number;
+            launchId: string;
             createdAt: Date;
         },
         ExtArgs['result']['vote']
@@ -1304,11 +1260,11 @@ export interface Prisma__VoteClient<
         ExtArgs,
         GlobalOmitOptions
     >;
-    product<T extends Prisma.ProductDefaultArgs<ExtArgs> = {}>(
-        args?: Prisma.Subset<T, Prisma.ProductDefaultArgs<ExtArgs>>
-    ): Prisma.Prisma__ProductClient<
+    launch<T extends Prisma.LaunchDefaultArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.LaunchDefaultArgs<ExtArgs>>
+    ): Prisma.Prisma__LaunchClient<
         | runtime.Types.Result.GetResult<
-              Prisma.$ProductPayload<ExtArgs>,
+              Prisma.$LaunchPayload<ExtArgs>,
               T,
               'findUniqueOrThrow',
               GlobalOmitOptions
@@ -1351,7 +1307,7 @@ export interface Prisma__VoteClient<
 export interface VoteFieldRefs {
     readonly id: Prisma.FieldRef<'Vote', 'String'>;
     readonly userId: Prisma.FieldRef<'Vote', 'String'>;
-    readonly productId: Prisma.FieldRef<'Vote', 'Int'>;
+    readonly launchId: Prisma.FieldRef<'Vote', 'String'>;
     readonly createdAt: Prisma.FieldRef<'Vote', 'DateTime'>;
 }
 

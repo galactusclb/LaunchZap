@@ -175,17 +175,18 @@ export type ProductCategoryGroupByOutputType = {
     _max: ProductCategoryMaxAggregateOutputType | null;
 };
 
-type GetProductCategoryGroupByPayload<T extends ProductCategoryGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-        Prisma.PickEnumerable<ProductCategoryGroupByOutputType, T['by']> & {
-            [P in keyof T & keyof ProductCategoryGroupByOutputType]: P extends '_count'
-                ? T[P] extends boolean
-                    ? number
-                    : Prisma.GetScalarType<T[P], ProductCategoryGroupByOutputType[P]>
-                : Prisma.GetScalarType<T[P], ProductCategoryGroupByOutputType[P]>;
-        }
-    >
->;
+export type GetProductCategoryGroupByPayload<T extends ProductCategoryGroupByArgs> =
+    Prisma.PrismaPromise<
+        Array<
+            Prisma.PickEnumerable<ProductCategoryGroupByOutputType, T['by']> & {
+                [P in keyof T & keyof ProductCategoryGroupByOutputType]: P extends '_count'
+                    ? T[P] extends boolean
+                        ? number
+                        : Prisma.GetScalarType<T[P], ProductCategoryGroupByOutputType[P]>
+                    : Prisma.GetScalarType<T[P], ProductCategoryGroupByOutputType[P]>;
+            }
+        >
+    >;
 
 export type ProductCategoryWhereInput = {
     AND?: Prisma.ProductCategoryWhereInput | Prisma.ProductCategoryWhereInput[];

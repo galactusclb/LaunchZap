@@ -17,15 +17,20 @@ export { Prisma };
 export * as $Enums from './enums.ts';
 export * from './enums.ts';
 /**
- * Model Product
+ * Model Launch
  *
  */
-export type Product = Prisma.ProductModel;
+export type Launch = Prisma.LaunchModel;
 /**
  * Model Vote
  *
  */
 export type Vote = Prisma.VoteModel;
+/**
+ * Model Product
+ *
+ */
+export type Product = Prisma.ProductModel;
 /**
  * Model Category
  *

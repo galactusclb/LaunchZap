@@ -30,8 +30,8 @@ export * from './enums.ts';
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Products
- * const products = await prisma.product.findMany()
+ * // Fetch zero or more Launches
+ * const launches = await prisma.launch.findMany()
  * ```
  *
  * Read more in our [docs](https://pris.ly/d/client).
@@ -45,15 +45,20 @@ export type PrismaClient<
 export { Prisma };
 
 /**
- * Model Product
+ * Model Launch
  *
  */
-export type Product = Prisma.ProductModel;
+export type Launch = Prisma.LaunchModel;
 /**
  * Model Vote
  *
  */
 export type Vote = Prisma.VoteModel;
+/**
+ * Model Product
+ *
+ */
+export type Product = Prisma.ProductModel;
 /**
  * Model Category
  *

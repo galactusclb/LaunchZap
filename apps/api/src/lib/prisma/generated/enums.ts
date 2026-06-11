@@ -8,14 +8,6 @@
  * 🟢 You can import this file directly.
  */
 
-export const ProductStatus = {
-    PENDING: 'PENDING',
-    APPROVED: 'APPROVED',
-    REJECTED: 'REJECTED',
-} as const;
-
-export type ProductStatus = (typeof ProductStatus)[keyof typeof ProductStatus];
-
 export const Roles = {
     ADMIN: 'ADMIN',
     USER: 'USER',

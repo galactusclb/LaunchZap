@@ -48,8 +48,9 @@ export const JsonNull = runtime.JsonNull;
 export const AnyNull = runtime.AnyNull;
 
 export const ModelName = {
-    Product: 'Product',
+    Launch: 'Launch',
     Vote: 'Vote',
+    Product: 'Product',
     Category: 'Category',
     ProductCategory: 'ProductCategory',
     User: 'User',
@@ -71,6 +72,30 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel =
     (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel];
 
+export const LaunchScalarFieldEnum = {
+    id: 'id',
+    tagline: 'tagline',
+    description: 'description',
+    gallery: 'gallery',
+    status: 'status',
+    launchDate: 'launchDate',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    productId: 'productId',
+} as const;
+
+export type LaunchScalarFieldEnum =
+    (typeof LaunchScalarFieldEnum)[keyof typeof LaunchScalarFieldEnum];
+
+export const VoteScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    launchId: 'launchId',
+    createdAt: 'createdAt',
+} as const;
+
+export type VoteScalarFieldEnum = (typeof VoteScalarFieldEnum)[keyof typeof VoteScalarFieldEnum];
+
 export const ProductScalarFieldEnum = {
     id: 'id',
     name: 'name',
@@ -80,7 +105,6 @@ export const ProductScalarFieldEnum = {
     logoUrl: 'logoUrl',
     gallery: 'gallery',
     status: 'status',
-    launchDate: 'launchDate',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     makerId: 'makerId',
@@ -88,15 +112,6 @@ export const ProductScalarFieldEnum = {
 
 export type ProductScalarFieldEnum =
     (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum];
-
-export const VoteScalarFieldEnum = {
-    id: 'id',
-    userId: 'userId',
-    productId: 'productId',
-    createdAt: 'createdAt',
-} as const;
-
-export type VoteScalarFieldEnum = (typeof VoteScalarFieldEnum)[keyof typeof VoteScalarFieldEnum];
 
 export const CategoryScalarFieldEnum = {
     id: 'id',

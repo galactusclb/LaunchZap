@@ -1,4 +1,6 @@
 import { cacheConfig } from './cache';
+import { launchStatus } from './launch';
+import { productStatus } from './product';
 import { RoleList } from './role';
 
 export const constants = {
@@ -21,5 +23,7 @@ export const constants = {
         },
     },
     role: RoleList,
+    productStatus: productStatus,
+    launchStatus: launchStatus,
     cache: cacheConfig,
 };

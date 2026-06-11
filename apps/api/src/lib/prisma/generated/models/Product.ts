@@ -40,8 +40,7 @@ export type ProductMinAggregateOutputType = {
     description: string | null;
     websiteUrl: string | null;
     logoUrl: string | null;
-    status: $Enums.ProductStatus | null;
-    launchDate: Date | null;
+    status: string | null;
     createdAt: Date | null;
     updatedAt: Date | null;
     makerId: string | null;
@@ -54,8 +53,7 @@ export type ProductMaxAggregateOutputType = {
     description: string | null;
     websiteUrl: string | null;
     logoUrl: string | null;
-    status: $Enums.ProductStatus | null;
-    launchDate: Date | null;
+    status: string | null;
     createdAt: Date | null;
     updatedAt: Date | null;
     makerId: string | null;
@@ -70,7 +68,6 @@ export type ProductCountAggregateOutputType = {
     logoUrl: number;
     gallery: number;
     status: number;
-    launchDate: number;
     createdAt: number;
     updatedAt: number;
     makerId: number;
@@ -93,7 +90,6 @@ export type ProductMinAggregateInputType = {
     websiteUrl?: true;
     logoUrl?: true;
     status?: true;
-    launchDate?: true;
     createdAt?: true;
     updatedAt?: true;
     makerId?: true;
@@ -107,7 +103,6 @@ export type ProductMaxAggregateInputType = {
     websiteUrl?: true;
     logoUrl?: true;
     status?: true;
-    launchDate?: true;
     createdAt?: true;
     updatedAt?: true;
     makerId?: true;
@@ -122,7 +117,6 @@ export type ProductCountAggregateInputType = {
     logoUrl?: true;
     gallery?: true;
     status?: true;
-    launchDate?: true;
     createdAt?: true;
     updatedAt?: true;
     makerId?: true;
@@ -226,8 +220,7 @@ export type ProductGroupByOutputType = {
     websiteUrl: string;
     logoUrl: string | null;
     gallery: runtime.JsonValue | null;
-    status: $Enums.ProductStatus;
-    launchDate: Date | null;
+    status: string;
     createdAt: Date;
     updatedAt: Date;
     makerId: string | null;
@@ -238,7 +231,7 @@ export type ProductGroupByOutputType = {
     _max: ProductMaxAggregateOutputType | null;
 };
 
-type GetProductGroupByPayload<T extends ProductGroupByArgs> = Prisma.PrismaPromise<
+export type GetProductGroupByPayload<T extends ProductGroupByArgs> = Prisma.PrismaPromise<
     Array<
         Prisma.PickEnumerable<ProductGroupByOutputType, T['by']> & {
             [P in keyof T & keyof ProductGroupByOutputType]: P extends '_count'
@@ -261,14 +254,13 @@ export type ProductWhereInput = {
     websiteUrl?: Prisma.StringFilter<'Product'> | string;
     logoUrl?: Prisma.StringNullableFilter<'Product'> | string | null;
     gallery?: Prisma.JsonNullableFilter<'Product'>;
-    status?: Prisma.EnumProductStatusFilter<'Product'> | $Enums.ProductStatus;
-    launchDate?: Prisma.DateTimeNullableFilter<'Product'> | Date | string | null;
+    status?: Prisma.StringFilter<'Product'> | string;
     createdAt?: Prisma.DateTimeFilter<'Product'> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<'Product'> | Date | string;
     makerId?: Prisma.StringNullableFilter<'Product'> | string | null;
     maker?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null;
     categories?: Prisma.ProductCategoryListRelationFilter;
-    votes?: Prisma.VoteListRelationFilter;
+    launches?: Prisma.LaunchListRelationFilter;
 };
 
 export type ProductOrderByWithRelationInput = {
@@ -280,13 +272,12 @@ export type ProductOrderByWithRelationInput = {
     logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder;
     gallery?: Prisma.SortOrderInput | Prisma.SortOrder;
     status?: Prisma.SortOrder;
-    launchDate?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     makerId?: Prisma.SortOrderInput | Prisma.SortOrder;
     maker?: Prisma.UserOrderByWithRelationInput;
     categories?: Prisma.ProductCategoryOrderByRelationAggregateInput;
-    votes?: Prisma.VoteOrderByRelationAggregateInput;
+    launches?: Prisma.LaunchOrderByRelationAggregateInput;
 };
 
 export type ProductWhereUniqueInput = Prisma.AtLeast<
@@ -302,14 +293,13 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<
         websiteUrl?: Prisma.StringFilter<'Product'> | string;
         logoUrl?: Prisma.StringNullableFilter<'Product'> | string | null;
         gallery?: Prisma.JsonNullableFilter<'Product'>;
-        status?: Prisma.EnumProductStatusFilter<'Product'> | $Enums.ProductStatus;
-        launchDate?: Prisma.DateTimeNullableFilter<'Product'> | Date | string | null;
+        status?: Prisma.StringFilter<'Product'> | string;
         createdAt?: Prisma.DateTimeFilter<'Product'> | Date | string;
         updatedAt?: Prisma.DateTimeFilter<'Product'> | Date | string;
         makerId?: Prisma.StringNullableFilter<'Product'> | string | null;
         maker?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null;
         categories?: Prisma.ProductCategoryListRelationFilter;
-        votes?: Prisma.VoteListRelationFilter;
+        launches?: Prisma.LaunchListRelationFilter;
     },
     'id' | 'makerId_name'
 >;
@@ -323,7 +313,6 @@ export type ProductOrderByWithAggregationInput = {
     logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder;
     gallery?: Prisma.SortOrderInput | Prisma.SortOrder;
     status?: Prisma.SortOrder;
-    launchDate?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     makerId?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -349,8 +338,7 @@ export type ProductScalarWhereWithAggregatesInput = {
     websiteUrl?: Prisma.StringWithAggregatesFilter<'Product'> | string;
     logoUrl?: Prisma.StringNullableWithAggregatesFilter<'Product'> | string | null;
     gallery?: Prisma.JsonNullableWithAggregatesFilter<'Product'>;
-    status?: Prisma.EnumProductStatusWithAggregatesFilter<'Product'> | $Enums.ProductStatus;
-    launchDate?: Prisma.DateTimeNullableWithAggregatesFilter<'Product'> | Date | string | null;
+    status?: Prisma.StringWithAggregatesFilter<'Product'> | string;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<'Product'> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<'Product'> | Date | string;
     makerId?: Prisma.StringNullableWithAggregatesFilter<'Product'> | string | null;
@@ -363,13 +351,12 @@ export type ProductCreateInput = {
     websiteUrl: string;
     logoUrl?: string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: $Enums.ProductStatus;
-    launchDate?: Date | string | null;
+    status?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     maker?: Prisma.UserCreateNestedOneWithoutProductsInput;
     categories?: Prisma.ProductCategoryCreateNestedManyWithoutProductInput;
-    votes?: Prisma.VoteCreateNestedManyWithoutProductInput;
+    launches?: Prisma.LaunchCreateNestedManyWithoutProductInput;
 };
 
 export type ProductUncheckedCreateInput = {
@@ -380,13 +367,12 @@ export type ProductUncheckedCreateInput = {
     websiteUrl: string;
     logoUrl?: string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: $Enums.ProductStatus;
-    launchDate?: Date | string | null;
+    status?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     makerId?: string | null;
     categories?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutProductInput;
-    votes?: Prisma.VoteUncheckedCreateNestedManyWithoutProductInput;
+    launches?: Prisma.LaunchUncheckedCreateNestedManyWithoutProductInput;
 };
 
 export type ProductUpdateInput = {
@@ -396,13 +382,12 @@ export type ProductUpdateInput = {
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
     logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     maker?: Prisma.UserUpdateOneWithoutProductsNestedInput;
     categories?: Prisma.ProductCategoryUpdateManyWithoutProductNestedInput;
-    votes?: Prisma.VoteUpdateManyWithoutProductNestedInput;
+    launches?: Prisma.LaunchUpdateManyWithoutProductNestedInput;
 };
 
 export type ProductUncheckedUpdateInput = {
@@ -413,13 +398,12 @@ export type ProductUncheckedUpdateInput = {
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
     logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     makerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     categories?: Prisma.ProductCategoryUncheckedUpdateManyWithoutProductNestedInput;
-    votes?: Prisma.VoteUncheckedUpdateManyWithoutProductNestedInput;
+    launches?: Prisma.LaunchUncheckedUpdateManyWithoutProductNestedInput;
 };
 
 export type ProductCreateManyInput = {
@@ -430,8 +414,7 @@ export type ProductCreateManyInput = {
     websiteUrl: string;
     logoUrl?: string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: $Enums.ProductStatus;
-    launchDate?: Date | string | null;
+    status?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     makerId?: string | null;
@@ -444,8 +427,7 @@ export type ProductUpdateManyMutationInput = {
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
     logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -458,11 +440,15 @@ export type ProductUncheckedUpdateManyInput = {
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
     logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     makerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+};
+
+export type ProductScalarRelationFilter = {
+    is?: Prisma.ProductWhereInput;
+    isNot?: Prisma.ProductWhereInput;
 };
 
 export type ProductMakerIdNameCompoundUniqueInput = {
@@ -479,7 +465,6 @@ export type ProductCountOrderByAggregateInput = {
     logoUrl?: Prisma.SortOrder;
     gallery?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
-    launchDate?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     makerId?: Prisma.SortOrder;
@@ -497,7 +482,6 @@ export type ProductMaxOrderByAggregateInput = {
     websiteUrl?: Prisma.SortOrder;
     logoUrl?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
-    launchDate?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     makerId?: Prisma.SortOrder;
@@ -511,7 +495,6 @@ export type ProductMinOrderByAggregateInput = {
     websiteUrl?: Prisma.SortOrder;
     logoUrl?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
-    launchDate?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     makerId?: Prisma.SortOrder;
@@ -519,11 +502,6 @@ export type ProductMinOrderByAggregateInput = {
 
 export type ProductSumOrderByAggregateInput = {
     id?: Prisma.SortOrder;
-};
-
-export type ProductScalarRelationFilter = {
-    is?: Prisma.ProductWhereInput;
-    isNot?: Prisma.ProductWhereInput;
 };
 
 export type ProductListRelationFilter = {
@@ -536,58 +514,34 @@ export type ProductOrderByRelationAggregateInput = {
     _count?: Prisma.SortOrder;
 };
 
-export type StringFieldUpdateOperationsInput = {
-    set?: string;
+export type ProductCreateNestedOneWithoutLaunchesInput = {
+    create?: Prisma.XOR<
+        Prisma.ProductCreateWithoutLaunchesInput,
+        Prisma.ProductUncheckedCreateWithoutLaunchesInput
+    >;
+    connectOrCreate?: Prisma.ProductCreateOrConnectWithoutLaunchesInput;
+    connect?: Prisma.ProductWhereUniqueInput;
+};
+
+export type ProductUpdateOneRequiredWithoutLaunchesNestedInput = {
+    create?: Prisma.XOR<
+        Prisma.ProductCreateWithoutLaunchesInput,
+        Prisma.ProductUncheckedCreateWithoutLaunchesInput
+    >;
+    connectOrCreate?: Prisma.ProductCreateOrConnectWithoutLaunchesInput;
+    upsert?: Prisma.ProductUpsertWithoutLaunchesInput;
+    connect?: Prisma.ProductWhereUniqueInput;
+    update?: Prisma.XOR<
+        Prisma.XOR<
+            Prisma.ProductUpdateToOneWithWhereWithoutLaunchesInput,
+            Prisma.ProductUpdateWithoutLaunchesInput
+        >,
+        Prisma.ProductUncheckedUpdateWithoutLaunchesInput
+    >;
 };
 
 export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null;
-};
-
-export type EnumProductStatusFieldUpdateOperationsInput = {
-    set?: $Enums.ProductStatus;
-};
-
-export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null;
-};
-
-export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string;
-};
-
-export type IntFieldUpdateOperationsInput = {
-    set?: number;
-    increment?: number;
-    decrement?: number;
-    multiply?: number;
-    divide?: number;
-};
-
-export type ProductCreateNestedOneWithoutVotesInput = {
-    create?: Prisma.XOR<
-        Prisma.ProductCreateWithoutVotesInput,
-        Prisma.ProductUncheckedCreateWithoutVotesInput
-    >;
-    connectOrCreate?: Prisma.ProductCreateOrConnectWithoutVotesInput;
-    connect?: Prisma.ProductWhereUniqueInput;
-};
-
-export type ProductUpdateOneRequiredWithoutVotesNestedInput = {
-    create?: Prisma.XOR<
-        Prisma.ProductCreateWithoutVotesInput,
-        Prisma.ProductUncheckedCreateWithoutVotesInput
-    >;
-    connectOrCreate?: Prisma.ProductCreateOrConnectWithoutVotesInput;
-    upsert?: Prisma.ProductUpsertWithoutVotesInput;
-    connect?: Prisma.ProductWhereUniqueInput;
-    update?: Prisma.XOR<
-        Prisma.XOR<
-            Prisma.ProductUpdateToOneWithWhereWithoutVotesInput,
-            Prisma.ProductUpdateWithoutVotesInput
-        >,
-        Prisma.ProductUncheckedUpdateWithoutVotesInput
-    >;
 };
 
 export type ProductCreateNestedOneWithoutCategoriesInput = {
@@ -702,22 +656,21 @@ export type ProductUncheckedUpdateManyWithoutMakerNestedInput = {
     deleteMany?: Prisma.ProductScalarWhereInput | Prisma.ProductScalarWhereInput[];
 };
 
-export type ProductCreateWithoutVotesInput = {
+export type ProductCreateWithoutLaunchesInput = {
     name: string;
     tagline: string;
     description: string;
     websiteUrl: string;
     logoUrl?: string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: $Enums.ProductStatus;
-    launchDate?: Date | string | null;
+    status?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     maker?: Prisma.UserCreateNestedOneWithoutProductsInput;
     categories?: Prisma.ProductCategoryCreateNestedManyWithoutProductInput;
 };
 
-export type ProductUncheckedCreateWithoutVotesInput = {
+export type ProductUncheckedCreateWithoutLaunchesInput = {
     id?: number;
     name: string;
     tagline: string;
@@ -725,58 +678,56 @@ export type ProductUncheckedCreateWithoutVotesInput = {
     websiteUrl: string;
     logoUrl?: string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: $Enums.ProductStatus;
-    launchDate?: Date | string | null;
+    status?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     makerId?: string | null;
     categories?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutProductInput;
 };
 
-export type ProductCreateOrConnectWithoutVotesInput = {
+export type ProductCreateOrConnectWithoutLaunchesInput = {
     where: Prisma.ProductWhereUniqueInput;
     create: Prisma.XOR<
-        Prisma.ProductCreateWithoutVotesInput,
-        Prisma.ProductUncheckedCreateWithoutVotesInput
+        Prisma.ProductCreateWithoutLaunchesInput,
+        Prisma.ProductUncheckedCreateWithoutLaunchesInput
     >;
 };
 
-export type ProductUpsertWithoutVotesInput = {
+export type ProductUpsertWithoutLaunchesInput = {
     update: Prisma.XOR<
-        Prisma.ProductUpdateWithoutVotesInput,
-        Prisma.ProductUncheckedUpdateWithoutVotesInput
+        Prisma.ProductUpdateWithoutLaunchesInput,
+        Prisma.ProductUncheckedUpdateWithoutLaunchesInput
     >;
     create: Prisma.XOR<
-        Prisma.ProductCreateWithoutVotesInput,
-        Prisma.ProductUncheckedCreateWithoutVotesInput
+        Prisma.ProductCreateWithoutLaunchesInput,
+        Prisma.ProductUncheckedCreateWithoutLaunchesInput
     >;
     where?: Prisma.ProductWhereInput;
 };
 
-export type ProductUpdateToOneWithWhereWithoutVotesInput = {
+export type ProductUpdateToOneWithWhereWithoutLaunchesInput = {
     where?: Prisma.ProductWhereInput;
     data: Prisma.XOR<
-        Prisma.ProductUpdateWithoutVotesInput,
-        Prisma.ProductUncheckedUpdateWithoutVotesInput
+        Prisma.ProductUpdateWithoutLaunchesInput,
+        Prisma.ProductUncheckedUpdateWithoutLaunchesInput
     >;
 };
 
-export type ProductUpdateWithoutVotesInput = {
+export type ProductUpdateWithoutLaunchesInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
     logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     maker?: Prisma.UserUpdateOneWithoutProductsNestedInput;
     categories?: Prisma.ProductCategoryUpdateManyWithoutProductNestedInput;
 };
 
-export type ProductUncheckedUpdateWithoutVotesInput = {
+export type ProductUncheckedUpdateWithoutLaunchesInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -784,8 +735,7 @@ export type ProductUncheckedUpdateWithoutVotesInput = {
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
     logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     makerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -799,12 +749,11 @@ export type ProductCreateWithoutCategoriesInput = {
     websiteUrl: string;
     logoUrl?: string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: $Enums.ProductStatus;
-    launchDate?: Date | string | null;
+    status?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     maker?: Prisma.UserCreateNestedOneWithoutProductsInput;
-    votes?: Prisma.VoteCreateNestedManyWithoutProductInput;
+    launches?: Prisma.LaunchCreateNestedManyWithoutProductInput;
 };
 
 export type ProductUncheckedCreateWithoutCategoriesInput = {
@@ -815,12 +764,11 @@ export type ProductUncheckedCreateWithoutCategoriesInput = {
     websiteUrl: string;
     logoUrl?: string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: $Enums.ProductStatus;
-    launchDate?: Date | string | null;
+    status?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     makerId?: string | null;
-    votes?: Prisma.VoteUncheckedCreateNestedManyWithoutProductInput;
+    launches?: Prisma.LaunchUncheckedCreateNestedManyWithoutProductInput;
 };
 
 export type ProductCreateOrConnectWithoutCategoriesInput = {
@@ -858,12 +806,11 @@ export type ProductUpdateWithoutCategoriesInput = {
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
     logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     maker?: Prisma.UserUpdateOneWithoutProductsNestedInput;
-    votes?: Prisma.VoteUpdateManyWithoutProductNestedInput;
+    launches?: Prisma.LaunchUpdateManyWithoutProductNestedInput;
 };
 
 export type ProductUncheckedUpdateWithoutCategoriesInput = {
@@ -874,12 +821,11 @@ export type ProductUncheckedUpdateWithoutCategoriesInput = {
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
     logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     makerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    votes?: Prisma.VoteUncheckedUpdateManyWithoutProductNestedInput;
+    launches?: Prisma.LaunchUncheckedUpdateManyWithoutProductNestedInput;
 };
 
 export type ProductCreateWithoutMakerInput = {
@@ -889,12 +835,11 @@ export type ProductCreateWithoutMakerInput = {
     websiteUrl: string;
     logoUrl?: string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: $Enums.ProductStatus;
-    launchDate?: Date | string | null;
+    status?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     categories?: Prisma.ProductCategoryCreateNestedManyWithoutProductInput;
-    votes?: Prisma.VoteCreateNestedManyWithoutProductInput;
+    launches?: Prisma.LaunchCreateNestedManyWithoutProductInput;
 };
 
 export type ProductUncheckedCreateWithoutMakerInput = {
@@ -905,12 +850,11 @@ export type ProductUncheckedCreateWithoutMakerInput = {
     websiteUrl: string;
     logoUrl?: string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: $Enums.ProductStatus;
-    launchDate?: Date | string | null;
+    status?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     categories?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutProductInput;
-    votes?: Prisma.VoteUncheckedCreateNestedManyWithoutProductInput;
+    launches?: Prisma.LaunchUncheckedCreateNestedManyWithoutProductInput;
 };
 
 export type ProductCreateOrConnectWithoutMakerInput = {
@@ -965,8 +909,7 @@ export type ProductScalarWhereInput = {
     websiteUrl?: Prisma.StringFilter<'Product'> | string;
     logoUrl?: Prisma.StringNullableFilter<'Product'> | string | null;
     gallery?: Prisma.JsonNullableFilter<'Product'>;
-    status?: Prisma.EnumProductStatusFilter<'Product'> | $Enums.ProductStatus;
-    launchDate?: Prisma.DateTimeNullableFilter<'Product'> | Date | string | null;
+    status?: Prisma.StringFilter<'Product'> | string;
     createdAt?: Prisma.DateTimeFilter<'Product'> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<'Product'> | Date | string;
     makerId?: Prisma.StringNullableFilter<'Product'> | string | null;
@@ -980,8 +923,7 @@ export type ProductCreateManyMakerInput = {
     websiteUrl: string;
     logoUrl?: string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: $Enums.ProductStatus;
-    launchDate?: Date | string | null;
+    status?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -993,12 +935,11 @@ export type ProductUpdateWithoutMakerInput = {
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
     logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     categories?: Prisma.ProductCategoryUpdateManyWithoutProductNestedInput;
-    votes?: Prisma.VoteUpdateManyWithoutProductNestedInput;
+    launches?: Prisma.LaunchUpdateManyWithoutProductNestedInput;
 };
 
 export type ProductUncheckedUpdateWithoutMakerInput = {
@@ -1009,12 +950,11 @@ export type ProductUncheckedUpdateWithoutMakerInput = {
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
     logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     categories?: Prisma.ProductCategoryUncheckedUpdateManyWithoutProductNestedInput;
-    votes?: Prisma.VoteUncheckedUpdateManyWithoutProductNestedInput;
+    launches?: Prisma.LaunchUncheckedUpdateManyWithoutProductNestedInput;
 };
 
 export type ProductUncheckedUpdateManyWithoutMakerInput = {
@@ -1025,8 +965,7 @@ export type ProductUncheckedUpdateManyWithoutMakerInput = {
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
     logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -1037,14 +976,14 @@ export type ProductUncheckedUpdateManyWithoutMakerInput = {
 
 export type ProductCountOutputType = {
     categories: number;
-    votes: number;
+    launches: number;
 };
 
 export type ProductCountOutputTypeSelect<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     categories?: boolean | ProductCountOutputTypeCountCategoriesArgs;
-    votes?: boolean | ProductCountOutputTypeCountVotesArgs;
+    launches?: boolean | ProductCountOutputTypeCountLaunchesArgs;
 };
 
 /**
@@ -1071,10 +1010,10 @@ export type ProductCountOutputTypeCountCategoriesArgs<
 /**
  * ProductCountOutputType without action
  */
-export type ProductCountOutputTypeCountVotesArgs<
+export type ProductCountOutputTypeCountLaunchesArgs<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
-    where?: Prisma.VoteWhereInput;
+    where?: Prisma.LaunchWhereInput;
 };
 
 export type ProductSelect<
@@ -1089,13 +1028,12 @@ export type ProductSelect<
         logoUrl?: boolean;
         gallery?: boolean;
         status?: boolean;
-        launchDate?: boolean;
         createdAt?: boolean;
         updatedAt?: boolean;
         makerId?: boolean;
         maker?: boolean | Prisma.Product$makerArgs<ExtArgs>;
         categories?: boolean | Prisma.Product$categoriesArgs<ExtArgs>;
-        votes?: boolean | Prisma.Product$votesArgs<ExtArgs>;
+        launches?: boolean | Prisma.Product$launchesArgs<ExtArgs>;
         _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>;
     },
     ExtArgs['result']['product']
@@ -1113,7 +1051,6 @@ export type ProductSelectCreateManyAndReturn<
         logoUrl?: boolean;
         gallery?: boolean;
         status?: boolean;
-        launchDate?: boolean;
         createdAt?: boolean;
         updatedAt?: boolean;
         makerId?: boolean;
@@ -1134,7 +1071,6 @@ export type ProductSelectUpdateManyAndReturn<
         logoUrl?: boolean;
         gallery?: boolean;
         status?: boolean;
-        launchDate?: boolean;
         createdAt?: boolean;
         updatedAt?: boolean;
         makerId?: boolean;
@@ -1152,7 +1088,6 @@ export type ProductSelectScalar = {
     logoUrl?: boolean;
     gallery?: boolean;
     status?: boolean;
-    launchDate?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     makerId?: boolean;
@@ -1169,7 +1104,6 @@ export type ProductOmit<
     | 'logoUrl'
     | 'gallery'
     | 'status'
-    | 'launchDate'
     | 'createdAt'
     | 'updatedAt'
     | 'makerId',
@@ -1180,7 +1114,7 @@ export type ProductInclude<
 > = {
     maker?: boolean | Prisma.Product$makerArgs<ExtArgs>;
     categories?: boolean | Prisma.Product$categoriesArgs<ExtArgs>;
-    votes?: boolean | Prisma.Product$votesArgs<ExtArgs>;
+    launches?: boolean | Prisma.Product$launchesArgs<ExtArgs>;
     _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type ProductIncludeCreateManyAndReturn<
@@ -1201,7 +1135,7 @@ export type $ProductPayload<
     objects: {
         maker: Prisma.$UserPayload<ExtArgs> | null;
         categories: Prisma.$ProductCategoryPayload<ExtArgs>[];
-        votes: Prisma.$VotePayload<ExtArgs>[];
+        launches: Prisma.$LaunchPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
@@ -1212,8 +1146,7 @@ export type $ProductPayload<
             websiteUrl: string;
             logoUrl: string | null;
             gallery: runtime.JsonValue | null;
-            status: $Enums.ProductStatus;
-            launchDate: Date | null;
+            status: string;
             createdAt: Date;
             updatedAt: Date;
             makerId: string | null;
@@ -1776,11 +1709,11 @@ export interface Prisma__ProductClient<
           >
         | Null
     >;
-    votes<T extends Prisma.Product$votesArgs<ExtArgs> = {}>(
-        args?: Prisma.Subset<T, Prisma.Product$votesArgs<ExtArgs>>
+    launches<T extends Prisma.Product$launchesArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.Product$launchesArgs<ExtArgs>>
     ): Prisma.PrismaPromise<
         | runtime.Types.Result.GetResult<
-              Prisma.$VotePayload<ExtArgs>,
+              Prisma.$LaunchPayload<ExtArgs>,
               T,
               'findMany',
               GlobalOmitOptions
@@ -1825,8 +1758,7 @@ export interface ProductFieldRefs {
     readonly websiteUrl: Prisma.FieldRef<'Product', 'String'>;
     readonly logoUrl: Prisma.FieldRef<'Product', 'String'>;
     readonly gallery: Prisma.FieldRef<'Product', 'Json'>;
-    readonly status: Prisma.FieldRef<'Product', 'ProductStatus'>;
-    readonly launchDate: Prisma.FieldRef<'Product', 'DateTime'>;
+    readonly status: Prisma.FieldRef<'Product', 'String'>;
     readonly createdAt: Prisma.FieldRef<'Product', 'DateTime'>;
     readonly updatedAt: Prisma.FieldRef<'Product', 'DateTime'>;
     readonly makerId: Prisma.FieldRef<'Product', 'String'>;
@@ -2307,29 +2239,29 @@ export type Product$categoriesArgs<
 };
 
 /**
- * Product.votes
+ * Product.launches
  */
-export type Product$votesArgs<
+export type Product$launchesArgs<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     /**
-     * Select specific fields to fetch from the Vote
+     * Select specific fields to fetch from the Launch
      */
-    select?: Prisma.VoteSelect<ExtArgs> | null;
+    select?: Prisma.LaunchSelect<ExtArgs> | null;
     /**
-     * Omit specific fields from the Vote
+     * Omit specific fields from the Launch
      */
-    omit?: Prisma.VoteOmit<ExtArgs> | null;
+    omit?: Prisma.LaunchOmit<ExtArgs> | null;
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Prisma.VoteInclude<ExtArgs> | null;
-    where?: Prisma.VoteWhereInput;
-    orderBy?: Prisma.VoteOrderByWithRelationInput | Prisma.VoteOrderByWithRelationInput[];
-    cursor?: Prisma.VoteWhereUniqueInput;
+    include?: Prisma.LaunchInclude<ExtArgs> | null;
+    where?: Prisma.LaunchWhereInput;
+    orderBy?: Prisma.LaunchOrderByWithRelationInput | Prisma.LaunchOrderByWithRelationInput[];
+    cursor?: Prisma.LaunchWhereUniqueInput;
     take?: number;
     skip?: number;
-    distinct?: Prisma.VoteScalarFieldEnum | Prisma.VoteScalarFieldEnum[];
+    distinct?: Prisma.LaunchScalarFieldEnum | Prisma.LaunchScalarFieldEnum[];
 };
 
 /**

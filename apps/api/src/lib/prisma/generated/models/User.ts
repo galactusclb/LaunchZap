@@ -192,7 +192,7 @@ export type UserGroupByOutputType = {
     _max: UserMaxAggregateOutputType | null;
 };
 
-type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
     Array<
         Prisma.PickEnumerable<UserGroupByOutputType, T['by']> & {
             [P in keyof T & keyof UserGroupByOutputType]: P extends '_count'
@@ -389,14 +389,14 @@ export type UserUncheckedUpdateManyInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 
-export type UserNullableScalarRelationFilter = {
-    is?: Prisma.UserWhereInput | null;
-    isNot?: Prisma.UserWhereInput | null;
-};
-
 export type UserScalarRelationFilter = {
     is?: Prisma.UserWhereInput;
     isNot?: Prisma.UserWhereInput;
+};
+
+export type UserNullableScalarRelationFilter = {
+    is?: Prisma.UserWhereInput | null;
+    isNot?: Prisma.UserWhereInput | null;
 };
 
 export type UserCountOrderByAggregateInput = {
@@ -438,6 +438,32 @@ export type UserMinOrderByAggregateInput = {
     updatedAt?: Prisma.SortOrder;
 };
 
+export type UserCreateNestedOneWithoutVotesInput = {
+    create?: Prisma.XOR<
+        Prisma.UserCreateWithoutVotesInput,
+        Prisma.UserUncheckedCreateWithoutVotesInput
+    >;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutVotesInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+
+export type UserUpdateOneRequiredWithoutVotesNestedInput = {
+    create?: Prisma.XOR<
+        Prisma.UserCreateWithoutVotesInput,
+        Prisma.UserUncheckedCreateWithoutVotesInput
+    >;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutVotesInput;
+    upsert?: Prisma.UserUpsertWithoutVotesInput;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<
+        Prisma.XOR<
+            Prisma.UserUpdateToOneWithWhereWithoutVotesInput,
+            Prisma.UserUpdateWithoutVotesInput
+        >,
+        Prisma.UserUncheckedUpdateWithoutVotesInput
+    >;
+};
+
 export type UserCreateNestedOneWithoutProductsInput = {
     create?: Prisma.XOR<
         Prisma.UserCreateWithoutProductsInput,
@@ -466,122 +492,12 @@ export type UserUpdateOneWithoutProductsNestedInput = {
     >;
 };
 
-export type UserCreateNestedOneWithoutVotesInput = {
-    create?: Prisma.XOR<
-        Prisma.UserCreateWithoutVotesInput,
-        Prisma.UserUncheckedCreateWithoutVotesInput
-    >;
-    connectOrCreate?: Prisma.UserCreateOrConnectWithoutVotesInput;
-    connect?: Prisma.UserWhereUniqueInput;
-};
-
-export type UserUpdateOneRequiredWithoutVotesNestedInput = {
-    create?: Prisma.XOR<
-        Prisma.UserCreateWithoutVotesInput,
-        Prisma.UserUncheckedCreateWithoutVotesInput
-    >;
-    connectOrCreate?: Prisma.UserCreateOrConnectWithoutVotesInput;
-    upsert?: Prisma.UserUpsertWithoutVotesInput;
-    connect?: Prisma.UserWhereUniqueInput;
-    update?: Prisma.XOR<
-        Prisma.XOR<
-            Prisma.UserUpdateToOneWithWhereWithoutVotesInput,
-            Prisma.UserUpdateWithoutVotesInput
-        >,
-        Prisma.UserUncheckedUpdateWithoutVotesInput
-    >;
-};
-
 export type BoolFieldUpdateOperationsInput = {
     set?: boolean;
 };
 
 export type EnumRolesFieldUpdateOperationsInput = {
     set?: $Enums.Roles;
-};
-
-export type UserCreateWithoutProductsInput = {
-    id?: string;
-    name: string;
-    email: string;
-    emailVerified?: boolean;
-    googleSub?: string | null;
-    pictureUrl?: string | null;
-    role?: $Enums.Roles;
-    lastLoginAt?: Date | string | null;
-    createdAt?: Date | string;
-    updatedAt?: Date | string;
-    votes?: Prisma.VoteCreateNestedManyWithoutUserInput;
-};
-
-export type UserUncheckedCreateWithoutProductsInput = {
-    id?: string;
-    name: string;
-    email: string;
-    emailVerified?: boolean;
-    googleSub?: string | null;
-    pictureUrl?: string | null;
-    role?: $Enums.Roles;
-    lastLoginAt?: Date | string | null;
-    createdAt?: Date | string;
-    updatedAt?: Date | string;
-    votes?: Prisma.VoteUncheckedCreateNestedManyWithoutUserInput;
-};
-
-export type UserCreateOrConnectWithoutProductsInput = {
-    where: Prisma.UserWhereUniqueInput;
-    create: Prisma.XOR<
-        Prisma.UserCreateWithoutProductsInput,
-        Prisma.UserUncheckedCreateWithoutProductsInput
-    >;
-};
-
-export type UserUpsertWithoutProductsInput = {
-    update: Prisma.XOR<
-        Prisma.UserUpdateWithoutProductsInput,
-        Prisma.UserUncheckedUpdateWithoutProductsInput
-    >;
-    create: Prisma.XOR<
-        Prisma.UserCreateWithoutProductsInput,
-        Prisma.UserUncheckedCreateWithoutProductsInput
-    >;
-    where?: Prisma.UserWhereInput;
-};
-
-export type UserUpdateToOneWithWhereWithoutProductsInput = {
-    where?: Prisma.UserWhereInput;
-    data: Prisma.XOR<
-        Prisma.UserUpdateWithoutProductsInput,
-        Prisma.UserUncheckedUpdateWithoutProductsInput
-    >;
-};
-
-export type UserUpdateWithoutProductsInput = {
-    id?: Prisma.StringFieldUpdateOperationsInput | string;
-    name?: Prisma.StringFieldUpdateOperationsInput | string;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
-    emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-    googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    pictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    role?: Prisma.EnumRolesFieldUpdateOperationsInput | $Enums.Roles;
-    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
-    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    votes?: Prisma.VoteUpdateManyWithoutUserNestedInput;
-};
-
-export type UserUncheckedUpdateWithoutProductsInput = {
-    id?: Prisma.StringFieldUpdateOperationsInput | string;
-    name?: Prisma.StringFieldUpdateOperationsInput | string;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
-    emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-    googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    pictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    role?: Prisma.EnumRolesFieldUpdateOperationsInput | $Enums.Roles;
-    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
-    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    votes?: Prisma.VoteUncheckedUpdateManyWithoutUserNestedInput;
 };
 
 export type UserCreateWithoutVotesInput = {
@@ -666,6 +582,90 @@ export type UserUncheckedUpdateWithoutVotesInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     products?: Prisma.ProductUncheckedUpdateManyWithoutMakerNestedInput;
+};
+
+export type UserCreateWithoutProductsInput = {
+    id?: string;
+    name: string;
+    email: string;
+    emailVerified?: boolean;
+    googleSub?: string | null;
+    pictureUrl?: string | null;
+    role?: $Enums.Roles;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    votes?: Prisma.VoteCreateNestedManyWithoutUserInput;
+};
+
+export type UserUncheckedCreateWithoutProductsInput = {
+    id?: string;
+    name: string;
+    email: string;
+    emailVerified?: boolean;
+    googleSub?: string | null;
+    pictureUrl?: string | null;
+    role?: $Enums.Roles;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    votes?: Prisma.VoteUncheckedCreateNestedManyWithoutUserInput;
+};
+
+export type UserCreateOrConnectWithoutProductsInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<
+        Prisma.UserCreateWithoutProductsInput,
+        Prisma.UserUncheckedCreateWithoutProductsInput
+    >;
+};
+
+export type UserUpsertWithoutProductsInput = {
+    update: Prisma.XOR<
+        Prisma.UserUpdateWithoutProductsInput,
+        Prisma.UserUncheckedUpdateWithoutProductsInput
+    >;
+    create: Prisma.XOR<
+        Prisma.UserCreateWithoutProductsInput,
+        Prisma.UserUncheckedCreateWithoutProductsInput
+    >;
+    where?: Prisma.UserWhereInput;
+};
+
+export type UserUpdateToOneWithWhereWithoutProductsInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<
+        Prisma.UserUpdateWithoutProductsInput,
+        Prisma.UserUncheckedUpdateWithoutProductsInput
+    >;
+};
+
+export type UserUpdateWithoutProductsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    pictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    role?: Prisma.EnumRolesFieldUpdateOperationsInput | $Enums.Roles;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    votes?: Prisma.VoteUpdateManyWithoutUserNestedInput;
+};
+
+export type UserUncheckedUpdateWithoutProductsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    pictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    role?: Prisma.EnumRolesFieldUpdateOperationsInput | $Enums.Roles;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    votes?: Prisma.VoteUncheckedUpdateManyWithoutUserNestedInput;
 };
 
 /**
