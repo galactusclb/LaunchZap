@@ -39,3 +39,8 @@ web-build:
 	AWS_CLOUDFRONT_DOMAIN=dummy.cloudfront.net \
 	AWS_S3_BUCKET_NAME=dummy-bucket \
 	npx next build
+
+prisma-migrate:
+	cd apps/api && \
+	DATABASE_URL=postgresql://placeholder:placeholder@localhost:5432/placeholder \
+	pnpm run generate
