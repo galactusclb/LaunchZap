@@ -49,10 +49,11 @@ export const AnyNull = runtime.AnyNull;
 
 export const ModelName = {
     Launch: 'Launch',
-    Vote: 'Vote',
+    LaunchVote: 'LaunchVote',
     Product: 'Product',
     Category: 'Category',
     ProductCategory: 'ProductCategory',
+    Vote: 'Vote',
     User: 'User',
 } as const;
 
@@ -87,14 +88,15 @@ export const LaunchScalarFieldEnum = {
 export type LaunchScalarFieldEnum =
     (typeof LaunchScalarFieldEnum)[keyof typeof LaunchScalarFieldEnum];
 
-export const VoteScalarFieldEnum = {
+export const LaunchVoteScalarFieldEnum = {
     id: 'id',
     userId: 'userId',
     launchId: 'launchId',
     createdAt: 'createdAt',
 } as const;
 
-export type VoteScalarFieldEnum = (typeof VoteScalarFieldEnum)[keyof typeof VoteScalarFieldEnum];
+export type LaunchVoteScalarFieldEnum =
+    (typeof LaunchVoteScalarFieldEnum)[keyof typeof LaunchVoteScalarFieldEnum];
 
 export const ProductScalarFieldEnum = {
     id: 'id',
@@ -128,6 +130,15 @@ export const ProductCategoryScalarFieldEnum = {
 
 export type ProductCategoryScalarFieldEnum =
     (typeof ProductCategoryScalarFieldEnum)[keyof typeof ProductCategoryScalarFieldEnum];
+
+export const VoteScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    productId: 'productId',
+    createdAt: 'createdAt',
+} as const;
+
+export type VoteScalarFieldEnum = (typeof VoteScalarFieldEnum)[keyof typeof VoteScalarFieldEnum];
 
 export const UserScalarFieldEnum = {
     id: 'id',

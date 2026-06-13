@@ -30,7 +30,7 @@ export type UserMinAggregateOutputType = {
     emailVerified: boolean | null;
     googleSub: string | null;
     pictureUrl: string | null;
-    role: $Enums.Roles | null;
+    role: string | null;
     lastLoginAt: Date | null;
     createdAt: Date | null;
     updatedAt: Date | null;
@@ -43,7 +43,7 @@ export type UserMaxAggregateOutputType = {
     emailVerified: boolean | null;
     googleSub: string | null;
     pictureUrl: string | null;
-    role: $Enums.Roles | null;
+    role: string | null;
     lastLoginAt: Date | null;
     createdAt: Date | null;
     updatedAt: Date | null;
@@ -183,7 +183,7 @@ export type UserGroupByOutputType = {
     emailVerified: boolean;
     googleSub: string | null;
     pictureUrl: string | null;
-    role: $Enums.Roles;
+    role: string;
     lastLoginAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
@@ -214,12 +214,13 @@ export type UserWhereInput = {
     emailVerified?: Prisma.BoolFilter<'User'> | boolean;
     googleSub?: Prisma.StringNullableFilter<'User'> | string | null;
     pictureUrl?: Prisma.StringNullableFilter<'User'> | string | null;
-    role?: Prisma.EnumRolesFilter<'User'> | $Enums.Roles;
+    role?: Prisma.StringFilter<'User'> | string;
     lastLoginAt?: Prisma.DateTimeNullableFilter<'User'> | Date | string | null;
     createdAt?: Prisma.DateTimeFilter<'User'> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<'User'> | Date | string;
     products?: Prisma.ProductListRelationFilter;
     votes?: Prisma.VoteListRelationFilter;
+    launchVote?: Prisma.LaunchVoteListRelationFilter;
 };
 
 export type UserOrderByWithRelationInput = {
@@ -235,6 +236,7 @@ export type UserOrderByWithRelationInput = {
     updatedAt?: Prisma.SortOrder;
     products?: Prisma.ProductOrderByRelationAggregateInput;
     votes?: Prisma.VoteOrderByRelationAggregateInput;
+    launchVote?: Prisma.LaunchVoteOrderByRelationAggregateInput;
 };
 
 export type UserWhereUniqueInput = Prisma.AtLeast<
@@ -248,12 +250,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
         NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[];
         emailVerified?: Prisma.BoolFilter<'User'> | boolean;
         pictureUrl?: Prisma.StringNullableFilter<'User'> | string | null;
-        role?: Prisma.EnumRolesFilter<'User'> | $Enums.Roles;
+        role?: Prisma.StringFilter<'User'> | string;
         lastLoginAt?: Prisma.DateTimeNullableFilter<'User'> | Date | string | null;
         createdAt?: Prisma.DateTimeFilter<'User'> | Date | string;
         updatedAt?: Prisma.DateTimeFilter<'User'> | Date | string;
         products?: Prisma.ProductListRelationFilter;
         votes?: Prisma.VoteListRelationFilter;
+        launchVote?: Prisma.LaunchVoteListRelationFilter;
     },
     'id' | 'name' | 'googleSub' | 'email'
 >;
@@ -284,7 +287,7 @@ export type UserScalarWhereWithAggregatesInput = {
     emailVerified?: Prisma.BoolWithAggregatesFilter<'User'> | boolean;
     googleSub?: Prisma.StringNullableWithAggregatesFilter<'User'> | string | null;
     pictureUrl?: Prisma.StringNullableWithAggregatesFilter<'User'> | string | null;
-    role?: Prisma.EnumRolesWithAggregatesFilter<'User'> | $Enums.Roles;
+    role?: Prisma.StringWithAggregatesFilter<'User'> | string;
     lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<'User'> | Date | string | null;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<'User'> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<'User'> | Date | string;
@@ -297,12 +300,13 @@ export type UserCreateInput = {
     emailVerified?: boolean;
     googleSub?: string | null;
     pictureUrl?: string | null;
-    role?: $Enums.Roles;
+    role?: string;
     lastLoginAt?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     products?: Prisma.ProductCreateNestedManyWithoutMakerInput;
     votes?: Prisma.VoteCreateNestedManyWithoutUserInput;
+    launchVote?: Prisma.LaunchVoteCreateNestedManyWithoutUserInput;
 };
 
 export type UserUncheckedCreateInput = {
@@ -312,12 +316,13 @@ export type UserUncheckedCreateInput = {
     emailVerified?: boolean;
     googleSub?: string | null;
     pictureUrl?: string | null;
-    role?: $Enums.Roles;
+    role?: string;
     lastLoginAt?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     products?: Prisma.ProductUncheckedCreateNestedManyWithoutMakerInput;
     votes?: Prisma.VoteUncheckedCreateNestedManyWithoutUserInput;
+    launchVote?: Prisma.LaunchVoteUncheckedCreateNestedManyWithoutUserInput;
 };
 
 export type UserUpdateInput = {
@@ -327,12 +332,13 @@ export type UserUpdateInput = {
     emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     pictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    role?: Prisma.EnumRolesFieldUpdateOperationsInput | $Enums.Roles;
+    role?: Prisma.StringFieldUpdateOperationsInput | string;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     products?: Prisma.ProductUpdateManyWithoutMakerNestedInput;
     votes?: Prisma.VoteUpdateManyWithoutUserNestedInput;
+    launchVote?: Prisma.LaunchVoteUpdateManyWithoutUserNestedInput;
 };
 
 export type UserUncheckedUpdateInput = {
@@ -342,12 +348,13 @@ export type UserUncheckedUpdateInput = {
     emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     pictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    role?: Prisma.EnumRolesFieldUpdateOperationsInput | $Enums.Roles;
+    role?: Prisma.StringFieldUpdateOperationsInput | string;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     products?: Prisma.ProductUncheckedUpdateManyWithoutMakerNestedInput;
     votes?: Prisma.VoteUncheckedUpdateManyWithoutUserNestedInput;
+    launchVote?: Prisma.LaunchVoteUncheckedUpdateManyWithoutUserNestedInput;
 };
 
 export type UserCreateManyInput = {
@@ -357,7 +364,7 @@ export type UserCreateManyInput = {
     emailVerified?: boolean;
     googleSub?: string | null;
     pictureUrl?: string | null;
-    role?: $Enums.Roles;
+    role?: string;
     lastLoginAt?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
@@ -370,7 +377,7 @@ export type UserUpdateManyMutationInput = {
     emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     pictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    role?: Prisma.EnumRolesFieldUpdateOperationsInput | $Enums.Roles;
+    role?: Prisma.StringFieldUpdateOperationsInput | string;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -383,7 +390,7 @@ export type UserUncheckedUpdateManyInput = {
     emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     pictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    role?: Prisma.EnumRolesFieldUpdateOperationsInput | $Enums.Roles;
+    role?: Prisma.StringFieldUpdateOperationsInput | string;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -438,29 +445,29 @@ export type UserMinOrderByAggregateInput = {
     updatedAt?: Prisma.SortOrder;
 };
 
-export type UserCreateNestedOneWithoutVotesInput = {
+export type UserCreateNestedOneWithoutLaunchVoteInput = {
     create?: Prisma.XOR<
-        Prisma.UserCreateWithoutVotesInput,
-        Prisma.UserUncheckedCreateWithoutVotesInput
+        Prisma.UserCreateWithoutLaunchVoteInput,
+        Prisma.UserUncheckedCreateWithoutLaunchVoteInput
     >;
-    connectOrCreate?: Prisma.UserCreateOrConnectWithoutVotesInput;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutLaunchVoteInput;
     connect?: Prisma.UserWhereUniqueInput;
 };
 
-export type UserUpdateOneRequiredWithoutVotesNestedInput = {
+export type UserUpdateOneRequiredWithoutLaunchVoteNestedInput = {
     create?: Prisma.XOR<
-        Prisma.UserCreateWithoutVotesInput,
-        Prisma.UserUncheckedCreateWithoutVotesInput
+        Prisma.UserCreateWithoutLaunchVoteInput,
+        Prisma.UserUncheckedCreateWithoutLaunchVoteInput
     >;
-    connectOrCreate?: Prisma.UserCreateOrConnectWithoutVotesInput;
-    upsert?: Prisma.UserUpsertWithoutVotesInput;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutLaunchVoteInput;
+    upsert?: Prisma.UserUpsertWithoutLaunchVoteInput;
     connect?: Prisma.UserWhereUniqueInput;
     update?: Prisma.XOR<
         Prisma.XOR<
-            Prisma.UserUpdateToOneWithWhereWithoutVotesInput,
-            Prisma.UserUpdateWithoutVotesInput
+            Prisma.UserUpdateToOneWithWhereWithoutLaunchVoteInput,
+            Prisma.UserUpdateWithoutLaunchVoteInput
         >,
-        Prisma.UserUncheckedUpdateWithoutVotesInput
+        Prisma.UserUncheckedUpdateWithoutLaunchVoteInput
     >;
 };
 
@@ -492,96 +499,122 @@ export type UserUpdateOneWithoutProductsNestedInput = {
     >;
 };
 
+export type UserCreateNestedOneWithoutVotesInput = {
+    create?: Prisma.XOR<
+        Prisma.UserCreateWithoutVotesInput,
+        Prisma.UserUncheckedCreateWithoutVotesInput
+    >;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutVotesInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+
+export type UserUpdateOneRequiredWithoutVotesNestedInput = {
+    create?: Prisma.XOR<
+        Prisma.UserCreateWithoutVotesInput,
+        Prisma.UserUncheckedCreateWithoutVotesInput
+    >;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutVotesInput;
+    upsert?: Prisma.UserUpsertWithoutVotesInput;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<
+        Prisma.XOR<
+            Prisma.UserUpdateToOneWithWhereWithoutVotesInput,
+            Prisma.UserUpdateWithoutVotesInput
+        >,
+        Prisma.UserUncheckedUpdateWithoutVotesInput
+    >;
+};
+
 export type BoolFieldUpdateOperationsInput = {
     set?: boolean;
 };
 
-export type EnumRolesFieldUpdateOperationsInput = {
-    set?: $Enums.Roles;
-};
-
-export type UserCreateWithoutVotesInput = {
+export type UserCreateWithoutLaunchVoteInput = {
     id?: string;
     name: string;
     email: string;
     emailVerified?: boolean;
     googleSub?: string | null;
     pictureUrl?: string | null;
-    role?: $Enums.Roles;
+    role?: string;
     lastLoginAt?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     products?: Prisma.ProductCreateNestedManyWithoutMakerInput;
+    votes?: Prisma.VoteCreateNestedManyWithoutUserInput;
 };
 
-export type UserUncheckedCreateWithoutVotesInput = {
+export type UserUncheckedCreateWithoutLaunchVoteInput = {
     id?: string;
     name: string;
     email: string;
     emailVerified?: boolean;
     googleSub?: string | null;
     pictureUrl?: string | null;
-    role?: $Enums.Roles;
+    role?: string;
     lastLoginAt?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     products?: Prisma.ProductUncheckedCreateNestedManyWithoutMakerInput;
+    votes?: Prisma.VoteUncheckedCreateNestedManyWithoutUserInput;
 };
 
-export type UserCreateOrConnectWithoutVotesInput = {
+export type UserCreateOrConnectWithoutLaunchVoteInput = {
     where: Prisma.UserWhereUniqueInput;
     create: Prisma.XOR<
-        Prisma.UserCreateWithoutVotesInput,
-        Prisma.UserUncheckedCreateWithoutVotesInput
+        Prisma.UserCreateWithoutLaunchVoteInput,
+        Prisma.UserUncheckedCreateWithoutLaunchVoteInput
     >;
 };
 
-export type UserUpsertWithoutVotesInput = {
+export type UserUpsertWithoutLaunchVoteInput = {
     update: Prisma.XOR<
-        Prisma.UserUpdateWithoutVotesInput,
-        Prisma.UserUncheckedUpdateWithoutVotesInput
+        Prisma.UserUpdateWithoutLaunchVoteInput,
+        Prisma.UserUncheckedUpdateWithoutLaunchVoteInput
     >;
     create: Prisma.XOR<
-        Prisma.UserCreateWithoutVotesInput,
-        Prisma.UserUncheckedCreateWithoutVotesInput
+        Prisma.UserCreateWithoutLaunchVoteInput,
+        Prisma.UserUncheckedCreateWithoutLaunchVoteInput
     >;
     where?: Prisma.UserWhereInput;
 };
 
-export type UserUpdateToOneWithWhereWithoutVotesInput = {
+export type UserUpdateToOneWithWhereWithoutLaunchVoteInput = {
     where?: Prisma.UserWhereInput;
     data: Prisma.XOR<
-        Prisma.UserUpdateWithoutVotesInput,
-        Prisma.UserUncheckedUpdateWithoutVotesInput
+        Prisma.UserUpdateWithoutLaunchVoteInput,
+        Prisma.UserUncheckedUpdateWithoutLaunchVoteInput
     >;
 };
 
-export type UserUpdateWithoutVotesInput = {
+export type UserUpdateWithoutLaunchVoteInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     email?: Prisma.StringFieldUpdateOperationsInput | string;
     emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     pictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    role?: Prisma.EnumRolesFieldUpdateOperationsInput | $Enums.Roles;
+    role?: Prisma.StringFieldUpdateOperationsInput | string;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     products?: Prisma.ProductUpdateManyWithoutMakerNestedInput;
+    votes?: Prisma.VoteUpdateManyWithoutUserNestedInput;
 };
 
-export type UserUncheckedUpdateWithoutVotesInput = {
+export type UserUncheckedUpdateWithoutLaunchVoteInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     email?: Prisma.StringFieldUpdateOperationsInput | string;
     emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     pictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    role?: Prisma.EnumRolesFieldUpdateOperationsInput | $Enums.Roles;
+    role?: Prisma.StringFieldUpdateOperationsInput | string;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     products?: Prisma.ProductUncheckedUpdateManyWithoutMakerNestedInput;
+    votes?: Prisma.VoteUncheckedUpdateManyWithoutUserNestedInput;
 };
 
 export type UserCreateWithoutProductsInput = {
@@ -591,11 +624,12 @@ export type UserCreateWithoutProductsInput = {
     emailVerified?: boolean;
     googleSub?: string | null;
     pictureUrl?: string | null;
-    role?: $Enums.Roles;
+    role?: string;
     lastLoginAt?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     votes?: Prisma.VoteCreateNestedManyWithoutUserInput;
+    launchVote?: Prisma.LaunchVoteCreateNestedManyWithoutUserInput;
 };
 
 export type UserUncheckedCreateWithoutProductsInput = {
@@ -605,11 +639,12 @@ export type UserUncheckedCreateWithoutProductsInput = {
     emailVerified?: boolean;
     googleSub?: string | null;
     pictureUrl?: string | null;
-    role?: $Enums.Roles;
+    role?: string;
     lastLoginAt?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     votes?: Prisma.VoteUncheckedCreateNestedManyWithoutUserInput;
+    launchVote?: Prisma.LaunchVoteUncheckedCreateNestedManyWithoutUserInput;
 };
 
 export type UserCreateOrConnectWithoutProductsInput = {
@@ -647,11 +682,12 @@ export type UserUpdateWithoutProductsInput = {
     emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     pictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    role?: Prisma.EnumRolesFieldUpdateOperationsInput | $Enums.Roles;
+    role?: Prisma.StringFieldUpdateOperationsInput | string;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     votes?: Prisma.VoteUpdateManyWithoutUserNestedInput;
+    launchVote?: Prisma.LaunchVoteUpdateManyWithoutUserNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutProductsInput = {
@@ -661,11 +697,100 @@ export type UserUncheckedUpdateWithoutProductsInput = {
     emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     pictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    role?: Prisma.EnumRolesFieldUpdateOperationsInput | $Enums.Roles;
+    role?: Prisma.StringFieldUpdateOperationsInput | string;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     votes?: Prisma.VoteUncheckedUpdateManyWithoutUserNestedInput;
+    launchVote?: Prisma.LaunchVoteUncheckedUpdateManyWithoutUserNestedInput;
+};
+
+export type UserCreateWithoutVotesInput = {
+    id?: string;
+    name: string;
+    email: string;
+    emailVerified?: boolean;
+    googleSub?: string | null;
+    pictureUrl?: string | null;
+    role?: string;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    products?: Prisma.ProductCreateNestedManyWithoutMakerInput;
+    launchVote?: Prisma.LaunchVoteCreateNestedManyWithoutUserInput;
+};
+
+export type UserUncheckedCreateWithoutVotesInput = {
+    id?: string;
+    name: string;
+    email: string;
+    emailVerified?: boolean;
+    googleSub?: string | null;
+    pictureUrl?: string | null;
+    role?: string;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    products?: Prisma.ProductUncheckedCreateNestedManyWithoutMakerInput;
+    launchVote?: Prisma.LaunchVoteUncheckedCreateNestedManyWithoutUserInput;
+};
+
+export type UserCreateOrConnectWithoutVotesInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<
+        Prisma.UserCreateWithoutVotesInput,
+        Prisma.UserUncheckedCreateWithoutVotesInput
+    >;
+};
+
+export type UserUpsertWithoutVotesInput = {
+    update: Prisma.XOR<
+        Prisma.UserUpdateWithoutVotesInput,
+        Prisma.UserUncheckedUpdateWithoutVotesInput
+    >;
+    create: Prisma.XOR<
+        Prisma.UserCreateWithoutVotesInput,
+        Prisma.UserUncheckedCreateWithoutVotesInput
+    >;
+    where?: Prisma.UserWhereInput;
+};
+
+export type UserUpdateToOneWithWhereWithoutVotesInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<
+        Prisma.UserUpdateWithoutVotesInput,
+        Prisma.UserUncheckedUpdateWithoutVotesInput
+    >;
+};
+
+export type UserUpdateWithoutVotesInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    pictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    role?: Prisma.StringFieldUpdateOperationsInput | string;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    products?: Prisma.ProductUpdateManyWithoutMakerNestedInput;
+    launchVote?: Prisma.LaunchVoteUpdateManyWithoutUserNestedInput;
+};
+
+export type UserUncheckedUpdateWithoutVotesInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    pictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    role?: Prisma.StringFieldUpdateOperationsInput | string;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    products?: Prisma.ProductUncheckedUpdateManyWithoutMakerNestedInput;
+    launchVote?: Prisma.LaunchVoteUncheckedUpdateManyWithoutUserNestedInput;
 };
 
 /**
@@ -675,6 +800,7 @@ export type UserUncheckedUpdateWithoutProductsInput = {
 export type UserCountOutputType = {
     products: number;
     votes: number;
+    launchVote: number;
 };
 
 export type UserCountOutputTypeSelect<
@@ -682,6 +808,7 @@ export type UserCountOutputTypeSelect<
 > = {
     products?: boolean | UserCountOutputTypeCountProductsArgs;
     votes?: boolean | UserCountOutputTypeCountVotesArgs;
+    launchVote?: boolean | UserCountOutputTypeCountLaunchVoteArgs;
 };
 
 /**
@@ -714,6 +841,15 @@ export type UserCountOutputTypeCountVotesArgs<
     where?: Prisma.VoteWhereInput;
 };
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountLaunchVoteArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    where?: Prisma.LaunchVoteWhereInput;
+};
+
 export type UserSelect<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
@@ -730,6 +866,7 @@ export type UserSelect<
         updatedAt?: boolean;
         products?: boolean | Prisma.User$productsArgs<ExtArgs>;
         votes?: boolean | Prisma.User$votesArgs<ExtArgs>;
+        launchVote?: boolean | Prisma.User$launchVoteArgs<ExtArgs>;
         _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
     },
     ExtArgs['result']['user']
@@ -804,6 +941,7 @@ export type UserInclude<
 > = {
     products?: boolean | Prisma.User$productsArgs<ExtArgs>;
     votes?: boolean | Prisma.User$votesArgs<ExtArgs>;
+    launchVote?: boolean | Prisma.User$launchVoteArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type UserIncludeCreateManyAndReturn<
@@ -820,6 +958,7 @@ export type $UserPayload<
     objects: {
         products: Prisma.$ProductPayload<ExtArgs>[];
         votes: Prisma.$VotePayload<ExtArgs>[];
+        launchVote: Prisma.$LaunchVotePayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
@@ -829,7 +968,7 @@ export type $UserPayload<
             emailVerified: boolean;
             googleSub: string | null;
             pictureUrl: string | null;
-            role: $Enums.Roles;
+            role: string;
             lastLoginAt: Date | null;
             createdAt: Date;
             updatedAt: Date;
@@ -1390,6 +1529,17 @@ export interface Prisma__UserClient<
           >
         | Null
     >;
+    launchVote<T extends Prisma.User$launchVoteArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.User$launchVoteArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<
+        | runtime.Types.Result.GetResult<
+              Prisma.$LaunchVotePayload<ExtArgs>,
+              T,
+              'findMany',
+              GlobalOmitOptions
+          >
+        | Null
+    >;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1427,7 +1577,7 @@ export interface UserFieldRefs {
     readonly emailVerified: Prisma.FieldRef<'User', 'Boolean'>;
     readonly googleSub: Prisma.FieldRef<'User', 'String'>;
     readonly pictureUrl: Prisma.FieldRef<'User', 'String'>;
-    readonly role: Prisma.FieldRef<'User', 'Roles'>;
+    readonly role: Prisma.FieldRef<'User', 'String'>;
     readonly lastLoginAt: Prisma.FieldRef<'User', 'DateTime'>;
     readonly createdAt: Prisma.FieldRef<'User', 'DateTime'>;
     readonly updatedAt: Prisma.FieldRef<'User', 'DateTime'>;
@@ -1900,6 +2050,34 @@ export type User$votesArgs<
     take?: number;
     skip?: number;
     distinct?: Prisma.VoteScalarFieldEnum | Prisma.VoteScalarFieldEnum[];
+};
+
+/**
+ * User.launchVote
+ */
+export type User$launchVoteArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    /**
+     * Select specific fields to fetch from the LaunchVote
+     */
+    select?: Prisma.LaunchVoteSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the LaunchVote
+     */
+    omit?: Prisma.LaunchVoteOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.LaunchVoteInclude<ExtArgs> | null;
+    where?: Prisma.LaunchVoteWhereInput;
+    orderBy?:
+        | Prisma.LaunchVoteOrderByWithRelationInput
+        | Prisma.LaunchVoteOrderByWithRelationInput[];
+    cursor?: Prisma.LaunchVoteWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.LaunchVoteScalarFieldEnum | Prisma.LaunchVoteScalarFieldEnum[];
 };
 
 /**

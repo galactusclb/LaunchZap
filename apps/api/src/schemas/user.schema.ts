@@ -1,7 +1,7 @@
 import z from 'zod';
 
 import { trimmedString, normalizedEmail } from '@/lib/zod/extras';
-import { Roles } from '@/prisma/client';
+import { constants } from '@/utils/constant';
 
 export const baseUserSchema = z.object({
     name: trimmedString
@@ -18,7 +18,7 @@ export const userSchema = baseUserSchema.extend({
     id: z.string().cuid(),
     emailVerified: z.boolean(),
     googleSub: z.string().nullable(),
-    role: z.nativeEnum(Roles),
+    role: z.enum(constants.role),
     lastLoginAt: z.date().nullable(),
     createdAt: z.date(),
     updatedAt: z.date(),

@@ -241,7 +241,7 @@ export type LaunchWhereInput = {
     updatedAt?: Prisma.DateTimeFilter<'Launch'> | Date | string;
     productId?: Prisma.IntFilter<'Launch'> | number;
     product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>;
-    vote?: Prisma.VoteListRelationFilter;
+    launchVote?: Prisma.LaunchVoteListRelationFilter;
 };
 
 export type LaunchOrderByWithRelationInput = {
@@ -255,7 +255,7 @@ export type LaunchOrderByWithRelationInput = {
     updatedAt?: Prisma.SortOrder;
     productId?: Prisma.SortOrder;
     product?: Prisma.ProductOrderByWithRelationInput;
-    vote?: Prisma.VoteOrderByRelationAggregateInput;
+    launchVote?: Prisma.LaunchVoteOrderByRelationAggregateInput;
 };
 
 export type LaunchWhereUniqueInput = Prisma.AtLeast<
@@ -273,7 +273,7 @@ export type LaunchWhereUniqueInput = Prisma.AtLeast<
         updatedAt?: Prisma.DateTimeFilter<'Launch'> | Date | string;
         productId?: Prisma.IntFilter<'Launch'> | number;
         product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>;
-        vote?: Prisma.VoteListRelationFilter;
+        launchVote?: Prisma.LaunchVoteListRelationFilter;
     },
     'id'
 >;
@@ -324,7 +324,7 @@ export type LaunchCreateInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     product: Prisma.ProductCreateNestedOneWithoutLaunchesInput;
-    vote?: Prisma.VoteCreateNestedManyWithoutLaunchInput;
+    launchVote?: Prisma.LaunchVoteCreateNestedManyWithoutLaunchInput;
 };
 
 export type LaunchUncheckedCreateInput = {
@@ -337,7 +337,7 @@ export type LaunchUncheckedCreateInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     productId: number;
-    vote?: Prisma.VoteUncheckedCreateNestedManyWithoutLaunchInput;
+    launchVote?: Prisma.LaunchVoteUncheckedCreateNestedManyWithoutLaunchInput;
 };
 
 export type LaunchUpdateInput = {
@@ -350,7 +350,7 @@ export type LaunchUpdateInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     product?: Prisma.ProductUpdateOneRequiredWithoutLaunchesNestedInput;
-    vote?: Prisma.VoteUpdateManyWithoutLaunchNestedInput;
+    launchVote?: Prisma.LaunchVoteUpdateManyWithoutLaunchNestedInput;
 };
 
 export type LaunchUncheckedUpdateInput = {
@@ -363,7 +363,7 @@ export type LaunchUncheckedUpdateInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     productId?: Prisma.IntFieldUpdateOperationsInput | number;
-    vote?: Prisma.VoteUncheckedUpdateManyWithoutLaunchNestedInput;
+    launchVote?: Prisma.LaunchVoteUncheckedUpdateManyWithoutLaunchNestedInput;
 };
 
 export type LaunchCreateManyInput = {
@@ -478,29 +478,29 @@ export type IntFieldUpdateOperationsInput = {
     divide?: number;
 };
 
-export type LaunchCreateNestedOneWithoutVoteInput = {
+export type LaunchCreateNestedOneWithoutLaunchVoteInput = {
     create?: Prisma.XOR<
-        Prisma.LaunchCreateWithoutVoteInput,
-        Prisma.LaunchUncheckedCreateWithoutVoteInput
+        Prisma.LaunchCreateWithoutLaunchVoteInput,
+        Prisma.LaunchUncheckedCreateWithoutLaunchVoteInput
     >;
-    connectOrCreate?: Prisma.LaunchCreateOrConnectWithoutVoteInput;
+    connectOrCreate?: Prisma.LaunchCreateOrConnectWithoutLaunchVoteInput;
     connect?: Prisma.LaunchWhereUniqueInput;
 };
 
-export type LaunchUpdateOneRequiredWithoutVoteNestedInput = {
+export type LaunchUpdateOneRequiredWithoutLaunchVoteNestedInput = {
     create?: Prisma.XOR<
-        Prisma.LaunchCreateWithoutVoteInput,
-        Prisma.LaunchUncheckedCreateWithoutVoteInput
+        Prisma.LaunchCreateWithoutLaunchVoteInput,
+        Prisma.LaunchUncheckedCreateWithoutLaunchVoteInput
     >;
-    connectOrCreate?: Prisma.LaunchCreateOrConnectWithoutVoteInput;
-    upsert?: Prisma.LaunchUpsertWithoutVoteInput;
+    connectOrCreate?: Prisma.LaunchCreateOrConnectWithoutLaunchVoteInput;
+    upsert?: Prisma.LaunchUpsertWithoutLaunchVoteInput;
     connect?: Prisma.LaunchWhereUniqueInput;
     update?: Prisma.XOR<
         Prisma.XOR<
-            Prisma.LaunchUpdateToOneWithWhereWithoutVoteInput,
-            Prisma.LaunchUpdateWithoutVoteInput
+            Prisma.LaunchUpdateToOneWithWhereWithoutLaunchVoteInput,
+            Prisma.LaunchUpdateWithoutLaunchVoteInput
         >,
-        Prisma.LaunchUncheckedUpdateWithoutVoteInput
+        Prisma.LaunchUncheckedUpdateWithoutLaunchVoteInput
     >;
 };
 
@@ -590,7 +590,7 @@ export type LaunchUncheckedUpdateManyWithoutProductNestedInput = {
     deleteMany?: Prisma.LaunchScalarWhereInput | Prisma.LaunchScalarWhereInput[];
 };
 
-export type LaunchCreateWithoutVoteInput = {
+export type LaunchCreateWithoutLaunchVoteInput = {
     id?: string;
     tagline: string;
     description: string;
@@ -602,7 +602,7 @@ export type LaunchCreateWithoutVoteInput = {
     product: Prisma.ProductCreateNestedOneWithoutLaunchesInput;
 };
 
-export type LaunchUncheckedCreateWithoutVoteInput = {
+export type LaunchUncheckedCreateWithoutLaunchVoteInput = {
     id?: string;
     tagline: string;
     description: string;
@@ -614,35 +614,35 @@ export type LaunchUncheckedCreateWithoutVoteInput = {
     productId: number;
 };
 
-export type LaunchCreateOrConnectWithoutVoteInput = {
+export type LaunchCreateOrConnectWithoutLaunchVoteInput = {
     where: Prisma.LaunchWhereUniqueInput;
     create: Prisma.XOR<
-        Prisma.LaunchCreateWithoutVoteInput,
-        Prisma.LaunchUncheckedCreateWithoutVoteInput
+        Prisma.LaunchCreateWithoutLaunchVoteInput,
+        Prisma.LaunchUncheckedCreateWithoutLaunchVoteInput
     >;
 };
 
-export type LaunchUpsertWithoutVoteInput = {
+export type LaunchUpsertWithoutLaunchVoteInput = {
     update: Prisma.XOR<
-        Prisma.LaunchUpdateWithoutVoteInput,
-        Prisma.LaunchUncheckedUpdateWithoutVoteInput
+        Prisma.LaunchUpdateWithoutLaunchVoteInput,
+        Prisma.LaunchUncheckedUpdateWithoutLaunchVoteInput
     >;
     create: Prisma.XOR<
-        Prisma.LaunchCreateWithoutVoteInput,
-        Prisma.LaunchUncheckedCreateWithoutVoteInput
+        Prisma.LaunchCreateWithoutLaunchVoteInput,
+        Prisma.LaunchUncheckedCreateWithoutLaunchVoteInput
     >;
     where?: Prisma.LaunchWhereInput;
 };
 
-export type LaunchUpdateToOneWithWhereWithoutVoteInput = {
+export type LaunchUpdateToOneWithWhereWithoutLaunchVoteInput = {
     where?: Prisma.LaunchWhereInput;
     data: Prisma.XOR<
-        Prisma.LaunchUpdateWithoutVoteInput,
-        Prisma.LaunchUncheckedUpdateWithoutVoteInput
+        Prisma.LaunchUpdateWithoutLaunchVoteInput,
+        Prisma.LaunchUncheckedUpdateWithoutLaunchVoteInput
     >;
 };
 
-export type LaunchUpdateWithoutVoteInput = {
+export type LaunchUpdateWithoutLaunchVoteInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -654,7 +654,7 @@ export type LaunchUpdateWithoutVoteInput = {
     product?: Prisma.ProductUpdateOneRequiredWithoutLaunchesNestedInput;
 };
 
-export type LaunchUncheckedUpdateWithoutVoteInput = {
+export type LaunchUncheckedUpdateWithoutLaunchVoteInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -675,7 +675,7 @@ export type LaunchCreateWithoutProductInput = {
     launchDate?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
-    vote?: Prisma.VoteCreateNestedManyWithoutLaunchInput;
+    launchVote?: Prisma.LaunchVoteCreateNestedManyWithoutLaunchInput;
 };
 
 export type LaunchUncheckedCreateWithoutProductInput = {
@@ -687,7 +687,7 @@ export type LaunchUncheckedCreateWithoutProductInput = {
     launchDate?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
-    vote?: Prisma.VoteUncheckedCreateNestedManyWithoutLaunchInput;
+    launchVote?: Prisma.LaunchVoteUncheckedCreateNestedManyWithoutLaunchInput;
 };
 
 export type LaunchCreateOrConnectWithoutProductInput = {
@@ -766,7 +766,7 @@ export type LaunchUpdateWithoutProductInput = {
     launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    vote?: Prisma.VoteUpdateManyWithoutLaunchNestedInput;
+    launchVote?: Prisma.LaunchVoteUpdateManyWithoutLaunchNestedInput;
 };
 
 export type LaunchUncheckedUpdateWithoutProductInput = {
@@ -778,7 +778,7 @@ export type LaunchUncheckedUpdateWithoutProductInput = {
     launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    vote?: Prisma.VoteUncheckedUpdateManyWithoutLaunchNestedInput;
+    launchVote?: Prisma.LaunchVoteUncheckedUpdateManyWithoutLaunchNestedInput;
 };
 
 export type LaunchUncheckedUpdateManyWithoutProductInput = {
@@ -797,13 +797,13 @@ export type LaunchUncheckedUpdateManyWithoutProductInput = {
  */
 
 export type LaunchCountOutputType = {
-    vote: number;
+    launchVote: number;
 };
 
 export type LaunchCountOutputTypeSelect<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
-    vote?: boolean | LaunchCountOutputTypeCountVoteArgs;
+    launchVote?: boolean | LaunchCountOutputTypeCountLaunchVoteArgs;
 };
 
 /**
@@ -821,10 +821,10 @@ export type LaunchCountOutputTypeDefaultArgs<
 /**
  * LaunchCountOutputType without action
  */
-export type LaunchCountOutputTypeCountVoteArgs<
+export type LaunchCountOutputTypeCountLaunchVoteArgs<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
-    where?: Prisma.VoteWhereInput;
+    where?: Prisma.LaunchVoteWhereInput;
 };
 
 export type LaunchSelect<
@@ -841,7 +841,7 @@ export type LaunchSelect<
         updatedAt?: boolean;
         productId?: boolean;
         product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>;
-        vote?: boolean | Prisma.Launch$voteArgs<ExtArgs>;
+        launchVote?: boolean | Prisma.Launch$launchVoteArgs<ExtArgs>;
         _count?: boolean | Prisma.LaunchCountOutputTypeDefaultArgs<ExtArgs>;
     },
     ExtArgs['result']['launch']
@@ -913,7 +913,7 @@ export type LaunchInclude<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>;
-    vote?: boolean | Prisma.Launch$voteArgs<ExtArgs>;
+    launchVote?: boolean | Prisma.Launch$launchVoteArgs<ExtArgs>;
     _count?: boolean | Prisma.LaunchCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type LaunchIncludeCreateManyAndReturn<
@@ -933,7 +933,7 @@ export type $LaunchPayload<
     name: 'Launch';
     objects: {
         product: Prisma.$ProductPayload<ExtArgs>;
-        vote: Prisma.$VotePayload<ExtArgs>[];
+        launchVote: Prisma.$LaunchVotePayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
@@ -1495,11 +1495,11 @@ export interface Prisma__LaunchClient<
         ExtArgs,
         GlobalOmitOptions
     >;
-    vote<T extends Prisma.Launch$voteArgs<ExtArgs> = {}>(
-        args?: Prisma.Subset<T, Prisma.Launch$voteArgs<ExtArgs>>
+    launchVote<T extends Prisma.Launch$launchVoteArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.Launch$launchVoteArgs<ExtArgs>>
     ): Prisma.PrismaPromise<
         | runtime.Types.Result.GetResult<
-              Prisma.$VotePayload<ExtArgs>,
+              Prisma.$LaunchVotePayload<ExtArgs>,
               T,
               'findMany',
               GlobalOmitOptions
@@ -1974,29 +1974,31 @@ export type LaunchDeleteManyArgs<
 };
 
 /**
- * Launch.vote
+ * Launch.launchVote
  */
-export type Launch$voteArgs<
+export type Launch$launchVoteArgs<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     /**
-     * Select specific fields to fetch from the Vote
+     * Select specific fields to fetch from the LaunchVote
      */
-    select?: Prisma.VoteSelect<ExtArgs> | null;
+    select?: Prisma.LaunchVoteSelect<ExtArgs> | null;
     /**
-     * Omit specific fields from the Vote
+     * Omit specific fields from the LaunchVote
      */
-    omit?: Prisma.VoteOmit<ExtArgs> | null;
+    omit?: Prisma.LaunchVoteOmit<ExtArgs> | null;
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Prisma.VoteInclude<ExtArgs> | null;
-    where?: Prisma.VoteWhereInput;
-    orderBy?: Prisma.VoteOrderByWithRelationInput | Prisma.VoteOrderByWithRelationInput[];
-    cursor?: Prisma.VoteWhereUniqueInput;
+    include?: Prisma.LaunchVoteInclude<ExtArgs> | null;
+    where?: Prisma.LaunchVoteWhereInput;
+    orderBy?:
+        | Prisma.LaunchVoteOrderByWithRelationInput
+        | Prisma.LaunchVoteOrderByWithRelationInput[];
+    cursor?: Prisma.LaunchVoteWhereUniqueInput;
     take?: number;
     skip?: number;
-    distinct?: Prisma.VoteScalarFieldEnum | Prisma.VoteScalarFieldEnum[];
+    distinct?: Prisma.LaunchVoteScalarFieldEnum | Prisma.LaunchVoteScalarFieldEnum[];
 };
 
 /**

@@ -8,9 +8,10 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Launch.ts';
-export type * from './models/Vote.ts';
+export type * from './models/LaunchVote.ts';
 export type * from './models/Product.ts';
 export type * from './models/Category.ts';
 export type * from './models/ProductCategory.ts';
+export type * from './models/Vote.ts';
 export type * from './models/User.ts';
 export type * from './commonInputTypes.ts';

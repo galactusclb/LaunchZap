@@ -22,10 +22,10 @@ export * from './enums.ts';
  */
 export type Launch = Prisma.LaunchModel;
 /**
- * Model Vote
+ * Model LaunchVote
  *
  */
-export type Vote = Prisma.VoteModel;
+export type LaunchVote = Prisma.LaunchVoteModel;
 /**
  * Model Product
  *
@@ -41,6 +41,11 @@ export type Category = Prisma.CategoryModel;
  *
  */
 export type ProductCategory = Prisma.ProductCategoryModel;
+/**
+ * Model Vote
+ *
+ */
+export type Vote = Prisma.VoteModel;
 /**
  * Model User
  *

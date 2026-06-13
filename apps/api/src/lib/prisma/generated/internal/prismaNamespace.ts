@@ -376,10 +376,11 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
     Launch: 'Launch',
-    Vote: 'Vote',
+    LaunchVote: 'LaunchVote',
     Product: 'Product',
     Category: 'Category',
     ProductCategory: 'ProductCategory',
+    Vote: 'Vote',
     User: 'User',
 } as const;
 
@@ -400,7 +401,14 @@ export type TypeMap<
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: 'launch' | 'vote' | 'product' | 'category' | 'productCategory' | 'user';
+        modelProps:
+            | 'launch'
+            | 'launchVote'
+            | 'product'
+            | 'category'
+            | 'productCategory'
+            | 'vote'
+            | 'user';
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -480,78 +488,78 @@ export type TypeMap<
                 };
             };
         };
-        Vote: {
-            payload: Prisma.$VotePayload<ExtArgs>;
-            fields: Prisma.VoteFieldRefs;
+        LaunchVote: {
+            payload: Prisma.$LaunchVotePayload<ExtArgs>;
+            fields: Prisma.LaunchVoteFieldRefs;
             operations: {
                 findUnique: {
-                    args: Prisma.VoteFindUniqueArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload> | null;
+                    args: Prisma.LaunchVoteFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$LaunchVotePayload> | null;
                 };
                 findUniqueOrThrow: {
-                    args: Prisma.VoteFindUniqueOrThrowArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>;
+                    args: Prisma.LaunchVoteFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$LaunchVotePayload>;
                 };
                 findFirst: {
-                    args: Prisma.VoteFindFirstArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload> | null;
+                    args: Prisma.LaunchVoteFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$LaunchVotePayload> | null;
                 };
                 findFirstOrThrow: {
-                    args: Prisma.VoteFindFirstOrThrowArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>;
+                    args: Prisma.LaunchVoteFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$LaunchVotePayload>;
                 };
                 findMany: {
-                    args: Prisma.VoteFindManyArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>[];
+                    args: Prisma.LaunchVoteFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$LaunchVotePayload>[];
                 };
                 create: {
-                    args: Prisma.VoteCreateArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>;
+                    args: Prisma.LaunchVoteCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$LaunchVotePayload>;
                 };
                 createMany: {
-                    args: Prisma.VoteCreateManyArgs<ExtArgs>;
+                    args: Prisma.LaunchVoteCreateManyArgs<ExtArgs>;
                     result: BatchPayload;
                 };
                 createManyAndReturn: {
-                    args: Prisma.VoteCreateManyAndReturnArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>[];
+                    args: Prisma.LaunchVoteCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$LaunchVotePayload>[];
                 };
                 delete: {
-                    args: Prisma.VoteDeleteArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>;
+                    args: Prisma.LaunchVoteDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$LaunchVotePayload>;
                 };
                 update: {
-                    args: Prisma.VoteUpdateArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>;
+                    args: Prisma.LaunchVoteUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$LaunchVotePayload>;
                 };
                 deleteMany: {
-                    args: Prisma.VoteDeleteManyArgs<ExtArgs>;
+                    args: Prisma.LaunchVoteDeleteManyArgs<ExtArgs>;
                     result: BatchPayload;
                 };
                 updateMany: {
-                    args: Prisma.VoteUpdateManyArgs<ExtArgs>;
+                    args: Prisma.LaunchVoteUpdateManyArgs<ExtArgs>;
                     result: BatchPayload;
                 };
                 updateManyAndReturn: {
-                    args: Prisma.VoteUpdateManyAndReturnArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>[];
+                    args: Prisma.LaunchVoteUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$LaunchVotePayload>[];
                 };
                 upsert: {
-                    args: Prisma.VoteUpsertArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>;
+                    args: Prisma.LaunchVoteUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$LaunchVotePayload>;
                 };
                 aggregate: {
-                    args: Prisma.VoteAggregateArgs<ExtArgs>;
-                    result: runtime.Types.Utils.Optional<Prisma.AggregateVote>;
+                    args: Prisma.LaunchVoteAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateLaunchVote>;
                 };
                 groupBy: {
-                    args: Prisma.VoteGroupByArgs<ExtArgs>;
-                    result: runtime.Types.Utils.Optional<Prisma.VoteGroupByOutputType>[];
+                    args: Prisma.LaunchVoteGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.LaunchVoteGroupByOutputType>[];
                 };
                 count: {
-                    args: Prisma.VoteCountArgs<ExtArgs>;
+                    args: Prisma.LaunchVoteCountArgs<ExtArgs>;
                     result:
-                        | runtime.Types.Utils.Optional<Prisma.VoteCountAggregateOutputType>
+                        | runtime.Types.Utils.Optional<Prisma.LaunchVoteCountAggregateOutputType>
                         | number;
                 };
             };
@@ -784,6 +792,82 @@ export type TypeMap<
                 };
             };
         };
+        Vote: {
+            payload: Prisma.$VotePayload<ExtArgs>;
+            fields: Prisma.VoteFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.VoteFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.VoteFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>;
+                };
+                findFirst: {
+                    args: Prisma.VoteFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.VoteFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>;
+                };
+                findMany: {
+                    args: Prisma.VoteFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>[];
+                };
+                create: {
+                    args: Prisma.VoteCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>;
+                };
+                createMany: {
+                    args: Prisma.VoteCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.VoteCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>[];
+                };
+                delete: {
+                    args: Prisma.VoteDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>;
+                };
+                update: {
+                    args: Prisma.VoteUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>;
+                };
+                deleteMany: {
+                    args: Prisma.VoteDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.VoteUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.VoteUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>[];
+                };
+                upsert: {
+                    args: Prisma.VoteUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VotePayload>;
+                };
+                aggregate: {
+                    args: Prisma.VoteAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateVote>;
+                };
+                groupBy: {
+                    args: Prisma.VoteGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.VoteGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.VoteCountArgs<ExtArgs>;
+                    result:
+                        | runtime.Types.Utils.Optional<Prisma.VoteCountAggregateOutputType>
+                        | number;
+                };
+            };
+        };
         User: {
             payload: Prisma.$UserPayload<ExtArgs>;
             fields: Prisma.UserFieldRefs;
@@ -914,14 +998,15 @@ export const LaunchScalarFieldEnum = {
 export type LaunchScalarFieldEnum =
     (typeof LaunchScalarFieldEnum)[keyof typeof LaunchScalarFieldEnum];
 
-export const VoteScalarFieldEnum = {
+export const LaunchVoteScalarFieldEnum = {
     id: 'id',
     userId: 'userId',
     launchId: 'launchId',
     createdAt: 'createdAt',
 } as const;
 
-export type VoteScalarFieldEnum = (typeof VoteScalarFieldEnum)[keyof typeof VoteScalarFieldEnum];
+export type LaunchVoteScalarFieldEnum =
+    (typeof LaunchVoteScalarFieldEnum)[keyof typeof LaunchVoteScalarFieldEnum];
 
 export const ProductScalarFieldEnum = {
     id: 'id',
@@ -955,6 +1040,15 @@ export const ProductCategoryScalarFieldEnum = {
 
 export type ProductCategoryScalarFieldEnum =
     (typeof ProductCategoryScalarFieldEnum)[keyof typeof ProductCategoryScalarFieldEnum];
+
+export const VoteScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    productId: 'productId',
+    createdAt: 'createdAt',
+} as const;
+
+export type VoteScalarFieldEnum = (typeof VoteScalarFieldEnum)[keyof typeof VoteScalarFieldEnum];
 
 export const UserScalarFieldEnum = {
     id: 'id',
@@ -1056,16 +1150,6 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>;
-
-/**
- * Reference to a field of type 'Roles'
- */
-export type EnumRolesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Roles'>;
-
-/**
- * Reference to a field of type 'Roles[]'
- */
-export type ListEnumRolesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Roles[]'>;
 
 /**
  * Reference to a field of type 'Float'
@@ -1196,10 +1280,11 @@ export type PrismaClientOptions = (
 };
 export type GlobalOmitConfig = {
     launch?: Prisma.LaunchOmit;
-    vote?: Prisma.VoteOmit;
+    launchVote?: Prisma.LaunchVoteOmit;
     product?: Prisma.ProductOmit;
     category?: Prisma.CategoryOmit;
     productCategory?: Prisma.ProductCategoryOmit;
+    vote?: Prisma.VoteOmit;
     user?: Prisma.UserOmit;
 };
 

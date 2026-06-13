@@ -1,15 +1,11 @@
 import jwt from 'jsonwebtoken';
 
 import { constants } from '@/utils/constant';
-import { Role } from '@/utils/constant/role';
+import { User } from '@/schemas/user.schema';
 
 const { ACCESS_SECRET } = constants.auth;
 
-export type AccessPayload = {
-    id: string;
-    email: string;
-    role: Role;
-};
+export type AccessPayload = Pick<User, 'id' | 'email' | 'role'>;
 
 export function signAccessToken(
     payload: AccessPayload,
