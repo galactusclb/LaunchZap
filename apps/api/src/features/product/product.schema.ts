@@ -10,8 +10,6 @@ export const productFilterSchema = paginationSchema.merge(sortSchema).extend({
     q: z.enum(['new', 'daily', 'weekly', 'hot']).optional(),
     search: z.string().optional(),
     status: z.enum(productStatus).optional(),
-    launchDataFrom: z.coerce.date().optional(),
-    launchDateTo: z.coerce.date().optional(),
 });
 
 export const createProductSchema = { body: baseProductSchema };

@@ -49,7 +49,11 @@ export async function upsertGoogleUser(
 }
 
 export async function issueAppTokensForUser(user: Pick<User, 'email' | 'role' | 'id'>) {
-    const accessToken = signAccessToken({ id: user.id, email: user.email, role: user.role });
+    const accessToken = signAccessToken({
+        id: user.id,
+        email: user.email,
+        role: user.role as unknown as User['role'],
+    });
 
     const { token: refreshToken, tokenHash, sessionId } = issueRefreshToken();
     await saveRefreshSession(redisClient, tokenHash, { userId: user.id, sessionId });
@@ -71,7 +75,11 @@ export async function rotateRefreshToken(refreshToken: string) {
 
     await userModel.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
 
-    const accessToken = signAccessToken({ id: user.id, email: user.email, role: user.role });
+    const accessToken = signAccessToken({
+        id: user.id,
+        email: user.email,
+        role: user.role as unknown as User['role'],
+    });
 
     return { accessToken, refreshToken: newRefreshToken };
 }
@@ -138,12 +146,12 @@ export async function handleGoogleCallback(
         throw new Error('Google profile missing email/sub');
     }
 
-    const user = await upsertGoogleUser({
+    const user = (await upsertGoogleUser({
         email,
         googleSub: sub,
         name: claims?.name as string,
         pictureUrl: (claims?.picture as string) ?? undefined,
-    });
+    })) as unknown as User;
 
     const tokens = await issueAppTokensForUser(user);
     const redirectTo = new URL(stored.returnTo, cfg.webAppUrl).toString();

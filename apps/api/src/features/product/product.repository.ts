@@ -16,12 +16,6 @@ export const findAll = async (query: ProductFilterQuery) => {
             ],
         }),
         ...(query.status && { status: query.status }),
-        ...((query.launchDataFrom || query.launchDateTo) && {
-            launchDate: {
-                ...(query.launchDataFrom && { gte: query.launchDataFrom }),
-                ...(query.launchDateTo && { lte: query.launchDateTo }),
-            },
-        }),
     };
 
     // const orderBy: Prisma.ProductOrderByWithRelationInput = query.sortBy
@@ -68,7 +62,6 @@ export const createProduct = async (makerId: User['id'], input: CreateProduct) =
             description: input.description ?? '',
             tagline: input.tagline,
             websiteUrl: input.websiteUrl,
-            launchDate: input.launchDate,
             logoUrl: input.logoUrl,
             makerId,
         },
