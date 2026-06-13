@@ -14,12 +14,12 @@ model Launch {
     productId Int
     product Product @relation(fields: [productId], references: [id])
 
-    vote Vote[]
+    launchVote LaunchVote[]
 
     @@map("launches")
 }
 
-model Vote {
+model LaunchVote {
   id String @id @default(cuid())
 
   userId    String
@@ -31,5 +31,5 @@ model Vote {
   launch  Launch @relation(fields: [launchId], references: [id])
 
   @@unique([userId, launchId])
-  @@map("votes")
+  @@map("launch_votes")
 }

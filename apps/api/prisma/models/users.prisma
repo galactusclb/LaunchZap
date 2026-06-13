@@ -5,7 +5,7 @@ model User {
   emailVerified Boolean @default(false)
   googleSub String? @unique
   pictureUrl  String?
-  role          Roles @default(USER)
+  role          String @default("USER")
 
   lastLoginAt DateTime?
   createdAt     DateTime @default(now())
@@ -13,12 +13,8 @@ model User {
 
   products Product[]
   votes    Vote[]
+  launchVote   LaunchVote[]
 
   @@unique([email])
   @@map("users")
-}
-
-enum Roles {
-  ADMIN
-  USER
 }
