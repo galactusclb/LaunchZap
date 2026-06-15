@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { isAuth } from '@/middleware/auth.middleware.ts';
 import { validate } from '@/middleware/validate.middleware.ts';
 
+import { routes as launchRouter } from './launch/index.ts';
 import { createProduct, getAllProducts, getProductById, toggleVote } from './product.controller.ts';
 import {
     createProductSchema,
@@ -18,5 +19,7 @@ router.get('/:id', validate(getProductByIdSchema), getProductById);
 router.post('/', isAuth, validate(createProductSchema), createProduct);
 // router.put('/:id', validate(createProductSchema), updateProduct);
 router.patch('/:id/vote', isAuth, validate(voteProductSchema), toggleVote);
+
+router.use('/:productId/launches', launchRouter);
 
 export default router;
