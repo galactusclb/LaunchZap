@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
-import * as ctrl from './user.controller';
-
 import { isAuth } from '@/middleware/auth.middleware';
+
+import * as ctrl from './user.controller';
 
 const router = Router();
 

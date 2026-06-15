@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
-import { constants } from '@/utils/constant';
 import { User } from '@/schemas/user.schema';
+import { constants } from '@/utils/constant';
 
 const { ACCESS_SECRET } = constants.auth;
 

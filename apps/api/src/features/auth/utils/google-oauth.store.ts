@@ -1,6 +1,6 @@
-import type { Redis as RedisClient } from 'ioredis';
-
 import { kvDel, kvGet, kvSetEx } from '@/lib/auth/kv-store.ts';
+
+import type { Redis as RedisClient } from 'ioredis';
 
 type OAuthStateData = {
     codeVerifier: string;

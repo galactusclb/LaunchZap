@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 
+import { requireAuth } from '@/middleware/auth.middleware.ts';
+
 import {
     handleGoogleOAuthStart,
     handleGoogleCallback,
@@ -9,8 +11,6 @@ import {
 } from './auth.service.ts';
 import { clearAuthCookies, setAuthCookies } from './utils/auth.cookies.ts';
 import { getGoogleOAuthConfig } from './utils/google-oauth.config.ts';
-
-import { requireAuth } from '@/middleware/auth.middleware.ts';
 
 function safeReturnTo(input: unknown): string {
     if (typeof input !== 'string') return '/';

@@ -1,7 +1,7 @@
+import prisma from '@/lib/prisma/prisma';
+
 import { getMeSelect } from './auth.dto';
 import { User } from './auth.schema';
-
-import prisma from '@/lib/prisma/prisma';
 
 export async function findUserByGoogleSub(sub?: string | null) {
     if (!sub) return;

@@ -3,12 +3,12 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
 
-import { configureXray, xrayClose, xrayOpen } from './lib/aws/xray';
-
 import { routes as authRoutes } from '@/features/auth';
 import { routes as productRoutes } from '@/features/product';
 import { routes as userRoutes } from '@/features/user';
 import { errorHandler } from '@/middleware/error.middleware.ts';
+
+import { configureXray, xrayClose, xrayOpen } from './lib/aws/xray';
 
 const app = express();
 const apiRouter = express.Router();

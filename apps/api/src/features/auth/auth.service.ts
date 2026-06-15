@@ -5,6 +5,18 @@ import {
     authorizationCodeGrant,
 } from 'openid-client';
 
+import { signAccessToken } from '@/lib/auth/access-jwt.ts';
+import {
+    getRefreshSession,
+    issueRefreshToken,
+    revokeRefreshSession,
+    rotateRefreshSession,
+    saveRefreshSession,
+} from '@/lib/auth/refresh-store.ts';
+import { sha256Hex, randomToken } from '@/lib/auth/token-utils.ts';
+import prisma from '@/lib/prisma/prisma.ts';
+import { redisClient } from '@/lib/redis/redis-client.ts';
+
 import { toMeDTO } from './auth.dto.ts';
 import {
     createUser,
@@ -17,18 +29,6 @@ import {
 import { User } from './auth.schema.ts';
 import { getGoogleOAuthConfig, getGoogleOIDCConfig } from './utils/google-oauth.config.ts';
 import { saveGoogleOAuthState, consumeGoogleOAuthState } from './utils/google-oauth.store.ts';
-
-import { signAccessToken } from '@/lib/auth/access-jwt.ts';
-import {
-    getRefreshSession,
-    issueRefreshToken,
-    revokeRefreshSession,
-    rotateRefreshSession,
-    saveRefreshSession,
-} from '@/lib/auth/refresh-store.ts';
-import { sha256Hex, randomToken } from '@/lib/auth/token-utils.ts';
-import prisma from '@/lib/prisma/prisma.ts';
-import { redisClient } from '@/lib/redis/redis-client.ts';
 
 export async function upsertGoogleUser(
     profile: Pick<User, 'email' | 'googleSub' | 'name' | 'pictureUrl'>
