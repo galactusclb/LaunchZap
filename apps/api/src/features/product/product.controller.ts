@@ -1,18 +1,18 @@
 import { Request, Response } from 'express';
 
-import { requireAuth } from '@/middleware/auth.middleware.ts';
-import { User } from '@/schemas/user.schema';
-import { toCacheControlHeader } from '@/utils/constant/cache.ts';
-import { constants } from '@/utils/constant/index.ts';
-
 import { toProductDTO } from './product.dto.ts';
 import {
-    CreateProduct,
+    CreateProductInput,
     GetProductById,
     ProductFilterQuery,
     VoteProduct,
 } from './product.schema.ts';
 import * as service from './product.service.ts';
+
+import { requireAuth } from '@/middleware/auth.middleware.ts';
+import { User } from '@/schemas/user.schema';
+import { toCacheControlHeader } from '@/utils/constant/cache.ts';
+import { constants } from '@/utils/constant/index.ts';
 
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
     const result = await service.doGetAllProducts(req.validatedQuery as ProductFilterQuery);
@@ -33,7 +33,7 @@ export const getProductById = async (req: Request, res: Response): Promise<void>
 export const createProduct = async (req: Request, res: Response): Promise<void> => {
     const user = requireAuth(req);
 
-    const product = await service.doCreateProduct(user.id, req.validatedBody as CreateProduct);
+    const product = await service.doCreateProduct(user.id, req.validatedBody as CreateProductInput);
 
     res.status(201).json({ success: true, data: product });
 };
