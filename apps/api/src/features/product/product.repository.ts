@@ -1,5 +1,5 @@
 import { getProductInclude } from './product.dto';
-import { CreateProduct, ProductFilterQuery } from './product.schema';
+import { CreateProductInput, ProductFilterQuery } from './product.schema';
 import { categoryFilter, getDateRange } from './product.utils';
 
 import { Prisma, Product, User, Vote } from '@/lib/prisma/generated/client';
@@ -55,7 +55,7 @@ export const findByName = async (name: string) => {
     });
 };
 
-export const createProduct = async (makerId: User['id'], input: CreateProduct) => {
+export const createProduct = async (makerId: User['id'], input: CreateProductInput) => {
     return await prisma.product.create({
         data: {
             name: input.name,

@@ -12,6 +12,17 @@ export const getProductInclude = (since?: Date) =>
                     },
                 },
             },
+            launches: {
+                take: 5,
+                orderBy: { launchDate: 'desc' },
+                include: {
+                    _count: {
+                        select: {
+                            launchVote: true,
+                        },
+                    },
+                },
+            },
         },
     }) satisfies Prisma.ProductFindManyArgs;
 

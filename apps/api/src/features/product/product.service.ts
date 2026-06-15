@@ -1,8 +1,5 @@
 import { createHash } from 'crypto';
 
-import * as repo from './product.repository.ts';
-import { CreateProduct, Product, ProductFilterQuery } from './product.schema.ts';
-
 import { logger } from '@/lib/logger';
 import prisma from '@/lib/prisma/prisma.ts';
 import { redisClient, redisUtils } from '@/lib/redis/redis-client.ts';
@@ -10,6 +7,9 @@ import { User } from '@/schemas/user.schema';
 import { constants } from '@/utils/constant/index.ts';
 import { ConflictError, NotFoundError } from '@/utils/errors/http-error.ts';
 import { paginatedResponse } from '@/utils/paginate-helpers.ts';
+
+import * as repo from './product.repository.ts';
+import { CreateProductInput, Product, ProductFilterQuery } from './product.schema.ts';
 
 const CACHE_KEY_PREFIX = 'lz:api:product';
 const CACHE_KEY_LIST = `${CACHE_KEY_PREFIX}:list`;
@@ -70,7 +70,7 @@ export const doGetAllProducts = async (query: ProductFilterQuery) => {
     );
 };
 
-export const doCreateProduct = async (makerId: string, input: CreateProduct) => {
+export const doCreateProduct = async (makerId: string, input: CreateProductInput) => {
     const isExist = await repo.findByName(input.name);
 
     if (isExist) throw new ConflictError('Product is already exist!');
