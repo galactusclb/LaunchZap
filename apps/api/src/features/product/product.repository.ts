@@ -59,7 +59,7 @@ export const createProduct = async (makerId: User['id'], input: CreateProductInp
     return await prisma.product.create({
         data: {
             name: input.name,
-            description: input.description ?? '',
+            description: input.description,
             tagline: input.tagline,
             websiteUrl: input.websiteUrl,
             logoUrl: input.logoUrl,

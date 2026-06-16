@@ -9,7 +9,7 @@ const productStatusList = constants.productStatus;
 export const baseProductSchema = z.object({
     name: trimmedString.min(1).max(100),
     tagline: trimmedString.min(1).max(250),
-    description: trimmedString.max(1000).optional(),
+    description: trimmedString.max(1000),
     websiteUrl: z.string().url(),
     logoUrl: z.string().url().optional(),
 });
