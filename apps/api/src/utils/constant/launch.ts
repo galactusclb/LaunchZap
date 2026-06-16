@@ -1,7 +1,7 @@
-export const launchStatus = [
-    "PENDING",
-    "APPROVED",
-    "REJECTED"
-] as const;
+export const launchStatus = {
+    DRAFT: 'DRAFT',
+    PUBLISHED: 'PUBLISHED',
+    HIDE: 'HIDE',
+} as const;
 
-export type LaunchStatus = typeof launchStatus;
+export type LaunchStatus = (typeof launchStatus)[keyof typeof launchStatus];

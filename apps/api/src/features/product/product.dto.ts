@@ -1,4 +1,5 @@
 import { Prisma } from '@/lib/prisma/generated/client';
+import { constants } from '@/utils/constant';
 import { omit } from '@/utils/object';
 
 export const getProductInclude = (since?: Date) =>
@@ -14,6 +15,9 @@ export const getProductInclude = (since?: Date) =>
             },
             launches: {
                 take: 5,
+                where: {
+                    status: constants.launchStatus.PUBLISHED,
+                },
                 orderBy: { launchDate: 'desc' },
                 select: {
                     id: true,
