@@ -15,7 +15,11 @@ export const getProductInclude = (since?: Date) =>
             launches: {
                 take: 5,
                 orderBy: { launchDate: 'desc' },
-                include: {
+                select: {
+                    id: true,
+                    tagline: true,
+                    launchDate: true,
+                    status: true,
                     _count: {
                         select: {
                             launchVote: true,
@@ -31,6 +35,10 @@ export type ProductWithRelations = Prisma.ProductGetPayload<ReturnType<typeof ge
 export const toProductDTO = (p: ProductWithRelations) => ({
     ...omit(p, ['makerId', '_count', 'updatedAt']),
     votesCount: p._count.votes,
+    launches: p.launches.map(({ _count, ...l }) => ({
+        ...l,
+        votesCount: _count.launchVote,
+    })),
 });
 
 export type ProductDTO = ReturnType<typeof toProductDTO>;
