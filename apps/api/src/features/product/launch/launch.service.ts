@@ -110,6 +110,8 @@ export const doUpdateLaunch = async (
     launchId: string,
     input: UpdateLaunchInput
 ) => {
+    const cacheKey = `${CACHE_KEY_ITEM}:${launchId}`;
+
     const product = await repo.findProduct(productId);
     if (!product) {
         throw new NotFoundError('Product not found');
@@ -133,6 +135,10 @@ export const doUpdateLaunch = async (
     void redisClient
         ?.incr(CACHE_KEY_VERSION)
         .catch((err) => logger.error('[product-launch] failed to bump version', { err }));
+
+    void redisClient
+        ?.del(cacheKey)
+        .catch((err) => logger.error('[product-launch] failed to invalidate item cache', { err }));
 
     return launch;
 };
