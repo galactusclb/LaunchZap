@@ -75,8 +75,8 @@ services:
       DATABASE_URL_READ: postgresql://postgres:postgres@db-replica:5432/test-db
       REDIS_CLIENT_URL: redis://redis-client:6379
       ACCESS_SECRET: random3233cscsdc
-      GOOGLE_CLIENT_ID: REDACTED_GOOGLE_CLIENT_ID
-      GOOGLE_CLIENT_SECRET: REDACTED_GOOGLE_CLIENT_SECRET
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       GOOGLE_REDIRECT_URI: http://localhost:4000/api/auth/google/callback
       WEB_APP_URL: http://localhost:3000
       LOG_LEVEL: trace
