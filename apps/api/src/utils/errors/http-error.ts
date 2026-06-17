@@ -1,3 +1,5 @@
+import { StatusCodes } from 'http-status-codes';
+
 class HttpError extends Error {
     statusCode: number;
     details?: unknown;
@@ -13,44 +15,50 @@ class HttpError extends Error {
 
 class BadRequestError extends HttpError {
     constructor(message = 'Bad request', details?: unknown) {
-        super(400, message, details);
+        super(StatusCodes.BAD_REQUEST, message, details);
     }
 }
 
 class UnauthorizedError extends HttpError {
     constructor(message = 'Unauthorized', details?: unknown) {
-        super(401, message, details);
+        super(StatusCodes.UNAUTHORIZED, message, details);
     }
 }
 
 class ForbiddenError extends HttpError {
     constructor(message = 'Forbidden', details?: unknown) {
-        super(403, message, details);
+        super(StatusCodes.FORBIDDEN, message, details);
     }
 }
 
 class NotFoundError extends HttpError {
     constructor(message = 'Resource not found', details?: unknown) {
-        super(404, message, details);
+        super(StatusCodes.NOT_FOUND, message, details);
     }
 }
 
 class ConflictError extends HttpError {
     constructor(message = 'Conflict', details?: unknown) {
-        super(409, message, details);
+        super(StatusCodes.CONFLICT, message, details);
+    }
+}
+
+class TooManyRequestsError extends HttpError {
+    constructor(message = 'Too many requests', details?: unknown) {
+        super(StatusCodes.TOO_MANY_REQUESTS, message, details);
     }
 }
 
 class InternalServerError extends HttpError {
     constructor(message = 'Internal server error', details?: unknown) {
-        super(500, message);
+        super(StatusCodes.INTERNAL_SERVER_ERROR, message);
         this.details = details;
     }
 }
 
 class ServiceUnavailableError extends HttpError {
     constructor(message = 'Service unavailable', details?: number) {
-        super(503, message);
+        super(StatusCodes.SERVICE_UNAVAILABLE, message);
         this.details = details;
     }
 }
@@ -62,6 +70,7 @@ export {
     ForbiddenError,
     NotFoundError,
     ConflictError,
+    TooManyRequestsError,
     InternalServerError,
     ServiceUnavailableError,
 };

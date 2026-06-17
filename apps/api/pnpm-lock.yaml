@@ -50,6 +50,9 @@ importers:
       helmet:
         specifier: ^8.2.0
         version: 8.2.0
+      http-status-codes:
+        specifier: ^2.3.0
+        version: 2.3.0
       ioredis:
         specifier: ^5.10.1
         version: 5.11.1
