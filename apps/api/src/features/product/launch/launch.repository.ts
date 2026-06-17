@@ -1,22 +1,25 @@
 import { Prisma, Product, User, LaunchVote, Launch } from '@/lib/prisma/generated/client';
 import prisma, { PrismaTransactionClient } from '@/lib/prisma/prisma.ts';
+import { constants } from '@/utils/constant';
 import { paginate } from '@/utils/paginate-helpers';
 
 import { getLaunchInclude } from './launch.dto';
 import { LaunchFilterQuery, UpdateLaunchInput } from './launch.schema';
+
+const defaultStatus = constants.launchStatus.PUBLISHED;
 
 export const findAll = async (query: LaunchFilterQuery) => {
     const where: Prisma.LaunchWhereInput = {
         ...(query.search && {
             OR: [{ tagline: { contains: query.search, mode: 'insensitive' } }],
         }),
-        ...(query.status && { status: query.status }),
         ...((query.launchDateFrom || query.launchDateTo) && {
             launchDate: {
                 ...(query.launchDateFrom && { gte: query.launchDateFrom }),
                 ...(query.launchDateTo && { lte: query.launchDateTo }),
             },
         }),
+        status: query.status ?? defaultStatus,
     };
 
     const [data, total] = await Promise.all([

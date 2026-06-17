@@ -2,13 +2,15 @@ import z from 'zod';
 
 import { baseLaunchSchema, launchResponseSchema } from '@/schemas/launch.schema';
 import { paginationSchema, sortSchema } from '@/schemas/pagination.schema';
-import { productStatus } from '@/utils/constant/product';
+import { constants } from '@/utils/constant';
 
 export type { Launch } from '@/schemas/launch.schema';
 
+const publicFilterbleStatus = constants.launchStatus.PUBLISHED;
+
 export const launchFilterSchema = paginationSchema.merge(sortSchema).extend({
     search: z.string().optional(),
-    status: z.enum(productStatus).optional(),
+    status: z.literal(publicFilterbleStatus).optional(),
     launchDateFrom: z.coerce.date().optional(),
     launchDateTo: z.coerce.date().optional(),
     sortBy: z.enum(['createdAt', 'votes']).optional(),

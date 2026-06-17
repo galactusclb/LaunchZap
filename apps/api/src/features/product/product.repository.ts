@@ -1,10 +1,13 @@
 import { Prisma, Product, User, Vote } from '@/lib/prisma/generated/client';
 import prisma, { PrismaTransactionClient } from '@/lib/prisma/prisma.ts';
+import { constants } from '@/utils/constant';
 import { paginate } from '@/utils/paginate-helpers';
 
 import { getProductInclude } from './product.dto';
 import { CreateProductInput, ProductFilterQuery } from './product.schema';
 import { categoryFilter, getDateRange } from './product.utils';
+
+const defaultStatus = constants.productStatus.APPROVED;
 
 export const findAll = async (query: ProductFilterQuery) => {
     const where: Prisma.ProductWhereInput = {
@@ -15,7 +18,7 @@ export const findAll = async (query: ProductFilterQuery) => {
                 { tagline: { contains: query.search, mode: 'insensitive' } },
             ],
         }),
-        ...(query.status && { status: query.status }),
+        status: query.status ?? defaultStatus,
     };
 
     // const orderBy: Prisma.ProductOrderByWithRelationInput = query.sortBy

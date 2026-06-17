@@ -18,7 +18,7 @@ export const productResponseSchema = baseProductSchema.extend({
     id: z.number(),
     createdAt: z.date(),
     updatedAt: z.date(),
-    status: z.enum(productStatusList),
+    status: z.nativeEnum(productStatusList),
     maker: userSchema.pick({ id: true, name: true }),
 });
 

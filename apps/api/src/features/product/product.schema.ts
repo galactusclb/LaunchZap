@@ -2,14 +2,16 @@ import z from 'zod';
 
 import { paginationSchema, sortSchema } from '@/schemas/pagination.schema';
 import { baseProductSchema } from '@/schemas/product.schema';
-import { productStatus } from '@/utils/constant/product';
+import { constants } from '@/utils/constant';
 
 export type { Product } from '@/schemas/product.schema';
+
+const publicFilterbleStatus = [constants.productStatus.APPROVED] as const;
 
 export const productFilterSchema = paginationSchema.merge(sortSchema).extend({
     q: z.enum(['new', 'daily', 'weekly', 'hot']).optional(),
     search: z.string().optional(),
-    status: z.enum(productStatus).optional(),
+    status: z.enum(publicFilterbleStatus).optional(),
 });
 
 export const createProductSchema = { body: baseProductSchema };
