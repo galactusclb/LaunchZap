@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { trimmedString } from '@/lib/zod/extras';
+import { httpUrl, trimmedString } from '@/lib/zod/extras';
 import { constants } from '@/utils/constant';
 
 import { productResponseSchema } from './product.schema';
@@ -12,7 +12,7 @@ export const baseLaunchSchema = z.object({
     tagline: trimmedString.min(1).max(250),
     description: trimmedString.max(1000),
     launchDate: z.coerce.date(),
-    gallery: z.array(z.string()),
+    gallery: z.array(httpUrl).max(5),
     status: z.nativeEnum(launchStatusList),
 });
 

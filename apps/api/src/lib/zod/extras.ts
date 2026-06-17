@@ -21,4 +21,18 @@ const sanitize = (values: string, opt = DEFAULT_SANITIZE_OPTS) => sanitizeHtml(v
 
 const sanitizeText = trimmedString.min(1).transform((val) => sanitize(val));
 
-export { trimmedString, optionalText, normalizedEmail, intFromAny, sanitize, sanitizeText };
+const httpUrl = z
+    .string()
+    .url()
+    .max(2048)
+    .refine((u) => /^https?:\/\//i.test(u), { message: 'Only http/https URLs are allowed' });
+
+export {
+    trimmedString,
+    optionalText,
+    httpUrl,
+    normalizedEmail,
+    intFromAny,
+    sanitize,
+    sanitizeText,
+};

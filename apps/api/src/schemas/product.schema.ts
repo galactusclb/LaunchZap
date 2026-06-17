@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { trimmedString } from '@/lib/zod/extras';
+import { httpUrl, trimmedString } from '@/lib/zod/extras';
 import { userSchema } from '@/schemas/user.schema';
 import { constants } from '@/utils/constant';
 
@@ -10,8 +10,8 @@ export const baseProductSchema = z.object({
     name: trimmedString.min(1).max(100),
     tagline: trimmedString.min(1).max(250),
     description: trimmedString.max(1000),
-    websiteUrl: z.string().url(),
-    logoUrl: z.string().url().optional(),
+    websiteUrl: httpUrl,
+    logoUrl: httpUrl.optional(),
 });
 
 export const productResponseSchema = baseProductSchema.extend({
