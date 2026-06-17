@@ -70,6 +70,7 @@ services:
       - "4000:4000"
     environment:
       NODE_ENV: development
+      CI: "true"
       DATABASE_URL: postgres://postgres:postgres@db:5432/test-db
       DATABASE_URL_READ: postgresql://postgres:postgres@db-replica:5432/test-db
       REDIS_CLIENT_URL: redis://redis-client:6379
@@ -105,6 +106,7 @@ services:
     ports:
       - "3000:3000"
     environment:
+      CI: "true"
       API_BASE_URL: http://api:4000/api
       NEXT_PUBLIC_API_BASE_URL: http://localhost:4000/api
       AWS_REGION: 'us-east-1'
