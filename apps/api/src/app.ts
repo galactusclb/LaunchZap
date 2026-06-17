@@ -15,6 +15,10 @@ const app = express();
 const apiRouter = express.Router();
 
 const allowedOrigins = ['http://localhost:3000', process.env.WEB_APP_URL];
+
+const apiLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 100 });
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 20 });
+
 app.set('trust proxy', 1);
 app.use(helmet);
 
@@ -43,7 +47,9 @@ app.use(
 );
 
 app.use(cookieParser());
-app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+
+app.use('/api/auth', authLimiter);
+app.use('/', apiLimiter);
 
 app.use((req: Request, res: Response, next) => {
     if (req.originalUrl !== '/api/health') {
