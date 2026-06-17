@@ -5,12 +5,7 @@ import prisma from '@/lib/prisma/prisma.ts';
 import { redisClient, redisUtils } from '@/lib/redis/redis-client.ts';
 import { User } from '@/schemas/user.schema.ts';
 import { constants } from '@/utils/constant/index.ts';
-import {
-    ConflictError,
-    NotFoundError,
-    TooManyRequestsError,
-    UnauthorizedError,
-} from '@/utils/errors/http-error.ts';
+import { ConflictError, NotFoundError, UnauthorizedError } from '@/utils/errors/http-error.ts';
 import { paginatedResponse } from '@/utils/paginate-helpers.ts';
 
 import * as repo from './launch.repository.ts';
@@ -91,20 +86,10 @@ export const doScheduleLaunch = async (
     productId: number,
     input: CreateLaunchInput
 ) => {
-    const rateBouncerKey = `${CACHE_KEY_PREFIX}:bouncer:${ownerId}`;
+    const rateBouncerKey = `${CACHE_KEY_PREFIX}:${ownerId}:bouncer`;
     const maximumBouncerLimit = 5;
 
-    const attempts = await redisClient?.incr(rateBouncerKey);
-
-    if (attempts === 1) {
-        void redisClient?.expire(rateBouncerKey, 60 * 60);
-    }
-
-    if (attempts && attempts > maximumBouncerLimit) {
-        throw new TooManyRequestsError('Too many launch attempts. Try again in an hour.', {
-            retryAfter: 3600,
-        });
-    }
+    await redisUtils.rateLimiter(rateBouncerKey, maximumBouncerLimit);
 
     const product = await repo.findProduct(productId);
     if (!product) throw new NotFoundError('Product not found');

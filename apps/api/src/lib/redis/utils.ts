@@ -1,7 +1,7 @@
 import { LRUCache } from 'lru-cache';
 
 import { logger } from '@/lib/logger';
-import { ServiceUnavailableError } from '@/utils/errors/http-error';
+import { ServiceUnavailableError, TooManyRequestsError } from '@/utils/errors/http-error';
 
 import { redisClient } from './redis-client';
 class FetcherError {
@@ -136,6 +136,33 @@ export async function withLock<T>(
     } finally {
         await redisClient?.del(lockKey);
     }
+}
+
+export async function rateLimiter(
+    rateBouncerKey: string,
+    maximumBouncerLimit: number,
+    ttlS: number = 60 * 60 // 1 hour
+) {
+    if (!redisClient) {
+        throw new ServiceUnavailableError('Rate limiter unavailable');
+    }
+
+    const attempts = (await redisClient.eval(
+        `local n = redis.call('INCR', KEYS[1])
+         if n == 1 then redis.call('EXPIRE', KEYS[1], ARGV[1]) end
+         return n`,
+        1,
+        rateBouncerKey,
+        String(ttlS)
+    )) as number;
+
+    if (attempts && attempts > maximumBouncerLimit) {
+        throw new TooManyRequestsError('Too many launch attempts. Try again in an hour.', {
+            retryAfter: ttlS,
+        });
+    }
+
+    return true;
 }
 
 const l2Inflight = new Map<string, Promise<unknown>>();
