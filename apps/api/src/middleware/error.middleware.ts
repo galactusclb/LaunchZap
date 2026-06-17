@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 import { logger } from '@/lib/logger/index.ts';
 import { Prisma } from '@/prisma/client';

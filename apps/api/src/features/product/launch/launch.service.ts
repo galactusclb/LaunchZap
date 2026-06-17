@@ -5,7 +5,12 @@ import prisma from '@/lib/prisma/prisma.ts';
 import { redisClient, redisUtils } from '@/lib/redis/redis-client.ts';
 import { User } from '@/schemas/user.schema.ts';
 import { constants } from '@/utils/constant/index.ts';
-import { NotFoundError, UnauthorizedError } from '@/utils/errors/http-error.ts';
+import {
+    ConflictError,
+    NotFoundError,
+    TooManyRequestsError,
+    UnauthorizedError,
+} from '@/utils/errors/http-error.ts';
 import { paginatedResponse } from '@/utils/paginate-helpers.ts';
 
 import * as repo from './launch.repository.ts';
@@ -87,12 +92,13 @@ export const doScheduleLaunch = async (
     input: CreateLaunchInput
 ) => {
     const product = await repo.findProduct(productId);
-    if (!product) {
-        throw new NotFoundError('Product not found');
-    }
 
-    if (product.makerId !== ownerId) {
-        throw new UnauthorizedError('Unowned product');
+    const publishedOrDraft = await repo.findPublishedOrDraft(productId);
+
+    if (publishedOrDraft) {
+        throw new ConflictError(
+            'This product already has an active launch. Complete or remove it before scheduling a new one.'
+        );
     }
 
     const launch = await repo.scheduleLaunch(productId, input);
