@@ -15,7 +15,7 @@ export const baseProductSchema = z.object({
 });
 
 export const productResponseSchema = baseProductSchema.extend({
-    id: z.number(),
+    id: z.coerce.number(),
     createdAt: z.date(),
     updatedAt: z.date(),
     status: z.nativeEnum(productStatusList),

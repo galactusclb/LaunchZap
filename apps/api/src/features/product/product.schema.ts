@@ -1,7 +1,7 @@
 import z from 'zod';
 
 import { paginationSchema, sortSchema } from '@/schemas/pagination.schema';
-import { baseProductSchema } from '@/schemas/product.schema';
+import { baseProductSchema, productResponseSchema } from '@/schemas/product.schema';
 import { constants } from '@/utils/constant';
 
 export type { Product } from '@/schemas/product.schema';
@@ -16,8 +16,8 @@ export const productFilterSchema = paginationSchema.merge(sortSchema).extend({
 
 export const createProductSchema = { body: baseProductSchema };
 export const getProductsSchema = { query: productFilterSchema };
-export const getProductByIdSchema = { params: z.object({ id: z.coerce.number() }) };
-export const voteProductSchema = { params: z.object({ id: z.coerce.number() }) };
+export const getProductByIdSchema = { params: z.object({ id: productResponseSchema.shape.id }) };
+export const voteProductSchema = { params: z.object({ id: productResponseSchema.shape.id }) };
 
 export type CreateProductInput = z.infer<typeof createProductSchema.body>;
 export type GetProductById = z.infer<typeof getProductByIdSchema.params>;
