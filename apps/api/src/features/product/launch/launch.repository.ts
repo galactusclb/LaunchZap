@@ -43,7 +43,10 @@ export const findById = async (
     prismaIntance: PrismaTransactionClient = prisma
 ) => {
     return await prismaIntance.launch.findFirst({
-        where: { id },
+        where: {
+            id,
+            status: constants.launchStatus.PUBLISHED,
+        },
         include: getLaunchInclude().include,
     });
 };

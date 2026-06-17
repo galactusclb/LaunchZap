@@ -45,7 +45,10 @@ export const findById = async (
     prismaIntance: PrismaTransactionClient = prisma
 ) => {
     return await prismaIntance.product.findFirst({
-        where: { id },
+        where: {
+            id,
+            status: constants.productStatus.APPROVED,
+        },
         include: getProductInclude().include,
     });
 };
