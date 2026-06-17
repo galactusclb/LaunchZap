@@ -1,19 +1,22 @@
 import { NextFunction, Request, Response } from 'express';
 
+import { logger } from '@/lib/logger/index.ts';
 import { Prisma } from '@/prisma/client';
-
-import { AppError, IsAuthMiddlewareMissingError } from '../utils/errors/app-errors.ts';
-import { HttpError } from '../utils/errors/http-error.ts';
+import { AppError, IsAuthMiddlewareMissingError } from '@/utils/errors/app-errors.ts';
+import { HttpError } from '@/utils/errors/http-error.ts';
 
 export function errorHandler(err: unknown, req: Request, res: Response, _next: NextFunction) {
-    console.error('[Error]', err);
+    logger.error('[Error]', {
+        message: err instanceof Error ? err.message : String(err),
+        stack: err instanceof Error ? err.stack : undefined,
+    });
 
     let statusCode = 500;
     let message = 'Internal server error';
     let details: unknown;
 
     if (err instanceof IsAuthMiddlewareMissingError) {
-        console.error('[Implementation Bug]', err.message);
+        logger.error('[Implementation Bug]', { message: err.message });
         return res.status(500).json({ success: false, error: 'Something went wrong' });
     }
 
@@ -56,17 +59,8 @@ export function errorHandler(err: unknown, req: Request, res: Response, _next: N
         });
     }
 
-    if (err instanceof Error) {
-        return res.status(500).json({
-            success: false,
-            // error: 'Internal server error',
-            error: message,
-        });
-    }
-
     return res.status(500).json({
         success: false,
-        // error: 'Internal server error',
         error: message,
     });
 }
