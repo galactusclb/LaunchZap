@@ -2,6 +2,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 
 import { routes as authRoutes } from '@/features/auth';
 import { routes as productRoutes } from '@/features/product';
@@ -14,6 +15,8 @@ const app = express();
 const apiRouter = express.Router();
 
 const allowedOrigins = ['http://localhost:3000', process.env.WEB_APP_URL];
+app.set('trust proxy', 1);
+app.use(helmet);
 
 configureXray();
 app.use(xrayOpen);
