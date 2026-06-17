@@ -25,7 +25,7 @@ export function errorHandler(err: unknown, req: Request, res: Response, _next: N
             success: false,
             error: 'Database error. Please try again later.',
             details: {
-                code: (err as Prisma.PrismaClientKnownRequestError).code || 'DB_ERROR',
+                code: CODE_MAP[(err as Prisma.PrismaClientKnownRequestError).code] || 'DB_ERROR',
             },
         });
     }
@@ -74,3 +74,11 @@ function isPrismaError(err: unknown): err is Prisma.PrismaClientKnownRequestErro
         err instanceof Prisma.PrismaClientValidationError
     );
 }
+
+const CODE_MAP: Partial<Record<string, string>> = {
+    P2002: 'CONFLICT',
+    P2003: 'CONSTRAINT_VIOLATION',
+    P2024: 'TIMEOUT',
+    P2025: 'NOT_FOUND',
+    P2034: 'CONFLICT',
+};
