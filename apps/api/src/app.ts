@@ -3,12 +3,14 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
+import { type RedisReply, RedisStore } from 'rate-limit-redis';
 
 import { routes as authRoutes } from '@/features/auth';
 import { routes as productRoutes } from '@/features/product';
 import { routes as userRoutes } from '@/features/user';
 import { configureXray, xrayClose, xrayOpen } from '@/lib/aws/xray';
 import { logger } from '@/lib/logger';
+import { redisClient } from '@/lib/redis/redis-client';
 import { errorHandler } from '@/middleware/error.middleware.ts';
 
 const app = express();
@@ -16,8 +18,9 @@ const apiRouter = express.Router();
 
 const allowedOrigins = ['http://localhost:3000', process.env.WEB_APP_URL];
 
-const apiLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 100 });
-const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 20 });
+const store = makeStore();
+const apiLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 100, store });
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, store });
 
 app.set('trust proxy', 1);
 app.use(helmet);
@@ -79,3 +82,13 @@ app.use(xrayClose);
 app.use(errorHandler);
 
 export default app;
+
+function makeStore() {
+    if (!redisClient) return undefined;
+
+    return new RedisStore({
+        sendCommand: (command: string, ...args: string[]) =>
+            redisClient!.call(command, ...args) as Promise<RedisReply>,
+        prefix: 'lz:api:rl',
+    });
+}
