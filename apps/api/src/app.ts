@@ -7,9 +7,9 @@ import helmet from 'helmet';
 import { routes as authRoutes } from '@/features/auth';
 import { routes as productRoutes } from '@/features/product';
 import { routes as userRoutes } from '@/features/user';
+import { configureXray, xrayClose, xrayOpen } from '@/lib/aws/xray';
+import { logger } from '@/lib/logger';
 import { errorHandler } from '@/middleware/error.middleware.ts';
-
-import { configureXray, xrayClose, xrayOpen } from './lib/aws/xray';
 
 const app = express();
 const apiRouter = express.Router();
@@ -53,7 +53,7 @@ app.use('/', apiLimiter);
 
 app.use((req: Request, res: Response, next) => {
     if (req.originalUrl !== '/api/health') {
-        console.log(`[${req.method}] ${req.originalUrl}`);
+        logger.info(`[${req.method}] ${req.path}`);
     }
     next();
 });
