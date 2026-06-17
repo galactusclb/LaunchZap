@@ -23,7 +23,7 @@ const apiLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 100, store });
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, store });
 
 app.set('trust proxy', 1);
-app.use(helmet);
+app.use(helmet());
 
 configureXray();
 app.use(xrayOpen);
@@ -34,12 +34,7 @@ app.use(
             if (!origin) return callback(null, true);
 
             if (allowedOrigins.indexOf(origin) === -1) {
-                return callback(
-                    new Error(
-                        'The CORS policy for this site does not allow access from the specified Origin.'
-                    ),
-                    false
-                );
+                return callback(null, false);
             }
             return callback(null, true);
         },
