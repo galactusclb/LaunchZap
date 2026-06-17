@@ -35,6 +35,13 @@ export function errorHandler(err: unknown, req: Request, res: Response, _next: N
         message = err.message;
         details = err.details;
 
+        if (statusCode === StatusCodes.TOO_MANY_REQUESTS) {
+            const retryAfter = (details as Record<string, unknown>)?.retryAfter;
+            if (typeof retryAfter === 'number') {
+                res.setHeader('Retry-After', String(retryAfter));
+            }
+        }
+
         return res.status(statusCode).json({
             success: false,
             error: message,
