@@ -5,6 +5,8 @@ uploads/*
 
 # Keep environment variables out of version control
 .env
+!.env.example
+
 src/scripts/seed.ts
 
 dist/*
