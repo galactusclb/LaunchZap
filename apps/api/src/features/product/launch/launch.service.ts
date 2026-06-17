@@ -91,7 +91,24 @@ export const doScheduleLaunch = async (
     productId: number,
     input: CreateLaunchInput
 ) => {
+    const rateBouncerKey = `${CACHE_KEY_PREFIX}:bouncer:${ownerId}`;
+    const maximumBouncerLimit = 5;
+
+    const attempts = await redisClient?.incr(rateBouncerKey);
+
+    if (attempts === 1) {
+        void redisClient?.expire(rateBouncerKey, 60 * 60);
+    }
+
+    if (attempts && attempts > maximumBouncerLimit) {
+        throw new TooManyRequestsError('Too many launch attempts. Try again in an hour.', {
+            retryAfter: 3600,
+        });
+    }
+
     const product = await repo.findProduct(productId);
+    if (!product) throw new NotFoundError('Product not found');
+    if (product.makerId !== ownerId) throw new UnauthorizedError('Unowned product');
 
     const publishedOrDraft = await repo.findPublishedOrDraft(productId);
 

@@ -52,9 +52,18 @@ export const findById = async (
 };
 
 export const findProduct = async (productId: number) => {
-    return prisma.product.findUnique({
+    return await prisma.product.findUnique({
         where: {
             id: productId,
+        },
+    });
+};
+
+export const findPublishedOrDraft = async (productId: number) => {
+    return await prisma.launch.findFirst({
+        where: {
+            productId,
+            status: { in: [constants.launchStatus.DRAFT, constants.launchStatus.PUBLISHED] },
         },
     });
 };
