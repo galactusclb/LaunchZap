@@ -1,6 +1,7 @@
 export const launchStatus = {
     DRAFT: 'DRAFT',
     PUBLISHED: 'PUBLISHED',
+    LAUNCHED: 'LAUNCHED',
     HIDE: 'HIDE',
 } as const;
 
