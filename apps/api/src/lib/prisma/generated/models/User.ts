@@ -529,6 +529,10 @@ export type BoolFieldUpdateOperationsInput = {
     set?: boolean;
 };
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null;
+};
+
 export type UserCreateWithoutLaunchVoteInput = {
     id?: string;
     name: string;

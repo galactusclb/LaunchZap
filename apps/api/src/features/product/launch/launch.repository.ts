@@ -28,7 +28,7 @@ export const findAll = async (query: LaunchFilterQuery) => {
             orderBy:
                 query.sortBy === 'votes'
                     ? { launchVote: { _count: query.sortOrder } }
-                    : { createdAt: query.sortOrder },
+                    : { launchDate: query.sortOrder },
             ...getLaunchInclude(),
             ...paginate(query),
         }),

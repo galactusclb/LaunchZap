@@ -13,7 +13,7 @@ export const launchFilterSchema = paginationSchema.merge(sortSchema).extend({
     status: z.literal(publicFilterbleStatus).optional(),
     launchDateFrom: z.coerce.date().optional(),
     launchDateTo: z.coerce.date().optional(),
-    sortBy: z.enum(['createdAt', 'votes']).optional(),
+    sortBy: z.enum(['launchDate', 'votes']).optional(),
 });
 
 export const getLaunchByIdSchema = {

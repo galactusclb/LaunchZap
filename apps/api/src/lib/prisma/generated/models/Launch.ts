@@ -204,7 +204,7 @@ export type LaunchGroupByOutputType = {
     description: string;
     gallery: runtime.JsonValue | null;
     status: string;
-    launchDate: Date | null;
+    launchDate: Date;
     createdAt: Date;
     updatedAt: Date;
     productId: number;
@@ -236,7 +236,7 @@ export type LaunchWhereInput = {
     description?: Prisma.StringFilter<'Launch'> | string;
     gallery?: Prisma.JsonNullableFilter<'Launch'>;
     status?: Prisma.StringFilter<'Launch'> | string;
-    launchDate?: Prisma.DateTimeNullableFilter<'Launch'> | Date | string | null;
+    launchDate?: Prisma.DateTimeFilter<'Launch'> | Date | string;
     createdAt?: Prisma.DateTimeFilter<'Launch'> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<'Launch'> | Date | string;
     productId?: Prisma.IntFilter<'Launch'> | number;
@@ -250,7 +250,7 @@ export type LaunchOrderByWithRelationInput = {
     description?: Prisma.SortOrder;
     gallery?: Prisma.SortOrderInput | Prisma.SortOrder;
     status?: Prisma.SortOrder;
-    launchDate?: Prisma.SortOrderInput | Prisma.SortOrder;
+    launchDate?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     productId?: Prisma.SortOrder;
@@ -268,7 +268,7 @@ export type LaunchWhereUniqueInput = Prisma.AtLeast<
         description?: Prisma.StringFilter<'Launch'> | string;
         gallery?: Prisma.JsonNullableFilter<'Launch'>;
         status?: Prisma.StringFilter<'Launch'> | string;
-        launchDate?: Prisma.DateTimeNullableFilter<'Launch'> | Date | string | null;
+        launchDate?: Prisma.DateTimeFilter<'Launch'> | Date | string;
         createdAt?: Prisma.DateTimeFilter<'Launch'> | Date | string;
         updatedAt?: Prisma.DateTimeFilter<'Launch'> | Date | string;
         productId?: Prisma.IntFilter<'Launch'> | number;
@@ -284,7 +284,7 @@ export type LaunchOrderByWithAggregationInput = {
     description?: Prisma.SortOrder;
     gallery?: Prisma.SortOrderInput | Prisma.SortOrder;
     status?: Prisma.SortOrder;
-    launchDate?: Prisma.SortOrderInput | Prisma.SortOrder;
+    launchDate?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     productId?: Prisma.SortOrder;
@@ -308,7 +308,7 @@ export type LaunchScalarWhereWithAggregatesInput = {
     description?: Prisma.StringWithAggregatesFilter<'Launch'> | string;
     gallery?: Prisma.JsonNullableWithAggregatesFilter<'Launch'>;
     status?: Prisma.StringWithAggregatesFilter<'Launch'> | string;
-    launchDate?: Prisma.DateTimeNullableWithAggregatesFilter<'Launch'> | Date | string | null;
+    launchDate?: Prisma.DateTimeWithAggregatesFilter<'Launch'> | Date | string;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<'Launch'> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<'Launch'> | Date | string;
     productId?: Prisma.IntWithAggregatesFilter<'Launch'> | number;
@@ -320,7 +320,7 @@ export type LaunchCreateInput = {
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string | null;
+    launchDate?: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     product: Prisma.ProductCreateNestedOneWithoutLaunchesInput;
@@ -333,7 +333,7 @@ export type LaunchUncheckedCreateInput = {
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string | null;
+    launchDate?: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     productId: number;
@@ -346,7 +346,7 @@ export type LaunchUpdateInput = {
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     product?: Prisma.ProductUpdateOneRequiredWithoutLaunchesNestedInput;
@@ -359,7 +359,7 @@ export type LaunchUncheckedUpdateInput = {
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     productId?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -372,7 +372,7 @@ export type LaunchCreateManyInput = {
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string | null;
+    launchDate?: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     productId: number;
@@ -384,7 +384,7 @@ export type LaunchUpdateManyMutationInput = {
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -395,7 +395,7 @@ export type LaunchUncheckedUpdateManyInput = {
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     productId?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -460,10 +460,6 @@ export type LaunchOrderByRelationAggregateInput = {
 
 export type StringFieldUpdateOperationsInput = {
     set?: string;
-};
-
-export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null;
 };
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -596,7 +592,7 @@ export type LaunchCreateWithoutLaunchVoteInput = {
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string | null;
+    launchDate?: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     product: Prisma.ProductCreateNestedOneWithoutLaunchesInput;
@@ -608,7 +604,7 @@ export type LaunchUncheckedCreateWithoutLaunchVoteInput = {
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string | null;
+    launchDate?: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     productId: number;
@@ -648,7 +644,7 @@ export type LaunchUpdateWithoutLaunchVoteInput = {
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     product?: Prisma.ProductUpdateOneRequiredWithoutLaunchesNestedInput;
@@ -660,7 +656,7 @@ export type LaunchUncheckedUpdateWithoutLaunchVoteInput = {
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     productId?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -672,7 +668,7 @@ export type LaunchCreateWithoutProductInput = {
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string | null;
+    launchDate?: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     launchVote?: Prisma.LaunchVoteCreateNestedManyWithoutLaunchInput;
@@ -684,7 +680,7 @@ export type LaunchUncheckedCreateWithoutProductInput = {
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string | null;
+    launchDate?: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     launchVote?: Prisma.LaunchVoteUncheckedCreateNestedManyWithoutLaunchInput;
@@ -740,7 +736,7 @@ export type LaunchScalarWhereInput = {
     description?: Prisma.StringFilter<'Launch'> | string;
     gallery?: Prisma.JsonNullableFilter<'Launch'>;
     status?: Prisma.StringFilter<'Launch'> | string;
-    launchDate?: Prisma.DateTimeNullableFilter<'Launch'> | Date | string | null;
+    launchDate?: Prisma.DateTimeFilter<'Launch'> | Date | string;
     createdAt?: Prisma.DateTimeFilter<'Launch'> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<'Launch'> | Date | string;
     productId?: Prisma.IntFilter<'Launch'> | number;
@@ -752,7 +748,7 @@ export type LaunchCreateManyProductInput = {
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string | null;
+    launchDate?: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -763,7 +759,7 @@ export type LaunchUpdateWithoutProductInput = {
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     launchVote?: Prisma.LaunchVoteUpdateManyWithoutLaunchNestedInput;
@@ -775,7 +771,7 @@ export type LaunchUncheckedUpdateWithoutProductInput = {
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     launchVote?: Prisma.LaunchVoteUncheckedUpdateManyWithoutLaunchNestedInput;
@@ -787,7 +783,7 @@ export type LaunchUncheckedUpdateManyWithoutProductInput = {
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
-    launchDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -942,7 +938,7 @@ export type $LaunchPayload<
             description: string;
             gallery: runtime.JsonValue | null;
             status: string;
-            launchDate: Date | null;
+            launchDate: Date;
             createdAt: Date;
             updatedAt: Date;
             productId: number;
