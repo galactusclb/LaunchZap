@@ -30,6 +30,26 @@ const l2 = new LRUCache<string, string>({
     ttl: 30 * 1000,
 });
 
+/**
+ * Stale-While-Revalidate cache backed by Redis (L1) with an LRU fallback (L2).
+ *
+ * Returns cached data immediately and triggers a background refresh when the
+ * entry is stale but within the stale window. Falls back to the in-process LRU
+ * cache if Redis is unavailable.
+ *
+ * @example
+ * const products = await swrCache(
+ *   'products:featured',
+ *   () => db.product.findMany({ where: { featured: true } }),
+ *   { redis_fresh_ttl: 30, redis_stale_ttl: 120 }
+ * );
+ *
+ * @param key            Redis cache key
+ * @param fetcher        Async function that fetches the canonical data
+ * @param opts.redis_fresh_ttl   Seconds before the entry is considered stale (default 60)
+ * @param opts.redis_stale_ttl   Seconds before Redis evicts the entry entirely (default 300)
+ * @param opts.lockTtl           Seconds the refresh lock is held (default 10)
+ */
 export async function swrCache<T>(
     key: string,
     fetcher: () => Promise<T>,
@@ -121,6 +141,23 @@ async function refresh<T>(key: string, fetcher: () => Promise<T>, opts: SwrOptio
     throw new ServiceUnavailableError('Cache temporarily unavailable, please retry');
 }
 
+/**
+ * Acquires a Redis-backed distributed lock for the duration of `fn`.
+ *
+ * Returns `null` immediately if the lock is already held by another caller,
+ * so the caller can treat `null` as "another process is refreshing — wait and retry."
+ *
+ * @example
+ * const result = await withLock('job:send-digest', async () => {
+ *   await sendDigestEmail();
+ *   return true;
+ * }, 15_000);
+ * if (result === null) console.log('lock contended, skipped');
+ *
+ * @param key    Base key; `:lock` is appended internally
+ * @param fn     Work to execute while the lock is held
+ * @param ttlMs  Lock expiry in milliseconds (default 5 000)
+ */
 export async function withLock<T>(
     key: string,
     fn: () => Promise<T>,
@@ -138,6 +175,23 @@ export async function withLock<T>(
     }
 }
 
+/**
+ * Atomic Redis-backed rate limiter using INCR + EXPIRE.
+ *
+ * Increments a counter on every call and throws `TooManyRequestsError` once
+ * `maximumBouncerLimit` is exceeded within the TTL window. The counter is set
+ * to expire only on the **first** increment, so the window is sliding from the
+ * first attempt, not from the latest.
+ *
+ * @example
+ * await rateLimiter(`launch:${userId}`, 3, 60 * 60); // max 3 launches/hour
+ *
+ * @param rateBouncerKey       Redis key for this action + subject (e.g. `launch:${userId}`)
+ * @param maximumBouncerLimit  Calls allowed within the window before throwing
+ * @param ttlS                 Window size in seconds (default 3 600 — 1 hour)
+ * @throws {TooManyRequestsError} when the limit is exceeded
+ * @throws {ServiceUnavailableError} when Redis is unreachable
+ */
 export async function rateLimiter(
     rateBouncerKey: string,
     maximumBouncerLimit: number,
