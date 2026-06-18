@@ -2,15 +2,13 @@ import { Prisma } from '@/lib/prisma/generated/client';
 import { constants } from '@/utils/constant';
 import { omit } from '@/utils/object';
 
-export const getProductInclude = (since?: Date) =>
+export const getProductInclude = (_since?: Date) =>
     ({
         include: {
             maker: { select: { id: true, name: true } },
             _count: {
                 select: {
-                    votes: {
-                        where: since ? { createdAt: { gte: since } } : undefined,
-                    },
+                    votes: true,
                 },
             },
             launches: {

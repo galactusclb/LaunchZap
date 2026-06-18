@@ -21,23 +21,22 @@ export const findAll = async (query: ProductFilterQuery) => {
         status: query.status ?? defaultStatus,
     };
 
-    // const orderBy: Prisma.ProductOrderByWithRelationInput = query.sortBy
-    //     ? {[query.sortBy]: query.sortOrder}
-    //     : { createdAt: query.sortOrder}
-    // const orderBy = categoryOrderBy(query.q ?? '')
+    const orderBy: Prisma.ProductOrderByWithRelationInput =
+        query.sortBy === 'votes'
+            ? { votes: { _count: query.sortOrder } }
+            : { createdAt: query.sortOrder };
 
     const [data, total] = await Promise.all([
         prisma.product.findMany({
             where,
-            // orderBy,
+            orderBy,
             ...getProductInclude(getDateRange(query.q ?? '')),
             ...paginate(query),
         }),
         prisma.product.count({ where }),
     ]);
 
-    const sorted = data.sort((a, b) => b._count.votes - a._count.votes);
-    return { data: sorted, total };
+    return { data, total };
 };
 
 export const findById = async (
