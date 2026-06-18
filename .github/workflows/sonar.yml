@@ -16,13 +16,9 @@ jobs:
 
       - name: Setup Node
         uses: actions/setup-node@v5
-        with:
-            node-version: 20
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: 9
 
       - name: Install & Test
         run: |
@@ -30,7 +26,7 @@ jobs:
         #   npm run test -- --coverage
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: sonarsource/sonarqube-scan-action@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
