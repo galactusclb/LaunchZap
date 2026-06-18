@@ -166,7 +166,7 @@ function logError(method: string | undefined, path: string, error: unknown): voi
             details: error.details,
         });
     } else if (error instanceof z.ZodError) {
-        console.error('[apiServer]', { ...ctx, type: 'ZodError', issues: z.treeifyError(error) });
+        console.error('[apiServer]', { ...ctx, type: 'ZodError', issues: error.issues });
     } else if (error instanceof Error) {
         console.error('[apiServer]', { ...ctx, message: error.message, stack: error.stack });
     } else {

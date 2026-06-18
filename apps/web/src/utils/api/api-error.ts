@@ -42,7 +42,7 @@ export function toApiError(error: unknown): ApiError {
     if (error instanceof z.ZodError)
         return new ApiError('Invalid API response format', {
             code: 'INVALID_RESPONSE',
-            details: z.treeifyError(error),
+            details: error.issues,
         });
     if (error instanceof Error) return new ApiError(error.message || unknownErrorMessage);
 
