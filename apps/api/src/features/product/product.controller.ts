@@ -1,4 +1,10 @@
 import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
+
+import { requireAuth } from '@/middleware/auth.middleware.ts';
+import { User } from '@/schemas/user.schema';
+import { toCacheControlHeader } from '@/utils/constant/cache.ts';
+import { constants } from '@/utils/constant/index.ts';
 
 import { toProductDTO } from './product.dto.ts';
 import {
@@ -9,12 +15,6 @@ import {
     VoteProduct,
 } from './product.schema.ts';
 import * as service from './product.service.ts';
-
-import { requireAuth } from '@/middleware/auth.middleware.ts';
-import { User } from '@/schemas/user.schema';
-import { toCacheControlHeader } from '@/utils/constant/cache.ts';
-import { constants } from '@/utils/constant/index.ts';
-import { StatusCodes } from 'http-status-codes';
 
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
     const result = await service.doGetAllProducts(req.validatedQuery as ProductFilterQuery);
