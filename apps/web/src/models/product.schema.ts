@@ -5,6 +5,7 @@ import { apiResponseSchema } from '@/models/api-response.schema';
 import { userResponseSchema } from './user.schema';
 
 export enum ProductStatus {
+    DRAFT = 'DRAFT',
     PENDING = 'PENDING',
     APPROVED = 'APPROVED',
     REJECTED = 'REJECTED',
@@ -13,11 +14,10 @@ export enum ProductStatus {
 export const baseProductSchema = z.object({
     name: z.string().min(1).max(100),
     tagline: z.string().min(1).max(250),
-    description: z.string().max(1000).optional(),
-
+    description: z.string().max(1000),
     websiteUrl: z.url(),
     logoUrl: z.url().nullable().optional(),
-    launchDate: z.coerce.date(),
+    status: z.enum(ProductStatus),
 });
 
 export const productResponseSchema = baseProductSchema.extend({
@@ -25,7 +25,6 @@ export const productResponseSchema = baseProductSchema.extend({
     createdAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
 
-    status: z.enum(ProductStatus),
     maker: userResponseSchema
         .pick({
             id: true,
@@ -43,15 +42,18 @@ export const productSingleResponseSchema = apiResponseSchema.single(
     productResponseSchema.optional()
 );
 
-export const productCreateResponseSchema = apiResponseSchema.single(
-    baseProductSchema.extend({
-        id: z.coerce.number(),
-        status: z.enum(ProductStatus),
-        makerId: z.string(),
-        createdAt: z.coerce.date(),
-        updatedAt: z.coerce.date().optional(),
-    })
-);
+export const createProductSchema = baseProductSchema;
+
+const productMakerResponseSchema = baseProductSchema.extend({
+    id: z.coerce.number(),
+    makerId: z.string(),
+    createdAt: z.coerce.date(),
+    updatedAt: z.coerce.date().optional(),
+});
+
+export const productCreateResponseSchema = apiResponseSchema.single(productMakerResponseSchema);
+
+export const productUpdateResponseSchema = apiResponseSchema.single(productMakerResponseSchema);
 
 export const productIdParamSchema = productResponseSchema.pick({
     id: true,
@@ -60,5 +62,5 @@ export const productIdParamSchema = productResponseSchema.pick({
 export type Product = z.infer<typeof productResponseSchema>;
 export type ProductListFullResponse = z.infer<typeof productListFullResponseSchema>;
 export type ProductSingleResponse = z.infer<typeof productSingleResponseSchema>;
-export type CreateProduct = z.infer<typeof baseProductSchema>;
+export type CreateProduct = z.infer<typeof createProductSchema>;
 export type ProductIdParam = z.infer<typeof productIdParamSchema>;

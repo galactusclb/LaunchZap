@@ -3,7 +3,7 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 
 import { s3 } from '@/lib/aws';
-import { baseProductSchema, productCreateResponseSchema } from '@/models/product.schema';
+import { createProductSchema, productCreateResponseSchema } from '@/models/product.schema';
 import { apiServer } from '@/utils/api/api-server';
 
 export type SubmitState = {
@@ -16,12 +16,12 @@ export default async function submitAction(
     prevState: SubmitState,
     formData: FormData
 ): Promise<SubmitState> {
-    const result = baseProductSchema.safeParse({
+    const result = createProductSchema.safeParse({
         name: formData.get('name'),
         tagline: formData.get('tagline'),
-        description: formData.get('description') || undefined,
+        description: formData.get('description'),
         websiteUrl: formData.get('websiteUrl'),
-        launchDate: formData.get('launchDate'),
+        status: formData.get('status') || undefined,
     });
 
     if (!result.success) {
