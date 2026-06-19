@@ -9,12 +9,18 @@ import { ConflictError, NotFoundError } from '@/utils/errors/http-error.ts';
 import { paginatedResponse } from '@/utils/paginate-helpers.ts';
 
 import * as repo from './product.repository.ts';
-import { CreateProductInput, Product, ProductFilterQuery } from './product.schema.ts';
+import {
+    CreateProductInput,
+    Product,
+    ProductFilterQuery,
+    UpdateProductInput,
+} from './product.schema.ts';
 
 const CACHE_KEY_PREFIX = 'lz:api:product';
 const CACHE_KEY_LIST = `${CACHE_KEY_PREFIX}:list`;
 const CACHE_KEY_VERSION = `${CACHE_KEY_PREFIX}:version`;
 const CACHE_KEY_ITEM = `${CACHE_KEY_PREFIX}:item`;
+const CACHE_KEY_ITEM_PREVIEW_VERSION = `${CACHE_KEY_ITEM}:preview:version`;
 const CACHE_KEY_ITEM_VOTE_COUNT = `${CACHE_KEY_PREFIX}:item:vote`;
 
 const VOTE_COUNT_TTL = 60 * 60 * 24;
@@ -53,6 +59,26 @@ export const doGetById = async (id: Product['id']) => {
     };
 };
 
+export const doGetProductPreviewById = async (userId: User['id'], productId: Product['id']) => {
+    const versionKey = `${CACHE_KEY_ITEM_PREVIEW_VERSION}:${productId}`;
+    const version = (await redisClient?.get(versionKey)) ?? '0';
+
+    const cacheKey = `${CACHE_KEY_ITEM}:preview:${productId}:v${version}`;
+
+    const previewProduct = await redisUtils.swrCache(
+        cacheKey,
+        async () => {
+            logger.debug('[product] preview cache miss', { cacheKey, productId });
+            return await repo.findByIdForMaker(userId, productId);
+        },
+        { ...constants.cache.product.previewItem }
+    );
+
+    if (!previewProduct) throw new NotFoundError('Product not found');
+
+    return previewProduct;
+};
+
 export const doGetAllProducts = async (query: ProductFilterQuery) => {
     const sortedQuery = JSON.stringify(query, Object.keys(query).sort());
     const queryHash = createHash('sha1').update(sortedQuery).digest('hex').slice(0, 12);
@@ -82,6 +108,25 @@ export const doCreateProduct = async (makerId: string, input: CreateProductInput
         .catch((err) => logger.error('[product] failed to bump version', { err }));
 
     return product;
+};
+
+export const doUpdateProduct = async (
+    makerId: User['id'],
+    productId: Product['id'],
+    input: UpdateProductInput
+) => {
+    const versionKey = `${CACHE_KEY_ITEM_PREVIEW_VERSION}:${productId}`;
+    const product = await repo.findByIdForMaker(makerId, productId);
+
+    if (!product) throw new NotFoundError('Product not found!');
+
+    const updatedProduct = await repo.updateProduct(productId, input);
+
+    void redisClient
+        ?.incr(versionKey)
+        .catch((err) => logger.error('[product] failed to bump preview version', { err }));
+
+    return updatedProduct;
 };
 
 export const doVoteProduct = async (userId: User['id'], productId: Product['id']) => {

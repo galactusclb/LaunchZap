@@ -52,6 +52,20 @@ export const findById = async (
     });
 };
 
+export const findByIdForMaker = async (
+    makerId: Product['makerId'],
+    productId: Product['id'],
+    prismaIntance: PrismaTransactionClient = prisma
+) => {
+    return await prismaIntance.product.findFirst({
+        where: {
+            id: productId,
+            makerId,
+        },
+        ...getProductInclude(),
+    });
+};
+
 export const findByName = async (name: string) => {
     return await prisma.product.findFirst({
         where: {
@@ -70,6 +84,21 @@ export const createProduct = async (makerId: User['id'], input: CreateProductInp
             logoUrl: input.logoUrl,
             makerId,
         },
+    });
+};
+
+export const updateProduct = async (
+    productId: Product['id'],
+    input: Omit<
+        Prisma.ProductUpdateInput,
+        'updatedAt' | 'createdAt' | 'maker' | 'votes' | 'maketId'
+    >
+) => {
+    return await prisma.product.update({
+        where: {
+            id: productId,
+        },
+        data: input,
     });
 };
 

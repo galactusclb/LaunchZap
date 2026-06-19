@@ -16,11 +16,13 @@ export const productFilterSchema = paginationSchema.merge(sortSchema).extend({
 });
 
 export const createProductSchema = { body: baseProductSchema };
+export const updateProductSchema = { body: baseProductSchema };
 export const getProductsSchema = { query: productFilterSchema };
 export const getProductByIdSchema = { params: z.object({ id: productResponseSchema.shape.id }) };
 export const voteProductSchema = { params: z.object({ id: productResponseSchema.shape.id }) };
 
 export type CreateProductInput = z.infer<typeof createProductSchema.body>;
+export type UpdateProductInput = z.infer<typeof updateProductSchema.body>;
 export type GetProductById = z.infer<typeof getProductByIdSchema.params>;
 export type VoteProduct = z.infer<typeof voteProductSchema.params>;
 export type ProductFilterQuery = z.infer<typeof productFilterSchema>;

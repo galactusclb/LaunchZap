@@ -23,6 +23,11 @@ export const cacheConfig = {
         item: {
             ...DEFAULT_CACHE,
         },
+        previewItem: {
+            ...DEFAULT_CACHE,
+            visibility: 'private',
+            header_s_max_age: 0,
+        },
     },
 } satisfies Record<string, Record<string, CacheObj>>;
 
