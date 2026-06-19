@@ -12,13 +12,13 @@ export const baseProductSchema = z.object({
     description: trimmedString.max(1000),
     websiteUrl: httpUrl,
     logoUrl: httpUrl.optional(),
+    status: z.nativeEnum(productStatusList),
 });
 
 export const productResponseSchema = baseProductSchema.extend({
     id: z.coerce.number(),
     createdAt: z.date(),
     updatedAt: z.date(),
-    status: z.nativeEnum(productStatusList),
     maker: userSchema.pick({ id: true, name: true }),
 });
 
