@@ -4,6 +4,7 @@ type CacheObj = {
     header_max_age: number;
     header_s_max_age: number;
     header_swr: number;
+    visibility?: 'public' | 'private';
 };
 
 export const DEFAULT_CACHE: CacheObj = {
@@ -26,5 +27,11 @@ export const cacheConfig = {
 } satisfies Record<string, Record<string, CacheObj>>;
 
 export function toCacheControlHeader(c: CacheObj): string {
+    const visibility = c.visibility ?? 'public';
+
+    if (visibility === 'private') {
+        return `private, max-age=${c.header_max_age}, stale-while-revalidate=${c.header_swr}`;
+    }
+
     return `public, max-age=${c.header_max_age}, s-maxage=${c.header_s_max_age}, stale-while-revalidate=${c.header_swr}`;
 }
