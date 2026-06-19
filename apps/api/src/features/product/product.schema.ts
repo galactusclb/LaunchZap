@@ -20,7 +20,12 @@ export const productFilterSchema = paginationSchema.merge(sortSchema).extend({
     sortBy: z.enum(['createdAt', 'votes']).optional(),
 });
 
-export const createProductSchema = { body: baseProductSchema };
+export const createProductSchema = {
+    body: baseProductSchema.extend({
+        status: ownerStatusUpdatedList.optional(),
+    }),
+};
+
 export const updateProductSchema = {
     body: baseProductSchema.extend({
         status: ownerStatusUpdatedList.optional(),

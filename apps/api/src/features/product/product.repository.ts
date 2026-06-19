@@ -4,7 +4,7 @@ import { constants } from '@/utils/constant';
 import { paginate } from '@/utils/paginate-helpers';
 
 import { getProductInclude } from './product.dto';
-import { CreateProductInput, ProductFilterQuery } from './product.schema';
+import { ProductFilterQuery } from './product.schema';
 import { categoryFilter, getDateRange } from './product.utils';
 
 const defaultStatus = constants.productStatus.APPROVED;
@@ -74,15 +74,18 @@ export const findByName = async (name: string) => {
     });
 };
 
-export const createProduct = async (makerId: User['id'], input: CreateProductInput) => {
+export const createProduct = async (
+    makerId: User['id'],
+    input: Omit<
+        Prisma.ProductCreateInput,
+        'updatedAt' | 'createdAt' | 'maker' | 'votes' | 'makerId'
+    >
+) => {
     return await prisma.product.create({
         data: {
-            name: input.name,
-            description: input.description,
-            tagline: input.tagline,
-            websiteUrl: input.websiteUrl,
-            logoUrl: input.logoUrl,
+            ...input,
             makerId,
+            status: input.status ?? constants.productStatus.DRAFT,
         },
     });
 };
