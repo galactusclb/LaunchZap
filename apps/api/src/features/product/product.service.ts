@@ -5,7 +5,7 @@ import prisma from '@/lib/prisma/prisma.ts';
 import { redisClient, redisUtils } from '@/lib/redis/redis-client.ts';
 import { User } from '@/schemas/user.schema';
 import { constants } from '@/utils/constant/index.ts';
-import { ConflictError, NotFoundError } from '@/utils/errors/http-error.ts';
+import { ConflictError, ForbiddenError, NotFoundError } from '@/utils/errors/http-error.ts';
 import { paginatedResponse } from '@/utils/paginate-helpers.ts';
 
 import * as repo from './product.repository.ts';
@@ -119,6 +119,19 @@ export const doUpdateProduct = async (
     const product = await repo.findByIdForMaker(makerId, productId);
 
     if (!product) throw new NotFoundError('Product not found!');
+
+    const productStatus = constants.productStatus;
+
+    if (input.status !== undefined) {
+        const current = product.status;
+        const next = input.status;
+
+        const allowed =
+            (current === productStatus.DRAFT && next === productStatus.PENDING) ||
+            (current === productStatus.PENDING && next === productStatus.DRAFT);
+
+        if (!allowed) throw new ForbiddenError(`Cannot transition from ${current} to ${next}`);
+    }
 
     const updatedProduct = await repo.updateProduct(productId, input);
 

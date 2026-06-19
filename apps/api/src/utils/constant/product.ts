@@ -1,4 +1,5 @@
 export const productStatus = {
+    DRAFT: 'DRAFT',
     PENDING: 'PENDING',
     APPROVED: 'APPROVED',
     REJECTED: 'REJECTED',

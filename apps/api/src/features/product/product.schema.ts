@@ -8,6 +8,11 @@ export type { Product } from '@/schemas/product.schema';
 
 const publicFilterbleStatus = [constants.productStatus.APPROVED] as const;
 
+const ownerStatusUpdatedList = z.enum([
+    constants.productStatus.DRAFT,
+    constants.productStatus.PENDING,
+]);
+
 export const productFilterSchema = paginationSchema.merge(sortSchema).extend({
     q: z.enum(['new', 'daily', 'weekly', 'hot']).optional(),
     search: z.string().optional(),
@@ -16,7 +21,12 @@ export const productFilterSchema = paginationSchema.merge(sortSchema).extend({
 });
 
 export const createProductSchema = { body: baseProductSchema };
-export const updateProductSchema = { body: baseProductSchema };
+export const updateProductSchema = {
+    body: baseProductSchema.extend({
+        status: ownerStatusUpdatedList.optional(),
+    }),
+};
+
 export const getProductsSchema = { query: productFilterSchema };
 export const getProductByIdSchema = { params: z.object({ id: productResponseSchema.shape.id }) };
 export const voteProductSchema = { params: z.object({ id: productResponseSchema.shape.id }) };
