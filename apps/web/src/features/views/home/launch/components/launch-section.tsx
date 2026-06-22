@@ -1,6 +1,10 @@
+import { Suspense } from 'react';
+
 import { getProductById } from '@/features/product/index.server';
 
 import LaunchDetails from './launch-details';
+import LaunchFeedSection from './launch-feed-section';
+import { LaunchFeedSkeleton } from './launch-feed-skeleton';
 import LaunchHero from './launch-hero';
 import LaunchNotFound from './launch-not-found';
 
@@ -17,6 +21,9 @@ export default async function LaunchSection({ id }: LaunchSectionProps) {
         <div className="flex flex-col gap-10">
             <LaunchHero product={product} />
             <LaunchDetails description={product.description} />
+            <Suspense fallback={<LaunchFeedSkeleton />}>
+                <LaunchFeedSection />
+            </Suspense>
         </div>
     );
 }
