@@ -35,6 +35,7 @@ export type LaunchSumAggregateOutputType = {
 
 export type LaunchMinAggregateOutputType = {
     id: string | null;
+    slug: string | null;
     tagline: string | null;
     description: string | null;
     status: string | null;
@@ -46,6 +47,7 @@ export type LaunchMinAggregateOutputType = {
 
 export type LaunchMaxAggregateOutputType = {
     id: string | null;
+    slug: string | null;
     tagline: string | null;
     description: string | null;
     status: string | null;
@@ -57,6 +59,7 @@ export type LaunchMaxAggregateOutputType = {
 
 export type LaunchCountAggregateOutputType = {
     id: number;
+    slug: number;
     tagline: number;
     description: number;
     gallery: number;
@@ -78,6 +81,7 @@ export type LaunchSumAggregateInputType = {
 
 export type LaunchMinAggregateInputType = {
     id?: true;
+    slug?: true;
     tagline?: true;
     description?: true;
     status?: true;
@@ -89,6 +93,7 @@ export type LaunchMinAggregateInputType = {
 
 export type LaunchMaxAggregateInputType = {
     id?: true;
+    slug?: true;
     tagline?: true;
     description?: true;
     status?: true;
@@ -100,6 +105,7 @@ export type LaunchMaxAggregateInputType = {
 
 export type LaunchCountAggregateInputType = {
     id?: true;
+    slug?: true;
     tagline?: true;
     description?: true;
     gallery?: true;
@@ -200,6 +206,7 @@ export type LaunchGroupByArgs<
 
 export type LaunchGroupByOutputType = {
     id: string;
+    slug: string;
     tagline: string;
     description: string;
     gallery: runtime.JsonValue | null;
@@ -232,6 +239,7 @@ export type LaunchWhereInput = {
     OR?: Prisma.LaunchWhereInput[];
     NOT?: Prisma.LaunchWhereInput | Prisma.LaunchWhereInput[];
     id?: Prisma.StringFilter<'Launch'> | string;
+    slug?: Prisma.StringFilter<'Launch'> | string;
     tagline?: Prisma.StringFilter<'Launch'> | string;
     description?: Prisma.StringFilter<'Launch'> | string;
     gallery?: Prisma.JsonNullableFilter<'Launch'>;
@@ -246,6 +254,7 @@ export type LaunchWhereInput = {
 
 export type LaunchOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
     tagline?: Prisma.SortOrder;
     description?: Prisma.SortOrder;
     gallery?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -261,6 +270,7 @@ export type LaunchOrderByWithRelationInput = {
 export type LaunchWhereUniqueInput = Prisma.AtLeast<
     {
         id?: string;
+        slug?: string;
         AND?: Prisma.LaunchWhereInput | Prisma.LaunchWhereInput[];
         OR?: Prisma.LaunchWhereInput[];
         NOT?: Prisma.LaunchWhereInput | Prisma.LaunchWhereInput[];
@@ -275,11 +285,12 @@ export type LaunchWhereUniqueInput = Prisma.AtLeast<
         product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>;
         launchVote?: Prisma.LaunchVoteListRelationFilter;
     },
-    'id'
+    'id' | 'slug'
 >;
 
 export type LaunchOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
     tagline?: Prisma.SortOrder;
     description?: Prisma.SortOrder;
     gallery?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -304,6 +315,7 @@ export type LaunchScalarWhereWithAggregatesInput = {
         | Prisma.LaunchScalarWhereWithAggregatesInput
         | Prisma.LaunchScalarWhereWithAggregatesInput[];
     id?: Prisma.StringWithAggregatesFilter<'Launch'> | string;
+    slug?: Prisma.StringWithAggregatesFilter<'Launch'> | string;
     tagline?: Prisma.StringWithAggregatesFilter<'Launch'> | string;
     description?: Prisma.StringWithAggregatesFilter<'Launch'> | string;
     gallery?: Prisma.JsonNullableWithAggregatesFilter<'Launch'>;
@@ -316,11 +328,12 @@ export type LaunchScalarWhereWithAggregatesInput = {
 
 export type LaunchCreateInput = {
     id?: string;
+    slug: string;
     tagline: string;
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string;
+    launchDate: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     product: Prisma.ProductCreateNestedOneWithoutLaunchesInput;
@@ -329,11 +342,12 @@ export type LaunchCreateInput = {
 
 export type LaunchUncheckedCreateInput = {
     id?: string;
+    slug: string;
     tagline: string;
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string;
+    launchDate: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     productId: number;
@@ -342,6 +356,7 @@ export type LaunchUncheckedCreateInput = {
 
 export type LaunchUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -355,6 +370,7 @@ export type LaunchUpdateInput = {
 
 export type LaunchUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -368,11 +384,12 @@ export type LaunchUncheckedUpdateInput = {
 
 export type LaunchCreateManyInput = {
     id?: string;
+    slug: string;
     tagline: string;
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string;
+    launchDate: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     productId: number;
@@ -380,6 +397,7 @@ export type LaunchCreateManyInput = {
 
 export type LaunchUpdateManyMutationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -391,6 +409,7 @@ export type LaunchUpdateManyMutationInput = {
 
 export type LaunchUncheckedUpdateManyInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -403,6 +422,7 @@ export type LaunchUncheckedUpdateManyInput = {
 
 export type LaunchCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
     tagline?: Prisma.SortOrder;
     description?: Prisma.SortOrder;
     gallery?: Prisma.SortOrder;
@@ -419,6 +439,7 @@ export type LaunchAvgOrderByAggregateInput = {
 
 export type LaunchMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
     tagline?: Prisma.SortOrder;
     description?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
@@ -430,6 +451,7 @@ export type LaunchMaxOrderByAggregateInput = {
 
 export type LaunchMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
     tagline?: Prisma.SortOrder;
     description?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
@@ -588,11 +610,12 @@ export type LaunchUncheckedUpdateManyWithoutProductNestedInput = {
 
 export type LaunchCreateWithoutLaunchVoteInput = {
     id?: string;
+    slug: string;
     tagline: string;
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string;
+    launchDate: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     product: Prisma.ProductCreateNestedOneWithoutLaunchesInput;
@@ -600,11 +623,12 @@ export type LaunchCreateWithoutLaunchVoteInput = {
 
 export type LaunchUncheckedCreateWithoutLaunchVoteInput = {
     id?: string;
+    slug: string;
     tagline: string;
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string;
+    launchDate: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     productId: number;
@@ -640,6 +664,7 @@ export type LaunchUpdateToOneWithWhereWithoutLaunchVoteInput = {
 
 export type LaunchUpdateWithoutLaunchVoteInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -652,6 +677,7 @@ export type LaunchUpdateWithoutLaunchVoteInput = {
 
 export type LaunchUncheckedUpdateWithoutLaunchVoteInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -664,11 +690,12 @@ export type LaunchUncheckedUpdateWithoutLaunchVoteInput = {
 
 export type LaunchCreateWithoutProductInput = {
     id?: string;
+    slug: string;
     tagline: string;
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string;
+    launchDate: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     launchVote?: Prisma.LaunchVoteCreateNestedManyWithoutLaunchInput;
@@ -676,11 +703,12 @@ export type LaunchCreateWithoutProductInput = {
 
 export type LaunchUncheckedCreateWithoutProductInput = {
     id?: string;
+    slug: string;
     tagline: string;
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string;
+    launchDate: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     launchVote?: Prisma.LaunchVoteUncheckedCreateNestedManyWithoutLaunchInput;
@@ -732,6 +760,7 @@ export type LaunchScalarWhereInput = {
     OR?: Prisma.LaunchScalarWhereInput[];
     NOT?: Prisma.LaunchScalarWhereInput | Prisma.LaunchScalarWhereInput[];
     id?: Prisma.StringFilter<'Launch'> | string;
+    slug?: Prisma.StringFilter<'Launch'> | string;
     tagline?: Prisma.StringFilter<'Launch'> | string;
     description?: Prisma.StringFilter<'Launch'> | string;
     gallery?: Prisma.JsonNullableFilter<'Launch'>;
@@ -744,17 +773,19 @@ export type LaunchScalarWhereInput = {
 
 export type LaunchCreateManyProductInput = {
     id?: string;
+    slug: string;
     tagline: string;
     description: string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     status?: string;
-    launchDate?: Date | string;
+    launchDate: Date | string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
 
 export type LaunchUpdateWithoutProductInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -767,6 +798,7 @@ export type LaunchUpdateWithoutProductInput = {
 
 export type LaunchUncheckedUpdateWithoutProductInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -779,6 +811,7 @@ export type LaunchUncheckedUpdateWithoutProductInput = {
 
 export type LaunchUncheckedUpdateManyWithoutProductInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     gallery?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -828,6 +861,7 @@ export type LaunchSelect<
 > = runtime.Types.Extensions.GetSelect<
     {
         id?: boolean;
+        slug?: boolean;
         tagline?: boolean;
         description?: boolean;
         gallery?: boolean;
@@ -848,6 +882,7 @@ export type LaunchSelectCreateManyAndReturn<
 > = runtime.Types.Extensions.GetSelect<
     {
         id?: boolean;
+        slug?: boolean;
         tagline?: boolean;
         description?: boolean;
         gallery?: boolean;
@@ -866,6 +901,7 @@ export type LaunchSelectUpdateManyAndReturn<
 > = runtime.Types.Extensions.GetSelect<
     {
         id?: boolean;
+        slug?: boolean;
         tagline?: boolean;
         description?: boolean;
         gallery?: boolean;
@@ -881,6 +917,7 @@ export type LaunchSelectUpdateManyAndReturn<
 
 export type LaunchSelectScalar = {
     id?: boolean;
+    slug?: boolean;
     tagline?: boolean;
     description?: boolean;
     gallery?: boolean;
@@ -895,6 +932,7 @@ export type LaunchOmit<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
     | 'id'
+    | 'slug'
     | 'tagline'
     | 'description'
     | 'gallery'
@@ -934,6 +972,7 @@ export type $LaunchPayload<
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
             id: string;
+            slug: string;
             tagline: string;
             description: string;
             gallery: runtime.JsonValue | null;
@@ -1534,6 +1573,7 @@ export interface Prisma__LaunchClient<
  */
 export interface LaunchFieldRefs {
     readonly id: Prisma.FieldRef<'Launch', 'String'>;
+    readonly slug: Prisma.FieldRef<'Launch', 'String'>;
     readonly tagline: Prisma.FieldRef<'Launch', 'String'>;
     readonly description: Prisma.FieldRef<'Launch', 'String'>;
     readonly gallery: Prisma.FieldRef<'Launch', 'Json'>;

@@ -36,6 +36,7 @@ export type ProductSumAggregateOutputType = {
 export type ProductMinAggregateOutputType = {
     id: number | null;
     name: string | null;
+    slug: string | null;
     tagline: string | null;
     description: string | null;
     websiteUrl: string | null;
@@ -49,6 +50,7 @@ export type ProductMinAggregateOutputType = {
 export type ProductMaxAggregateOutputType = {
     id: number | null;
     name: string | null;
+    slug: string | null;
     tagline: string | null;
     description: string | null;
     websiteUrl: string | null;
@@ -62,6 +64,7 @@ export type ProductMaxAggregateOutputType = {
 export type ProductCountAggregateOutputType = {
     id: number;
     name: number;
+    slug: number;
     tagline: number;
     description: number;
     websiteUrl: number;
@@ -85,6 +88,7 @@ export type ProductSumAggregateInputType = {
 export type ProductMinAggregateInputType = {
     id?: true;
     name?: true;
+    slug?: true;
     tagline?: true;
     description?: true;
     websiteUrl?: true;
@@ -98,6 +102,7 @@ export type ProductMinAggregateInputType = {
 export type ProductMaxAggregateInputType = {
     id?: true;
     name?: true;
+    slug?: true;
     tagline?: true;
     description?: true;
     websiteUrl?: true;
@@ -111,6 +116,7 @@ export type ProductMaxAggregateInputType = {
 export type ProductCountAggregateInputType = {
     id?: true;
     name?: true;
+    slug?: true;
     tagline?: true;
     description?: true;
     websiteUrl?: true;
@@ -215,6 +221,7 @@ export type ProductGroupByArgs<
 export type ProductGroupByOutputType = {
     id: number;
     name: string;
+    slug: string;
     tagline: string;
     description: string;
     websiteUrl: string;
@@ -249,6 +256,7 @@ export type ProductWhereInput = {
     NOT?: Prisma.ProductWhereInput | Prisma.ProductWhereInput[];
     id?: Prisma.IntFilter<'Product'> | number;
     name?: Prisma.StringFilter<'Product'> | string;
+    slug?: Prisma.StringFilter<'Product'> | string;
     tagline?: Prisma.StringFilter<'Product'> | string;
     description?: Prisma.StringFilter<'Product'> | string;
     websiteUrl?: Prisma.StringFilter<'Product'> | string;
@@ -267,6 +275,7 @@ export type ProductWhereInput = {
 export type ProductOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
     tagline?: Prisma.SortOrder;
     description?: Prisma.SortOrder;
     websiteUrl?: Prisma.SortOrder;
@@ -285,6 +294,7 @@ export type ProductOrderByWithRelationInput = {
 export type ProductWhereUniqueInput = Prisma.AtLeast<
     {
         id?: number;
+        slug?: string;
         makerId_name?: Prisma.ProductMakerIdNameCompoundUniqueInput;
         AND?: Prisma.ProductWhereInput | Prisma.ProductWhereInput[];
         OR?: Prisma.ProductWhereInput[];
@@ -304,12 +314,13 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<
         launches?: Prisma.LaunchListRelationFilter;
         votes?: Prisma.VoteListRelationFilter;
     },
-    'id' | 'makerId_name'
+    'id' | 'slug' | 'makerId_name'
 >;
 
 export type ProductOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
     tagline?: Prisma.SortOrder;
     description?: Prisma.SortOrder;
     websiteUrl?: Prisma.SortOrder;
@@ -336,6 +347,7 @@ export type ProductScalarWhereWithAggregatesInput = {
         | Prisma.ProductScalarWhereWithAggregatesInput[];
     id?: Prisma.IntWithAggregatesFilter<'Product'> | number;
     name?: Prisma.StringWithAggregatesFilter<'Product'> | string;
+    slug?: Prisma.StringWithAggregatesFilter<'Product'> | string;
     tagline?: Prisma.StringWithAggregatesFilter<'Product'> | string;
     description?: Prisma.StringWithAggregatesFilter<'Product'> | string;
     websiteUrl?: Prisma.StringWithAggregatesFilter<'Product'> | string;
@@ -349,6 +361,7 @@ export type ProductScalarWhereWithAggregatesInput = {
 
 export type ProductCreateInput = {
     name: string;
+    slug: string;
     tagline: string;
     description: string;
     websiteUrl: string;
@@ -366,6 +379,7 @@ export type ProductCreateInput = {
 export type ProductUncheckedCreateInput = {
     id?: number;
     name: string;
+    slug: string;
     tagline: string;
     description: string;
     websiteUrl: string;
@@ -382,6 +396,7 @@ export type ProductUncheckedCreateInput = {
 
 export type ProductUpdateInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -399,6 +414,7 @@ export type ProductUpdateInput = {
 export type ProductUncheckedUpdateInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -416,6 +432,7 @@ export type ProductUncheckedUpdateInput = {
 export type ProductCreateManyInput = {
     id?: number;
     name: string;
+    slug: string;
     tagline: string;
     description: string;
     websiteUrl: string;
@@ -429,6 +446,7 @@ export type ProductCreateManyInput = {
 
 export type ProductUpdateManyMutationInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -442,6 +460,7 @@ export type ProductUpdateManyMutationInput = {
 export type ProductUncheckedUpdateManyInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -466,6 +485,7 @@ export type ProductMakerIdNameCompoundUniqueInput = {
 export type ProductCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
     tagline?: Prisma.SortOrder;
     description?: Prisma.SortOrder;
     websiteUrl?: Prisma.SortOrder;
@@ -484,6 +504,7 @@ export type ProductAvgOrderByAggregateInput = {
 export type ProductMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
     tagline?: Prisma.SortOrder;
     description?: Prisma.SortOrder;
     websiteUrl?: Prisma.SortOrder;
@@ -497,6 +518,7 @@ export type ProductMaxOrderByAggregateInput = {
 export type ProductMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
     tagline?: Prisma.SortOrder;
     description?: Prisma.SortOrder;
     websiteUrl?: Prisma.SortOrder;
@@ -691,6 +713,7 @@ export type ProductUncheckedUpdateManyWithoutMakerNestedInput = {
 
 export type ProductCreateWithoutLaunchesInput = {
     name: string;
+    slug: string;
     tagline: string;
     description: string;
     websiteUrl: string;
@@ -707,6 +730,7 @@ export type ProductCreateWithoutLaunchesInput = {
 export type ProductUncheckedCreateWithoutLaunchesInput = {
     id?: number;
     name: string;
+    slug: string;
     tagline: string;
     description: string;
     websiteUrl: string;
@@ -750,6 +774,7 @@ export type ProductUpdateToOneWithWhereWithoutLaunchesInput = {
 
 export type ProductUpdateWithoutLaunchesInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -766,6 +791,7 @@ export type ProductUpdateWithoutLaunchesInput = {
 export type ProductUncheckedUpdateWithoutLaunchesInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -781,6 +807,7 @@ export type ProductUncheckedUpdateWithoutLaunchesInput = {
 
 export type ProductCreateWithoutCategoriesInput = {
     name: string;
+    slug: string;
     tagline: string;
     description: string;
     websiteUrl: string;
@@ -797,6 +824,7 @@ export type ProductCreateWithoutCategoriesInput = {
 export type ProductUncheckedCreateWithoutCategoriesInput = {
     id?: number;
     name: string;
+    slug: string;
     tagline: string;
     description: string;
     websiteUrl: string;
@@ -840,6 +868,7 @@ export type ProductUpdateToOneWithWhereWithoutCategoriesInput = {
 
 export type ProductUpdateWithoutCategoriesInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -856,6 +885,7 @@ export type ProductUpdateWithoutCategoriesInput = {
 export type ProductUncheckedUpdateWithoutCategoriesInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -871,6 +901,7 @@ export type ProductUncheckedUpdateWithoutCategoriesInput = {
 
 export type ProductCreateWithoutVotesInput = {
     name: string;
+    slug: string;
     tagline: string;
     description: string;
     websiteUrl: string;
@@ -887,6 +918,7 @@ export type ProductCreateWithoutVotesInput = {
 export type ProductUncheckedCreateWithoutVotesInput = {
     id?: number;
     name: string;
+    slug: string;
     tagline: string;
     description: string;
     websiteUrl: string;
@@ -930,6 +962,7 @@ export type ProductUpdateToOneWithWhereWithoutVotesInput = {
 
 export type ProductUpdateWithoutVotesInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -946,6 +979,7 @@ export type ProductUpdateWithoutVotesInput = {
 export type ProductUncheckedUpdateWithoutVotesInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -961,6 +995,7 @@ export type ProductUncheckedUpdateWithoutVotesInput = {
 
 export type ProductCreateWithoutMakerInput = {
     name: string;
+    slug: string;
     tagline: string;
     description: string;
     websiteUrl: string;
@@ -977,6 +1012,7 @@ export type ProductCreateWithoutMakerInput = {
 export type ProductUncheckedCreateWithoutMakerInput = {
     id?: number;
     name: string;
+    slug: string;
     tagline: string;
     description: string;
     websiteUrl: string;
@@ -1037,6 +1073,7 @@ export type ProductScalarWhereInput = {
     NOT?: Prisma.ProductScalarWhereInput | Prisma.ProductScalarWhereInput[];
     id?: Prisma.IntFilter<'Product'> | number;
     name?: Prisma.StringFilter<'Product'> | string;
+    slug?: Prisma.StringFilter<'Product'> | string;
     tagline?: Prisma.StringFilter<'Product'> | string;
     description?: Prisma.StringFilter<'Product'> | string;
     websiteUrl?: Prisma.StringFilter<'Product'> | string;
@@ -1051,6 +1088,7 @@ export type ProductScalarWhereInput = {
 export type ProductCreateManyMakerInput = {
     id?: number;
     name: string;
+    slug: string;
     tagline: string;
     description: string;
     websiteUrl: string;
@@ -1063,6 +1101,7 @@ export type ProductCreateManyMakerInput = {
 
 export type ProductUpdateWithoutMakerInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1079,6 +1118,7 @@ export type ProductUpdateWithoutMakerInput = {
 export type ProductUncheckedUpdateWithoutMakerInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1095,6 +1135,7 @@ export type ProductUncheckedUpdateWithoutMakerInput = {
 export type ProductUncheckedUpdateManyWithoutMakerInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
     tagline?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.StringFieldUpdateOperationsInput | string;
     websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1168,6 +1209,7 @@ export type ProductSelect<
     {
         id?: boolean;
         name?: boolean;
+        slug?: boolean;
         tagline?: boolean;
         description?: boolean;
         websiteUrl?: boolean;
@@ -1192,6 +1234,7 @@ export type ProductSelectCreateManyAndReturn<
     {
         id?: boolean;
         name?: boolean;
+        slug?: boolean;
         tagline?: boolean;
         description?: boolean;
         websiteUrl?: boolean;
@@ -1212,6 +1255,7 @@ export type ProductSelectUpdateManyAndReturn<
     {
         id?: boolean;
         name?: boolean;
+        slug?: boolean;
         tagline?: boolean;
         description?: boolean;
         websiteUrl?: boolean;
@@ -1229,6 +1273,7 @@ export type ProductSelectUpdateManyAndReturn<
 export type ProductSelectScalar = {
     id?: boolean;
     name?: boolean;
+    slug?: boolean;
     tagline?: boolean;
     description?: boolean;
     websiteUrl?: boolean;
@@ -1245,6 +1290,7 @@ export type ProductOmit<
 > = runtime.Types.Extensions.GetOmit<
     | 'id'
     | 'name'
+    | 'slug'
     | 'tagline'
     | 'description'
     | 'websiteUrl'
@@ -1290,6 +1336,7 @@ export type $ProductPayload<
         {
             id: number;
             name: string;
+            slug: string;
             tagline: string;
             description: string;
             websiteUrl: string;
@@ -1913,6 +1960,7 @@ export interface Prisma__ProductClient<
 export interface ProductFieldRefs {
     readonly id: Prisma.FieldRef<'Product', 'Int'>;
     readonly name: Prisma.FieldRef<'Product', 'String'>;
+    readonly slug: Prisma.FieldRef<'Product', 'String'>;
     readonly tagline: Prisma.FieldRef<'Product', 'String'>;
     readonly description: Prisma.FieldRef<'Product', 'String'>;
     readonly websiteUrl: Prisma.FieldRef<'Product', 'String'>;

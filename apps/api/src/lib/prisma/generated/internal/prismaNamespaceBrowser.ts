@@ -75,6 +75,7 @@ export type TransactionIsolationLevel =
 
 export const LaunchScalarFieldEnum = {
     id: 'id',
+    slug: 'slug',
     tagline: 'tagline',
     description: 'description',
     gallery: 'gallery',
@@ -101,6 +102,7 @@ export type LaunchVoteScalarFieldEnum =
 export const ProductScalarFieldEnum = {
     id: 'id',
     name: 'name',
+    slug: 'slug',
     tagline: 'tagline',
     description: 'description',
     websiteUrl: 'websiteUrl',
