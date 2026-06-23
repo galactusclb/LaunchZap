@@ -1,11 +1,10 @@
 'use client';
 
-import { useInfiniteQuery } from '@tanstack/react-query';
-
-import { Button } from '@/components/ui/button';
 import { ApiMeta } from '@/models/api-response.schema';
-import { productListFullResponseSchema } from '@/models/product.schema';
+import { Product, productListFullResponseSchema } from '@/models/product.schema';
 import { apiGet } from '@/utils/api/api-client';
+
+import FeedLoadMore from '../feed-load-more';
 
 import ProductItem from './product-item';
 
@@ -21,40 +20,12 @@ const fetchPage = async (endpoint: string, page: number) => {
 };
 
 export default function ProductLoadMore({ endpoint, initialMeta }: ProductLoadMoreProps) {
-    const hasMoreInitially = initialMeta.page < initialMeta.totalPages;
-
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
-        queryKey: ['products-more', endpoint],
-        queryFn: ({ pageParam }) => fetchPage(endpoint, pageParam),
-        initialPageParam: 2,
-        getNextPageParam: (lastPage) => {
-            if (!lastPage.meta) return undefined;
-            const { page, totalPages } = lastPage.meta;
-            return page < totalPages ? page + 1 : undefined;
-        },
-        enabled: false,
-    });
-
-    const products = data?.pages.flatMap((p) => p.data) ?? [];
-    const canLoadMore = data ? hasNextPage : hasMoreInitially;
-
-    if (!hasMoreInitially) return null;
-
     return (
-        <div className="flex flex-col gap-4">
-            {products.map((item) => (
-                <ProductItem item={item} key={item.id} />
-            ))}
-            {canLoadMore && (
-                <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => fetchNextPage()}
-                    disabled={isFetchingNextPage}
-                >
-                    {isFetchingNextPage ? 'Loading...' : 'Load more'}
-                </Button>
-            )}
-        </div>
+        <FeedLoadMore<Product>
+            queryKey={['products-more', endpoint]}
+            fetchPage={(page) => fetchPage(endpoint, page)}
+            renderItem={(item) => <ProductItem item={item} key={item.id} />}
+            initialMeta={initialMeta}
+        />
     );
 }
