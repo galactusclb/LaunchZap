@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import { type RedisReply, RedisStore } from 'rate-limit-redis';
 
 import { routes as authRoutes } from '@/features/auth';
+import { launchRoutes } from '@/features/launch';
 import { routes as productRoutes } from '@/features/product';
 import { routes as userRoutes } from '@/features/user';
 import { configureXray, xrayClose, xrayOpen } from '@/lib/aws/xray';
@@ -69,6 +70,7 @@ apiRouter.get('/', handleRoot);
 apiRouter.get('/health', (_, res) => res.sendStatus(200));
 apiRouter.use('/auth', authRoutes);
 apiRouter.use('/users', userRoutes);
+apiRouter.use('/launches', launchRoutes);
 apiRouter.use('/products', productRoutes);
 
 app.use('/api', apiRouter);
