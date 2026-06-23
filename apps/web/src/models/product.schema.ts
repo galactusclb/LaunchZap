@@ -2,6 +2,7 @@ import z from 'zod';
 
 import { apiResponseSchema } from '@/models/api-response.schema';
 
+import { launchResponseSchema } from './launch.schema';
 import { userResponseSchema } from './user.schema';
 
 export enum ProductStatus {
@@ -33,6 +34,7 @@ export const productResponseSchema = baseProductSchema.extend({
         .nullable()
         .optional(),
 
+    launches: z.array(launchResponseSchema),
     votesCount: z.number(),
 });
 
