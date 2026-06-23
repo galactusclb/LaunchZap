@@ -10,10 +10,11 @@ type ProductStaticParams = Record<keyof ProductIdParam, string>;
 export async function generateStaticParams(): Promise<ProductStaticParams[]> {
     try {
         const launches = await getDailyLaunches();
-        return (launches.data ?? []).map((l) => ({ id: l.slug }));
+        const params = (launches.data ?? []).map((l) => ({ id: l.slug }));
+        return params.length > 0 ? params : [{ id: '_placeholder' }];
     } catch (error) {
         console.warn('API unreachable at build, falling back to ISR:', error);
-        return [];
+        return [{ id: '_placeholder' }];
     }
 }
 
