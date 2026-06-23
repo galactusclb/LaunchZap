@@ -8,8 +8,9 @@ import { LaunchFilterQuery, UpdateLaunchInput } from './launch.schema';
 
 const defaultStatus = constants.launchStatus.PUBLISHED;
 
-export const findAll = async (query: LaunchFilterQuery) => {
+export const findAll = async (productId: Launch['productId'], query: LaunchFilterQuery) => {
     const where: Prisma.LaunchWhereInput = {
+        productId,
         ...(query.search && {
             OR: [{ tagline: { contains: query.search, mode: 'insensitive' } }],
         }),

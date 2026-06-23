@@ -33,11 +33,17 @@ export const updateLaunchSchema = {
     body: baseLaunchSchema.partial(),
 };
 
-export const getLaunchsSchema = { query: launchFilterSchema };
+export const getLaunchsSchema = {
+    params: launchResponseSchema.pick({
+        productId: true,
+    }),
+    query: launchFilterSchema,
+};
 export const voteLaunchSchema = { params: launchResponseSchema.pick({ id: true }) };
 
 export type CreateLaunchInput = z.infer<typeof createLaunchSchema.body>;
 export type UpdateLaunchInput = z.infer<typeof updateLaunchSchema.body>;
+export type GetLaunchListParams = z.infer<typeof getLaunchsSchema.params>;
 export type GetLaunchById = z.infer<typeof getLaunchByIdSchema.params>;
 export type VoteLaunch = z.infer<typeof voteLaunchSchema.params>;
 export type LaunchFilterQuery = z.infer<typeof launchFilterSchema>;

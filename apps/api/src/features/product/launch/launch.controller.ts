@@ -8,6 +8,7 @@ import { toLaunchDTO } from './launch.dto.ts';
 import {
     CreateLaunchInput,
     GetLaunchById,
+    GetLaunchListParams,
     LaunchFilterQuery,
     UpdateLaunchInput,
     VoteLaunch,
@@ -15,7 +16,10 @@ import {
 import * as service from './launch.service.ts';
 
 export const getProductLaunces = async (req: Request, res: Response): Promise<void> => {
-    const result = await service.doGetProductLaunchList(req.validatedQuery as LaunchFilterQuery);
+    const { productId } = req.validatedParams as GetLaunchListParams;
+    const query = req.validatedQuery as LaunchFilterQuery;
+
+    const result = await service.doGetProductLaunchList(productId, query);
     const parsed = result.data?.map((item) => toLaunchDTO(item));
 
     res.header('Cache-Control', toCacheControlHeader(constants.cache.product.list));

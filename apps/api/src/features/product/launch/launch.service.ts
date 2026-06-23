@@ -64,17 +64,23 @@ export const doGetLaunchById = async (id: Launch['id']) => {
     };
 };
 
-export const doGetProductLaunchList = async (query: LaunchFilterQuery) => {
+export const doGetProductLaunchList = async (
+    productId: Launch['productId'],
+    query: LaunchFilterQuery
+) => {
     const sortedQuery = JSON.stringify(query, Object.keys(query).sort());
     const queryHash = createHash('sha1').update(sortedQuery).digest('hex').slice(0, 12);
     const version = (await redisClient?.get(CACHE_KEY_VERSION)) ?? '0';
-    const cacheKey = `${CACHE_KEY_LIST}:v${version}:${queryHash}`;
+    const cacheKey = `${CACHE_KEY_LIST}:${productId}:v${version}:${queryHash}`;
 
     return redisUtils.swrCache(
         cacheKey,
         async () => {
-            logger.debug('[product-launch] list cache miss', { cacheKey, query });
-            const { data, total } = await repo.findAll(query);
+            logger.debug(`[product-launch] ${productId} launch list cache miss`, {
+                cacheKey,
+                query,
+            });
+            const { data, total } = await repo.findAll(productId, query);
             return paginatedResponse(data, total, query);
         },
         { ...constants.cache.product.list }
