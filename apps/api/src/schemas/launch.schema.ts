@@ -10,7 +10,7 @@ const MAX_LAUNCH_SCHEDULE_DAYS = 90;
 const launchStatusList = constants.launchStatus;
 
 export const baseLaunchSchema = z.object({
-    productId: productResponseSchema.shape.id,
+    slug: trimmedString.min(1).max(100),
     tagline: trimmedString.min(1).max(250),
     description: trimmedString.max(1000),
     launchDate: z.coerce
@@ -32,6 +32,7 @@ export const baseLaunchSchema = z.object({
 
 export const launchResponseSchema = baseLaunchSchema.extend({
     id: z.string(),
+    productId: productResponseSchema.shape.id,
     createdAt: z.date(),
     updatedAt: z.date(),
     votesCount: z.number(),

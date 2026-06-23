@@ -1,12 +1,13 @@
 model Launch {
     id String @id @default(cuid())
+    slug        String @unique @db.VarChar(100)
     tagline     String @db.VarChar(250)
     description String @db.Text
 
     gallery    Json?
 
     status     String @default("DRAFT")
-    launchDate DateTime @default(now())
+    launchDate DateTime
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
