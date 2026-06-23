@@ -71,11 +71,15 @@ export const findPublishedOrDraft = async (productId: number) => {
 
 export const scheduleLaunch = async (
     productId: Product['id'],
-    input: Pick<Prisma.LaunchCreateInput, 'tagline' | 'description' | 'launchDate' | 'gallery'>
+    input: Pick<
+        Prisma.LaunchCreateInput,
+        'slug' | 'tagline' | 'description' | 'launchDate' | 'gallery'
+    >
 ) => {
     return await prisma.launch.create({
         data: {
             productId,
+            slug: input.slug,
             tagline: input.tagline,
             description: input.description ?? '',
             launchDate: input.launchDate,
