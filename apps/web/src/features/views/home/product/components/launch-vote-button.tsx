@@ -1,9 +1,9 @@
 'use client';
 
 import ItemButton from '@/components/shared/product-feed/item-button';
-import { useVote } from '@/features/product';
 import { Launch } from '@/models/launch.schema';
 import { Product } from '@/models/product.schema';
+
 import useVoteLaunch from '../hooks/useVoteLaunch';
 
 interface LaunchVoteButtonProps {

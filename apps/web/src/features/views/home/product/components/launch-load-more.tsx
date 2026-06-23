@@ -1,13 +1,10 @@
 'use client';
 
-import { useInfiniteQuery } from '@tanstack/react-query';
-
-import { Button } from '@/components/ui/button';
+import FeedLoadMore from '@/components/shared/feed-load-more';
 import { Launch, launchListResponseSchema } from '@/models/launch.schema';
 import { apiGet } from '@/utils/api/api-client';
 
 import LaunchItem from './launch-item';
-import FeedLoadMore from '@/components/shared/feed-load-more';
 
 interface LaunchLoadMoreProps {
     endpoint: string;
