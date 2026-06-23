@@ -67,6 +67,17 @@ export function errorHandler(err: unknown, req: Request, res: Response, _next: N
         });
     }
 
+    if (
+        err instanceof SyntaxError &&
+        'status' in err &&
+        (err as SyntaxError & { status: number }).status === 400
+    ) {
+        return res.status(400).json({
+            success: false,
+            error: 'Invalid JSON in request body',
+        });
+    }
+
     return res.status(500).json({
         success: false,
         error: message,
