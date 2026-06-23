@@ -15,6 +15,7 @@ export enum LaunchStatus {
 
 export const baseLaunchSchema = z.object({
     productId: z.coerce.number(),
+    slug: trimmedString.min(1).max(100),
     tagline: trimmedString.min(1).max(250),
     description: trimmedString.max(1000),
     launchDate: z.coerce
@@ -36,13 +37,31 @@ export const baseLaunchSchema = z.object({
 
 export const launchResponseSchema = baseLaunchSchema.extend({
     id: z.string(),
-    launchDate: z.coerce.date(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
+    createdAt: z.coerce.date(),
+    updatedAt: z.coerce.date(),
     votesCount: z.number(),
 });
 
 export const launchListResponseSchema = apiResponseSchema.list(launchResponseSchema);
 
+const launchProductSchema = z.object({
+    id: z.number(),
+    name: z.string(),
+    slug: z.string(),
+    logoUrl: z.string().nullable(),
+    websiteUrl: z.string(),
+    maker: z.object({ id: z.string(), name: z.string() }).nullable(),
+});
+
+export const launchDetailSchema = launchResponseSchema.omit({ productId: true }).extend({
+    product: launchProductSchema,
+});
+
+export const launchFeedResponseSchema = apiResponseSchema.list(launchDetailSchema);
+export const launchDetailResponseSchema = apiResponseSchema.single(launchDetailSchema);
+
 export type Launch = z.infer<typeof launchResponseSchema>;
 export type BaseLaunch = z.infer<typeof baseLaunchSchema>;
+export type LaunchDetail = z.infer<typeof launchDetailSchema>;
+export type LaunchFeedListFullRespone = z.infer<typeof launchFeedResponseSchema>;
+export type LaunchFeedResult = Pick<LaunchFeedListFullRespone, 'data' | 'meta'>;

@@ -1,29 +1,22 @@
-import { Suspense } from 'react';
-
-import { getProductById } from '@/features/product/index.server';
+import { getLaunchBySlug } from '@/features/launch/index.server';
 
 import LaunchDetails from './launch-details';
-import LaunchFeedSection from './launch-feed-section';
-import { LaunchFeedSkeleton } from './launch-feed-skeleton';
 import LaunchHero from './launch-hero';
 import LaunchNotFound from './launch-not-found';
 
 interface LaunchSectionProps {
-    id: number;
+    slug: string;
 }
 
-export default async function LaunchSection({ id }: LaunchSectionProps) {
-    const product = await getProductById(id);
+export default async function LaunchSection({ slug }: LaunchSectionProps) {
+    const launch = await getLaunchBySlug(slug);
 
-    if (!product) return <LaunchNotFound />;
+    if (!launch) return <LaunchNotFound />;
 
     return (
         <div className="flex flex-col gap-10">
-            <LaunchHero product={product} />
-            <LaunchDetails description={product.description} />
-            <Suspense fallback={<LaunchFeedSkeleton />}>
-                <LaunchFeedSection />
-            </Suspense>
+            <LaunchHero launch={launch} />
+            <LaunchDetails description={launch.description} />
         </div>
     );
 }

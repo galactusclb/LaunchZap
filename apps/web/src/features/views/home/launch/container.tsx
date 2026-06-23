@@ -1,16 +1,17 @@
 import { notFound } from 'next/navigation';
-
-import { ProductIdParam, productIdParamSchema } from '@/models/product.schema';
+import z from 'zod';
 
 import LaunchAsyncBoundary from './components/launch-async-boundary';
 import LaunchSection from './components/launch-section';
 
+const launchSlugParamSchema = z.object({ id: z.string().min(1) });
+
 export interface LaunchPageContainerProps {
-    params: Promise<ProductIdParam>;
+    params: Promise<{ id: string }>;
 }
 
 export default async function LaunchPageContainer({ params }: LaunchPageContainerProps) {
-    const parsedParams = productIdParamSchema.safeParse(await params);
+    const parsedParams = launchSlugParamSchema.safeParse(await params);
 
     if (!parsedParams.success) notFound();
 
@@ -19,7 +20,7 @@ export default async function LaunchPageContainer({ params }: LaunchPageContaine
     return (
         <div className="w-full mx-auto">
             <LaunchAsyncBoundary>
-                <LaunchSection id={id} />
+                <LaunchSection slug={id} />
             </LaunchAsyncBoundary>
         </div>
     );

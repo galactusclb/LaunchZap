@@ -4,16 +4,18 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import ImageAvatar from '@/components/ui/image-avatar';
 import { Separator } from '@/components/ui/separator';
-import { Product } from '@/models/product.schema';
+import { LaunchDetail } from '@/models/launch.schema';
 
 import LaunchVoteButton from './launch-vote-button';
 
 interface LaunchHeroProps {
-    product: Product;
+    launch: LaunchDetail;
 }
 
-export default function LaunchHero({ product }: LaunchHeroProps) {
-    const launchDate = new Date(product.launchDate).toLocaleDateString('en-US', {
+export default function LaunchHero({ launch }: LaunchHeroProps) {
+    const { product } = launch;
+
+    const launchDate = new Date(launch.launchDate).toLocaleDateString('en-US', {
         month: 'long',
         day: 'numeric',
         year: 'numeric',
@@ -30,8 +32,13 @@ export default function LaunchHero({ product }: LaunchHeroProps) {
                     size={96}
                 />
                 <div className="flex flex-col flex-1 gap-1 min-w-0">
-                    <h1 className="text-4xl font-black tracking-tight">{product.name}</h1>
-                    <p className="text-muted-foreground text-base">{product.tagline}</p>
+                    <Link
+                        href={`/product/${product.slug}`}
+                        className="text-4xl font-black tracking-tight hover:underline"
+                    >
+                        {product.name}
+                    </Link>
+                    <p className="text-muted-foreground text-base">{launch.tagline}</p>
                     <div className="mt-4">
                         <Button
                             asChild
@@ -50,7 +57,7 @@ export default function LaunchHero({ product }: LaunchHeroProps) {
                     </div>
                 </div>
 
-                <LaunchVoteButton id={product.id} votesCount={product.votesCount} />
+                <LaunchVoteButton id={product.id} votesCount={launch.votesCount} />
             </div>
 
             <Separator />
@@ -72,7 +79,7 @@ export default function LaunchHero({ product }: LaunchHeroProps) {
                     <span>Launched {launchDate}</span>
                 </div>
                 <span className="ml-auto px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-xs font-medium capitalize">
-                    {product.status.toLowerCase()}
+                    {launch.status.toLowerCase()}
                 </span>
             </div>
         </div>
