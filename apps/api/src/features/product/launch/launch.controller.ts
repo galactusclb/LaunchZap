@@ -23,7 +23,7 @@ export const getProductLaunces = async (req: Request, res: Response): Promise<vo
     const parsed = result.data?.map((item) => toLaunchDTO(item));
 
     res.header('Cache-Control', toCacheControlHeader(constants.cache.product.list));
-    res.status(200).json({ success: true, data: parsed });
+    res.status(200).json({ success: true, data: parsed, meta: result.meta });
 };
 
 export const getProductLaunchById = async (req: Request, res: Response): Promise<void> => {
