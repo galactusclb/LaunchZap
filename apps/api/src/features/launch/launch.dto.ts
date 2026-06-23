@@ -13,6 +13,7 @@ export const getLaunchInclude = () =>
                     name: true,
                     slug: true,
                     logoUrl: true,
+                    websiteUrl: true,
                     maker: { select: { id: true, name: true } },
                 },
             },
