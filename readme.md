@@ -1,5 +1,9 @@
 # LaunchZap
 
+<p align="center">
+  <img src="LaunchZap.png" alt="LaunchZap" width="1000" alt="LaunchZap">
+</p>
+
 > Scalability isn't a feature.
 > It's an architectural decision.
 
