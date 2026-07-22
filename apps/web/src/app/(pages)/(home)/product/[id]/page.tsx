@@ -25,10 +25,12 @@ export async function generateStaticParams(): Promise<ProductStaticParams[]> {
             ...(weekly.data?.map((p) => p.id) ?? []),
         ]);
 
-        return Array.from(ids).map((id) => ({ id: String(id) }));
+        const idList = Array.from(ids).map((id) => ({ id: String(id) }));
+
+        return idList?.length > 0 ? idList : [{ id: '_placeholder' }];
     } catch (error) {
         console.warn('API unreachable at build, falling back to ISR:', error);
-        return [];
+        return [{ id: '_placeholder' }];
     }
 }
 

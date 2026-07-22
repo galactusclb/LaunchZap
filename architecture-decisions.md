@@ -3,7 +3,7 @@
 > Engineering decisions made during development, including the context, trade-offs, and implementation approach for each.
 
 **Highlights**
-- [6. AI Usage Optimizations](#6-ai-usage-optimizations) — Claude skill directory structure and reduced ~45% token wastage on Skills.
+- 
 
 ---
 
@@ -185,82 +185,6 @@ Running `findMany` and `count` as two separate queries creates a race window —
 | No off-by-one pagination bugs under concurrent inserts | In practice, on a low-traffic app, the race condition is rare — the transaction is defensive rather than reactive |
 
 ---
-
-## 6. AI Usage Optimizations
-
-### 6.1 Claude Skill Directory Structure
-
-#### My Decision
-In generally, I create sperate skills, if there is a repeatable implemenataion or code implementation standard, I follow in day-to-day. Previously I stored those `.md` file in a flat directory. Later It bacome hard to scan as the list grew, and since I tend to strucuture files into nested structure groupes by concern, I re-organized my Claude Code slash commands from a flat directory into a nested structure grouped by app layer and purpose.
-
-Here was the flat structure where everything lived at the same level with prefixes to distinguish them:
-```
-.claude/commands/
-  web-schema.md       → /web-schema
-  web-form.md         → /web-form
-  api-feature.md      → /api-feature
-```
-
-I wanted to split those skills into two distinct categories — 
-* **scaffold skills** - run once when starting a project 
-* **feature skills** - run repeatedly as I build. 
-
-Keeping them mixed in a flat list buried that distinction. So here is the after:
-```
-.claude/commands/
-  web/
-    scaffold.md           → /web:scaffold  (project setup, run once)
-    scaffold/
-      api-layer.md        → /web:scaffold:api-layer
-      files/              → template .ts files, copied verbatim
-    schema.md             → /web:schema    (per-feature, run repeatedly)
-    form.md               → /web:form
-    page.md               → /web:page
-  api/
-    scaffold/
-      <skill-file>.md        → /api:scaffold:<skill-file>
-      files/
-    scaffold.md           → /api:scaffold
-    schema.md             → /api:schema
-    dto.md                → /api:dto
-    feature.md            → /api:feature
-    filtering.md          → /api:filtering
-```
-Also want to highlight, full code snippets in the scaffold categories are moved as separate files into a nested subdirectory at `/scaffold/files` to achieve the following benefits:
-* Cleaner readability
-* Reduced token usage, which I cover in the next section
----
-
-### 6.2 Scaffold Token Usage Optimisation
-
-Here is one situation where I tried to reduce AI costs by optimizing token usage with proper reasoning without blindly applying it. This happened when I wanted to improve the readability of `api-layer.md` by extracting its inline code to separate files.
-
-When I was writing the web project's scaffold command skill, axios and its relevant code snippets were embedded as inline code blocks in the same `.md` file. So whenever that scaffold skill ran, all that inline code gets loaded into the context window, consuming tokens.
-
-I checked the token usage on average as follows and it's quite high even though it only runs once. But if I chain a few more scaffold steps, the token cost would compound quickly. However, simply extracting to separate `.ts` files wouldn't help on its own — Claude would still read and write each file, billing those tokens all the same.
-
-**Before** - inline code blocks inside `api-layer.md`, Claude reads and writes each file using the `Write` tool:
-
-| Step | Tokens (approx) |
-|---|---|
-| Read `scaffold.md` + `api-layer.md` (instructions + all inline code) | ~2,500 |
-| Claude writes 5 files via `Write` tool (full content in output tokens) | ~2,000 |
-| System prompt + conversation overhead | ~4,000 |
-| **Total** | **~8,500** |
-
-So I thought, why not just copy the files into the correct locations using `cp`? Those scaffold files are already correct and reviewed, and unlike the `Write` tool which passes full file content as output tokens, `cp` command copies the files without reads and writes, so the content never appears in model output. Afterwards, I measured the token usage again.
-
-**After** - code lives in `scaffold/files/*.ts`, `api-layer.md` contains only `cp` commands:
-
-| Step | Tokens (approx) |
-|---|---|
-| Read `scaffold.md` + `api-layer.md` (instructions only, no inline code) | ~500 |
-| Claude runs 5 `cp` bash commands (command strings only, no file content in output) | ~100 |
-| System prompt + conversation overhead | ~4,000 |
-| **Total** | **~4,600** |
-
-That is roughly **~45% reduction** in token usage per scaffold run.
-
 
 ## 7. [Infra] CDN optimization
 ```
