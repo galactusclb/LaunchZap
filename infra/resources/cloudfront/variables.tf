@@ -12,3 +12,8 @@ variable "bucket_arn" {
   description = "ARN of the S3 bucket"
   type        = string
 }
+
+variable "alb_dns_name" {
+  description = "DNS name of the shared ALB"
+  type = string
+}

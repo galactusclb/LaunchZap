@@ -134,6 +134,7 @@ module "cloudfront" {
   bucket_regional_domain_name = module.s3.s3_bucket_regional_domain_name
   bucket_id                   = module.s3.s3_bucket_id
   bucket_arn                  = module.s3.s3_bucket_arn
+  alb_dns_name = module.alb.alb_dns_name
 }
 
 module "secret-manager" {
